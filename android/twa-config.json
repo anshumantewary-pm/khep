@@ -1,0 +1,41 @@
+{
+  "_note": "Settings sent to the PWABuilder Android packager (pwabuilder-cloudapk). Signing passwords are deliberately left out; use signingMode 'mine' with the existing keystore for updates.",
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "packageId": "io.github.anshumantewarypm.khep",
+  "name": "Khep",
+  "launcherName": "Khep",
+  "host": "anshumantewary-pm.github.io",
+  "startUrl": "/khep/app.html",
+  "pwaUrl": "https://anshumantewary-pm.github.io/khep/app.html",
+  "fullScopeUrl": "https://anshumantewary-pm.github.io/khep/",
+  "webManifestUrl": "https://anshumantewary-pm.github.io/khep/manifest.webmanifest",
+  "iconUrl": "https://anshumantewary-pm.github.io/khep/icons/icon-512.png",
+  "maskableIconUrl": "https://anshumantewary-pm.github.io/khep/icons/maskable-512.png",
+  "themeColor": "#0a2a6e",
+  "backgroundColor": "#0a2a6e",
+  "navigationColor": "#0a2a6e",
+  "display": "standalone",
+  "orientation": "portrait",
+  "minSdkVersion": 24,
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "enableNotifications": false,
+  "features": {
+    "locationDelegation": {
+      "enabled": true
+    },
+    "playBilling": {
+      "enabled": false
+    }
+  },
+  "signing": {
+    "alias": "khep",
+    "fullName": "Khep",
+    "organization": "Khep",
+    "organizationalUnit": "Engineering",
+    "countryCode": "IN",
+    "keyPassword": "<from signing-key-info.txt>",
+    "storePassword": "<from signing-key-info.txt>"
+  }
+}

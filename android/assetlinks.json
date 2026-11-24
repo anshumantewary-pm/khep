@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.anshumantewarypm.khep",
+        "sha256_cert_fingerprints": ["B1:4A:C0:08:CC:14:95:C3:FC:30:A9:F8:18:96:82:43:0A:B3:D9:96:E1:87:38:FE:FC:86:F8:E6:D6:C7:BD:BB"]
+      }
+    }]
