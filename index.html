@@ -3,1060 +3,380 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khep · India's truck network</title>
+<meta name="description" content="Khep connects drivers, truck owners, companies, contractors and farmers. Download the app.">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#0a2a6e">
+<meta name="theme-color" content="#070a1c">
 <link rel="icon" type="image/png" href="icons/favicon-48.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Khep">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-</head>
-<body>
-<title>Khep Freight App</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&family=Yatra+One&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600&family=Yatra+One&display=swap">
 <style>
-/* Layout: a working phone prototype on the left, a "why this screen" panel on the right, then the plan below. Truck-art stripe is the one bold flourish. */
+/* Layout: a live night map of India's truck routes fills the screen; the pitch and the QR code sit on top. One dark look by design. */
 :root{
-  --bg:#eceef5; --surface:#ffffff; --sunk:#f4f5fa; --ink:#161a33; --muted:#585e80; --line:#d5d8e6;
-  --brand:#24317a; --brand-soft:#e3e7fb; --accent:#f2a516; --accent-ink:#3a2500; --red:#c8372d;
-  --ok:#17804f; --ok-soft:#dcf3e7; --warn:#a96a00; --warn-soft:#fdf0d4; --frame:#161a33;
-  --display:"Baloo 2","Mukta",system-ui,sans-serif; --body:"Mukta",system-ui,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --night:#070a1c; --night2:#0b1033; --ink:#10122b; --paper:#fff8e6; --mute:#b6bcdc; --line:rgba(255,248,230,.14);
+  --yel:#ffd400; --pink:#e5197e; --grn:#1f9e46; --saff:#ff9f1c; --red:#d7261e; --cob:#0b3d91;
+  --paint:"Yatra One","Baloo 2",system-ui,sans-serif; --display:"Baloo 2","Mukta",system-ui,sans-serif;
+  --body:"Mukta",system-ui,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0e1121; --surface:#171b31; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50;
-  --brand:#97a6ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --red:#ef6a5e;
-  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --frame:#000000; color-scheme:dark }}
-:root[data-theme="dark"]{
-  --bg:#0e1121; --surface:#171b31; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50;
-  --brand:#97a6ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --red:#ef6a5e;
-  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --frame:#000000; color-scheme:dark }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
-.stripe{height:10px;background:repeating-linear-gradient(-45deg,var(--accent) 0 14px,var(--brand) 14px 28px,var(--red) 28px 42px,var(--brand) 42px 56px)}
-.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-header .wrap{padding-block:28px 8px;display:grid;gap:10px}
-h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
-h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.01em}
-h1 span{color:var(--accent)}
-.lede{max-width:62ch;color:var(--muted);margin:0;font-size:1.05rem}
-.note{font-size:.85rem;color:var(--muted);margin:0}
-.roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.roles button{font:600 .95rem var(--body);padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
-.roles button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--surface)}
-button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:32px;padding-block:20px 40px;align-items:start}
-@media (max-width:820px){.stage{grid-template-columns:minmax(0,1fr)}}
-/* phone */
-.phone{width:100%;max-width:390px;margin:0 auto;background:var(--frame);border-radius:40px;padding:12px;box-shadow:0 20px 50px -20px rgba(20,24,60,.45)}
-.screen{background:var(--sunk);border-radius:30px;overflow:hidden;height:720px;display:flex;flex-direction:column;position:relative}
-.appbar{background:var(--brand);color:var(--surface);padding:14px 18px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
-.appbar b{font-family:var(--display);font-size:1.35rem;font-weight:800;letter-spacing:.01em}
-.appbar small{opacity:.85;font-size:.8rem;text-align:right}
-.content{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--surface)}
-.tabs button{background:none;border:0;padding:10px 4px 12px;font:600 .82rem var(--body);color:var(--muted);cursor:pointer;display:grid;justify-items:center;gap:2px}
-.tabs button[aria-selected="true"]{color:var(--brand)}
-.tabs button[aria-selected="true"] svg{stroke:var(--brand)}
-.tabs svg{width:22px;height:22px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:6px}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.lane{font-family:var(--display);font-weight:700;font-size:1.1rem}
-.sub{color:var(--muted);font-size:.85rem}
-.mono{font-family:var(--mono);font-size:.82rem;letter-spacing:.02em}
-.num{font-variant-numeric:tabular-nums}
-.price{font-family:var(--display);font-weight:800;font-size:1.25rem}
-.chip{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);white-space:nowrap}
-.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.field{display:grid;gap:2px}
-.field label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-.field input,.field select{font:500 1rem var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.band{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--ok-soft),var(--ok) 50%,var(--ok-soft));margin:6px 0 2px}
-.band i{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:var(--ink)}
-.btn{font:700 1rem var(--body);border:0;border-radius:12px;padding:12px 14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;width:100%}
-.btn.ghost{background:var(--surface);color:var(--brand);border:1.5px solid var(--brand)}
-.btn.small{width:auto;padding:7px 14px;font-size:.9rem}
-.btn:disabled{opacity:.5;cursor:default}
-.sec{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 2px -4px}
-.route svg{width:100%;height:64px;display:block}
-.steps{display:grid;gap:0}
-.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding-bottom:12px;position:relative}
-.step:not(:last-child)::before{content:"";position:absolute;left:13px;top:26px;bottom:0;width:2px;background:var(--line)}
-.dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font:700 .8rem var(--body);color:var(--muted)}
-.step.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
-.step.now .dot{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
-.bigstep{background:var(--brand);color:var(--surface);border-radius:16px;padding:16px;display:grid;gap:10px}
-.bigstep .t{font-family:var(--display);font-size:1.5rem;font-weight:800;line-height:1.15}
-.bigstep .btn{font-size:1.15rem;padding:16px}
-.otp{display:flex;gap:8px}
-.otp input{width:52px;text-align:center;font:700 1.4rem var(--mono);padding:8px 0;border-radius:10px;border:0;background:var(--surface);color:var(--ink)}
-.lang{display:flex;gap:4px;background:rgba(255,255,255,.15);border-radius:999px;padding:3px}
-.lang button{border:0;background:none;color:var(--surface);font:600 .8rem var(--body);padding:3px 10px;border-radius:999px;cursor:pointer}
-.lang button[aria-pressed="true"]{background:var(--surface);color:var(--brand)}
-.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
-.meter i{display:block;height:100%;background:var(--warn)}
-.toast{position:absolute;left:14px;right:14px;bottom:76px;background:var(--ink);color:var(--surface);border-radius:12px;padding:10px 14px;font-weight:600;font-size:.92rem;transition:opacity .25s, transform .25s;opacity:0;transform:translateY(8px);pointer-events:none}
-.toast.show{opacity:1;transform:none}
-.ledger .row{padding:6px 0;border-bottom:1px dashed var(--line)}
-.ledger .row:last-child{border-bottom:0}
-/* why panel */
-.why{display:grid;gap:18px;min-width:0}
-.why .eyebrow{font:700 .8rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
-.why h2{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:800}
-.why dl{display:grid;gap:14px;margin:0}
-.why dt{font:700 .8rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.why dd{margin:2px 0 0;max-width:62ch}
-.why .measure{border-left:4px solid var(--accent);padding:6px 0 6px 14px;background:none}
-.tour{display:flex;flex-wrap:wrap;gap:6px}
-.tour button{font:500 .85rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer}
-.tour button[aria-current="true"]{border-color:var(--brand);color:var(--brand);font-weight:700}
-/* plan */
-.plan{background:var(--surface);border-top:1px solid var(--line)}
-.plan .wrap{padding-block:40px 56px;display:grid;gap:36px}
-.plan h2{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800}
-.plan h3{font-size:1.2rem;font-weight:700}
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px 28px;margin:0;padding:0;list-style:none}
-.pillars li{display:grid;gap:4px;padding-top:12px;border-top:3px solid var(--brand)}
-.pillars p,.plan p{margin:0;color:var(--muted)}
-.tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
-.phases{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:ph}
-.phases li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;counter-increment:ph}
-.phases li::before{content:counter(ph);width:44px;height:44px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:800 1.3rem var(--display);display:grid;place-items:center}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px}
-.risks{margin:0;padding-left:1.1rem;display:grid;gap:8px;color:var(--muted)}
-.risks b{color:var(--ink)}
-@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--night);color:var(--paper);font:17px/1.55 var(--body)}
+[hidden]{display:none!important}
+h1,h2,h3{margin:0;line-height:1.12;text-wrap:balance}
+a{color:inherit}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--yel);outline-offset:3px}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block;background:radial-gradient(ellipse at 70% 40%,var(--night2),var(--night) 70%)}
+.veil{position:fixed;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(7,10,28,.92) 0%,rgba(7,10,28,.7) 38%,rgba(7,10,28,.05) 70%)}
+@media (max-width:900px){.veil{background:linear-gradient(180deg,rgba(7,10,28,.55),rgba(7,10,28,.82) 45%,rgba(7,10,28,.92))}}
+.page{position:relative;z-index:1}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.fringe{height:16px;background:repeating-linear-gradient(90deg,var(--pink) 0 18px,var(--yel) 18px 36px,var(--grn) 36px 54px,var(--saff) 54px 72px);-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/18px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/18px 100%}
 
-/* ---------- Sign-up: the painted back of a goods truck. A deliberate single look, same in light and dark. ---------- */
-.hrow{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
-.cta-join{display:inline-flex;align-items:center;gap:8px;font:800 1.05rem var(--display);text-decoration:none;color:#10122b;background:#ffd400;border:3px solid #10122b;border-radius:12px;padding:8px 18px;box-shadow:4px 4px 0 #e5197e;transition:transform .15s,box-shadow .15s}
-.cta-join:hover{transform:translate(-2px,-2px) rotate(-1deg);box-shadow:6px 6px 0 #e5197e}
-.cta-join:focus-visible{outline:3px solid #0b3d91;outline-offset:3px}
-.tg-sec{--t-ink:#10122b;--t-cob:#0b3d91;--t-cob2:#06275f;--t-pink:#e5197e;--t-saff:#ff9f1c;--t-saffd:#b85500;--t-grn:#1f9e46;--t-yel:#ffd400;--t-red:#d7261e;--t-paper:#fff8e6;--t-mute:#615c78;
-  --t-paint:"Yatra One","Baloo 2",system-ui,sans-serif;
-  background-color:var(--t-ink);background-image:radial-gradient(circle at 8% 10%,rgba(229,25,126,.32),transparent 32%),radial-gradient(circle at 92% 88%,rgba(255,159,28,.26),transparent 36%);color:var(--t-paper)}
-.tg-sec .wrap{padding-block:56px 72px;display:grid;gap:28px}
-.tg-head{display:grid;gap:8px;max-width:700px}
-.tg-eyebrow{margin:0;font:700 .85rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--t-saff)}
-.tg-head h2{font-family:var(--t-paint);font-weight:400;font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.2;color:var(--t-yel);text-shadow:3px 3px 0 var(--t-pink),6px 6px 0 var(--t-cob)}
-.tg-head p{margin:0;font-size:1.1rem;color:#e6e2fb;max-width:56ch}
-.tailgate{position:relative;overflow:hidden;border-radius:22px;border:12px solid transparent;background:linear-gradient(160deg,var(--t-cob),var(--t-cob2)) padding-box,repeating-linear-gradient(45deg,var(--t-red) 0 14px,var(--t-yel) 14px 28px,var(--t-grn) 28px 42px,var(--t-pink) 42px 56px) border-box;box-shadow:0 30px 60px -25px rgba(0,0,0,.75)}
-.tailgate.shake{animation:tg-shake .5s}
-@keyframes tg-shake{20%{transform:translate(-5px,1px) rotate(-.5deg)}40%{transform:translate(5px,-1px) rotate(.5deg)}60%{transform:translate(-3px,0)}80%{transform:translate(2px,1px)}}
-.jhalar{height:30px;background:repeating-linear-gradient(90deg,var(--t-pink) 0 28px,var(--t-yel) 28px 56px,var(--t-grn) 56px 84px,var(--t-saff) 84px 112px);-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/28px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/28px 100%}
-.tg-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:28px;padding:18px clamp(14px,3vw,32px) 28px}
-@media (max-width:860px){.tg-grid{grid-template-columns:minmax(0,1fr)}}
-.tg-art{display:grid;justify-items:center;align-content:center;gap:12px;text-align:center;min-width:0}
-.eyes{display:flex;gap:14px;justify-content:center}
-.eyes svg{width:min(120px,36vw);height:auto;display:block}
-.tg-painted{font-family:var(--t-paint);font-size:clamp(3.6rem,10vw,5.6rem);line-height:1.05;color:var(--t-paper);text-shadow:4px 4px 0 var(--t-pink),8px 8px 0 var(--t-ink);transform:rotate(-4deg)}
-.flowers{display:flex;gap:8px;align-items:center}
-.flowers svg{width:44px;height:44px;display:block}
-.flowers svg.big{width:76px;height:76px;animation:tg-spin 20s linear infinite}
-@keyframes tg-spin{to{transform:rotate(360deg)}}
-.slogan{font-family:var(--t-paint);font-size:clamp(1.7rem,4.4vw,2.3rem);color:var(--t-yel);text-shadow:2px 2px 0 var(--t-red);letter-spacing:.03em;line-height:1.15}
-.slogan .ok{display:inline-grid;place-items:center;width:1.9em;height:1.9em;border-radius:50%;background:var(--t-pink);color:var(--t-paper);text-shadow:none;font-size:.7em;vertical-align:middle;border:3px solid var(--t-yel)}
-.slogan.sm{font-family:var(--body);font-weight:800;font-size:.95rem;color:var(--t-paper);text-shadow:none;background:var(--t-red);padding:3px 14px;border-radius:6px;letter-spacing:.14em}
-.slogan.hi{font-size:1.15rem;color:var(--t-saff);text-shadow:none}
-.tg-form{background:var(--t-paper);color:var(--t-ink);border-radius:16px;border:3px solid var(--t-ink);box-shadow:8px 8px 0 var(--t-pink);padding:18px clamp(14px,3vw,26px) 22px;display:grid;gap:16px;min-width:0;align-content:start}
-.road{position:relative;height:40px}
-.road::before{content:"";position:absolute;left:0;right:0;bottom:4px;height:5px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--t-ink) 0 14px,transparent 14px 22px)}
-.mini{position:absolute;bottom:9px;left:0;width:56px;height:30px;transition:left .7s cubic-bezier(.45,1.5,.5,1)}
-.tg-steps{list-style:none;margin:-6px 0 0;padding:0;display:flex;justify-content:space-between;gap:6px;font:700 .76rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--t-mute)}
-.tg-steps li[aria-current="step"]{color:var(--t-pink)}
-.tg-step,.tg-done{display:grid;gap:14px}
-.tg-step h3,.tg-done h3{font-family:var(--t-paint);font-weight:400;font-size:1.8rem;line-height:1.2;color:var(--t-cob);outline:none}
-.tg-step h3 span{display:block;font-size:1.05rem;color:var(--t-pink)}
-.medals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-@media (max-width:520px){.medals{grid-template-columns:minmax(0,1fr)}}
-.medal{--m:var(--t-pink);display:grid;gap:2px;justify-items:center;text-align:center;padding:14px 8px 12px;border-radius:16px;border:3px solid var(--t-ink);background:#fff;color:var(--t-ink);cursor:pointer;font-family:var(--body);box-shadow:4px 4px 0 var(--t-ink);transition:transform .2s,box-shadow .2s,background-color .2s}
-.medal .ic{width:48px;height:48px;border-radius:50%;background:var(--m);display:grid;place-items:center;border:3px solid var(--t-ink);margin-bottom:4px}
-.medal .ic svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.medal b{font:800 1.1rem var(--display)}
-.medal span{font-weight:700;color:var(--m)}
-.medal small{color:var(--t-mute);font-size:.8rem;line-height:1.3}
-.medal:hover{transform:translate(-2px,-2px) rotate(-1.5deg);box-shadow:6px 6px 0 var(--t-ink)}
-.medal[aria-checked="true"]{background:var(--m);color:#fff;transform:rotate(-2deg);box-shadow:6px 6px 0 var(--t-ink)}
-.medal[aria-checked="true"] span,.medal[aria-checked="true"] small{color:#fff}
-.medal[aria-checked="true"] .ic{background:var(--t-ink)}
-.medal:focus-visible,.tg-go:focus-visible,.horn:focus-visible,.tg-back:focus-visible{outline:3px solid var(--t-cob);outline-offset:3px}
-.tf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-@media (max-width:520px){.tf-grid{grid-template-columns:minmax(0,1fr)}}
-.tf{display:grid;gap:4px;min-width:0;align-content:start}
-.tf.full{grid-column:1/-1}
-.tf label{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--t-cob)}
-.tf label i{font-style:normal;text-transform:none;letter-spacing:0;color:var(--t-mute);font-weight:500}
-.tf input,.tf select{font:500 1rem var(--body);color:var(--t-ink);background:#fff;border:2.5px solid var(--t-ink);border-radius:10px;padding:9px 11px;width:100%;min-width:0;color-scheme:light}
-.tf input:focus,.tf select:focus{outline:none;box-shadow:4px 4px 0 var(--t-saff)}
-.tf [aria-invalid="true"]{border-color:var(--t-red);background:#fff0ee}
-.pre{display:flex;border:2.5px solid var(--t-ink);border-radius:10px;overflow:hidden;background:#fff}
-.pre > span{display:grid;place-items:center;padding:0 10px;background:var(--t-yel);font-weight:800;border-right:2.5px solid var(--t-ink)}
-.pre input{border:0;border-radius:0}
-.pre input:focus{box-shadow:none}
-.pre:focus-within{box-shadow:4px 4px 0 var(--t-saff)}
-.plate{display:flex;align-items:stretch;border:3px solid #111;border-radius:9px;background:var(--t-yel);overflow:hidden}
-.plate .ind{display:grid;place-items:center;padding:0 8px;background:#1d3fa6;color:#fff;font:700 .72rem var(--body);letter-spacing:.06em}
-.plate input{border:0;border-radius:0;background:transparent;font:700 1.35rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#111;padding:8px 10px}
-.plate input::placeholder{color:rgba(17,17,17,.4)}
-.plate input:focus{box-shadow:none}
-.plate:focus-within{box-shadow:4px 4px 0 var(--t-saff)}
-.plate:has([aria-invalid="true"]){border-color:var(--t-red)}
-.check{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
-.check input{width:20px;height:20px;accent-color:var(--t-pink);margin-top:3px;flex:none}
-.hcta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.cta-sign{font:700 1rem var(--display);color:var(--brand);text-decoration:underline;text-underline-offset:4px;padding:6px 4px}
-.dl-sec{--d-ink:#10122b;--d-yel:#ffd400;--d-pink:#e5197e;--d-paper:#fff8e6;background:linear-gradient(160deg,#0b3d91,#06275f);color:var(--d-paper);position:relative}
-.dl-fringe{height:26px;background:repeating-linear-gradient(90deg,#e5197e 0 26px,#ffd400 26px 52px,#1f9e46 52px 78px,#ff9f1c 78px 104px);-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/26px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/26px 100%}
-.dl-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:28px;align-items:center;padding-block:26px 40px}
-@media (max-width:820px){.dl-grid{grid-template-columns:minmax(0,1fr)}}
-.dl-copy{display:grid;gap:12px;min-width:0}
-.dl-eyebrow{margin:0;font:700 .82rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:#ffb648}
-.dl-copy h2{font-family:"Yatra One","Baloo 2",system-ui,sans-serif;font-weight:400;font-size:clamp(2.2rem,6vw,3.4rem);line-height:1.2;color:var(--d-yel);text-shadow:3px 3px 0 var(--d-pink)}
-.dl-copy > p{margin:0;max-width:60ch;color:#e6e9fb}
-.dl-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:4px}
-.dl-btn{display:inline-flex;align-items:center;gap:8px;font:800 1.1rem var(--display);text-decoration:none;color:var(--d-ink);background:var(--d-yel);border:3px solid var(--d-ink);border-radius:14px;padding:10px 22px;box-shadow:5px 5px 0 var(--d-pink);cursor:pointer;transition:transform .15s,box-shadow .15s}
-.dl-btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--d-pink)}
-.dl-btn.ghost{background:transparent;color:var(--d-paper);border-color:var(--d-paper);box-shadow:none}
-.dl-btn:focus-visible{outline:3px solid var(--d-paper);outline-offset:3px}
-.dl-help{background:rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;max-width:60ch}
-.dl-help ol{margin:6px 0 0;padding-left:1.2rem;display:grid;gap:2px}
-.dl-small{margin:0;font-size:.85rem;color:#b9c3ea}
-.dl-status{margin:0;font-weight:700;color:var(--d-yel)}
-.dl-help.lit{background:rgba(255,212,0,.16);box-shadow:inset 0 0 0 2px var(--d-yel)}
-.dl-btn svg{flex:none}
-.dl-side{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center}
-.dl-icon{border-radius:30px;box-shadow:6px 6px 0 var(--d-pink);transform:rotate(-5deg)}
-.dl-qr{background:var(--d-paper);color:var(--d-ink);border-radius:14px;padding:12px;display:grid;gap:8px;justify-items:center;max-width:180px;text-align:center;font-size:.82rem;font-weight:600;border:3px solid var(--d-ink)}
-.dl-qr #dl-qr img,.dl-qr #dl-qr canvas{display:block;width:140px;height:140px}
-.crops{border:0;margin:0;padding:0}
-.crops legend{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--t-cob);padding:0;margin-bottom:6px}
-.crops legend i{font-style:normal;text-transform:none;letter-spacing:0;color:var(--t-mute);font-weight:500}
-.crop-chips{display:flex;flex-wrap:wrap;gap:8px}
-.crop-chips label{position:relative;cursor:pointer}
-.crop-chips input{position:absolute;opacity:0;width:1px;height:1px}
-.crop-chips span{display:inline-block;padding:6px 12px;border:2.5px solid var(--t-ink);border-radius:999px;background:#fff;font-weight:600;font-size:.9rem;transition:transform .15s}
-.crop-chips input:checked + span{background:var(--t-grn);color:#fff;transform:rotate(-2deg);box-shadow:3px 3px 0 var(--t-ink)}
-.crop-chips input:focus-visible + span{outline:3px solid var(--t-cob);outline-offset:2px}
-.tg-err{margin:0;color:var(--t-red);font-weight:700}
-.tg-err:empty{display:none}
-.tg-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
-.tg-go{font:800 1.1rem var(--display);border:3px solid var(--t-ink);border-radius:14px;padding:10px 22px;background:var(--t-yel);color:var(--t-ink);cursor:pointer;box-shadow:5px 5px 0 var(--t-pink);transition:transform .15s,box-shadow .15s;margin-left:auto}
-.tg-go:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--t-pink)}
-.tg-go:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--t-pink)}
-.tg-go:disabled{opacity:.6;cursor:wait}
-.tg-back{font:700 .95rem var(--body);background:none;border:0;color:var(--t-cob);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 2px}
-.bilty{border:2px dashed var(--t-ink);border-radius:10px;padding:14px;background:#fffdf3 repeating-linear-gradient(0deg,transparent 0 27px,rgba(11,61,145,.08) 27px 28px);display:grid;gap:10px;font-variant-numeric:tabular-nums}
-.bilty-h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:2px solid var(--t-ink);padding-bottom:6px;font:700 .78rem var(--body);letter-spacing:.08em;text-transform:uppercase}
-.bilty dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 16px}
-.bilty dt{color:var(--t-mute);font-size:.88rem}
-.bilty dd{margin:0;font-weight:700;overflow-wrap:anywhere}
-.pass-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.pass{display:flex;align-items:stretch;border:4px solid #111;border-radius:12px;background:var(--t-yel);overflow:hidden;box-shadow:6px 6px 0 var(--t-pink);animation:tg-pop .55s cubic-bezier(.3,1.6,.5,1)}
-.pass .ind{display:grid;place-items:center;padding:0 9px;background:#1d3fa6;color:#fff;font:700 .75rem var(--body)}
-.pass b{font:700 clamp(1.4rem,5vw,2rem) var(--mono);letter-spacing:.1em;padding:8px 16px;color:#111;white-space:nowrap}
-.stamp{font:400 1.2rem var(--t-paint);color:var(--t-red);border:3px solid var(--t-red);border-radius:8px;padding:0 12px;transform:rotate(-9deg);animation:tg-stamp .4s .35s both}
-@keyframes tg-pop{from{transform:scale(.5) rotate(-8deg);opacity:0}}
-@keyframes tg-stamp{from{transform:scale(2.2) rotate(-9deg);opacity:0}}
-.tg-done p{margin:0;max-width:52ch}
-.demo-note{font-size:.85rem;color:var(--t-mute);background:#fff;border:1.5px dashed var(--t-mute);border-radius:8px;padding:6px 10px}
-.tg-bumper{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px clamp(14px,3vw,32px) 14px;background:repeating-linear-gradient(-45deg,#111 0 16px,var(--t-yel) 16px 32px)}
-.horn{font:800 1rem var(--display);border:3px solid #111;border-radius:999px;padding:8px 20px;background:var(--t-red);color:#fff;cursor:pointer;box-shadow:3px 3px 0 #111}
-.horn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
-.tg-note{background:#111;color:var(--t-paper);font-size:.85rem;padding:4px 10px;border-radius:6px}
-.petal{position:absolute;top:-24px;width:12px;height:16px;border-radius:70% 0 70% 0;border:1.5px solid rgba(16,18,43,.6);pointer-events:none;z-index:5;animation:tg-fall linear forwards}
-@keyframes tg-fall{to{transform:translate(var(--x),1100px) rotate(var(--r));opacity:.3}}
-@media (prefers-reduced-motion:reduce){.flowers svg.big,.tailgate.shake,.pass,.stamp{animation:none}.mini,.medal,.tg-go,.cta-join{transition:none}}
+/* top bar */
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo img{width:40px;height:40px;border-radius:11px}
+.logo b{font:400 2rem var(--paint);color:var(--paper);text-shadow:2px 2px 0 var(--pink);line-height:1}
+.bar a.get{font:800 .98rem var(--display);text-decoration:none;color:var(--ink);background:var(--yel);border-radius:999px;padding:7px 16px;box-shadow:3px 3px 0 var(--pink)}
+
+/* hero */
+.hero{min-height:calc(100svh - 72px);display:grid;grid-template-columns:minmax(0,660px);align-items:center;padding-block:12px 48px}
+@media (max-width:900px){.hero{min-height:0;padding-top:8px}}
+.pitch{display:grid;gap:18px;min-width:0}
+.eyebrow{font:700 .82rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--saff);margin:0}
+.hero h1{font:400 clamp(2.7rem,7.2vw,5.4rem)/1.05 var(--paint);color:var(--yel);text-shadow:3px 3px 0 var(--pink),6px 6px 0 var(--cob)}
+.hero h1 span{display:block;color:var(--paper);font-size:.52em;text-shadow:2px 2px 0 var(--pink);margin-top:.35em}
+.lede{margin:0;font-size:1.15rem;color:#e3e6f8;max-width:52ch}
+.live-row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:.92rem;color:var(--mute)}
+.dot{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:#7ef0a6}
+.dot::before{content:"";width:9px;height:9px;border-radius:50%;background:#3ee07f;box-shadow:0 0 0 0 rgba(62,224,127,.7);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 10px rgba(62,224,127,0)}100%{box-shadow:0 0 0 0 rgba(62,224,127,0)}}
+.feed{min-height:3.2em;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(255,248,230,.07);border:1px solid var(--line);border-radius:14px;padding:10px 14px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .35s}
+.feed.fade{opacity:0}
+.plate{display:inline-flex;align-items:stretch;border:2px solid #111;border-radius:6px;background:var(--yel);overflow:hidden;flex:none}
+.plate i{font-style:normal;display:grid;place-items:center;padding:0 4px;background:#1d3fa6;color:#fff;font:700 .55rem var(--body)}
+.plate b{font:600 .85rem var(--mono);letter-spacing:.06em;color:#111;padding:0 7px}
+.feed .what{font-weight:600}
+.feed .sub{color:var(--mute);font-size:.9rem}
+
+/* download card */
+.get-card{background:rgba(10,14,40,.8);border:1px solid var(--line);border-radius:24px;padding:20px;display:flex;flex-wrap:wrap;gap:22px;align-items:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.qr-col{display:grid;gap:10px;justify-items:center;text-align:center;flex:none}
+.dl-col{flex:1 1 240px;display:grid;gap:12px;min-width:0;justify-items:stretch}
+.get-card h2{font:800 1.45rem var(--display)}
+.qr #qr img,.qr #qr canvas{width:168px!important;height:168px!important}
+.qr{background:var(--paper);border-radius:18px;padding:14px;border:4px solid var(--yel);box-shadow:6px 6px 0 var(--pink);position:relative}
+.qr #qr img,.qr #qr canvas{display:block;width:200px;height:200px}
+.qr .badge{position:absolute;left:50%;top:50%;width:46px;height:46px;transform:translate(-50%,-50%);border-radius:12px;border:3px solid var(--paper)}
+.scan{margin:0;color:var(--mute);font-size:.92rem;max-width:30ch}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;font:800 1.15rem var(--display);text-decoration:none;color:var(--ink);background:var(--yel);border:3px solid var(--ink);border-radius:16px;padding:12px 18px;box-shadow:5px 5px 0 var(--pink);cursor:pointer;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--pink)}
+.btn.ghost{background:transparent;color:var(--paper);border-color:rgba(255,248,230,.5);box-shadow:none;font-size:1rem;padding:9px 14px}
+.btn svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.meta{margin:0;font-size:.8rem;color:var(--mute)}
+details.how{width:100%;text-align:left;background:rgba(255,248,230,.06);border-radius:12px;padding:8px 14px}
+details.how summary{cursor:pointer;font-weight:700;padding:4px 0}
+details.how ol{margin:6px 0 4px;padding-left:1.2rem;display:grid;gap:3px;font-size:.92rem;color:#e3e6f8}
+details.how p{margin:6px 0 4px;font-size:.85rem;color:var(--mute)}
+.status{margin:0;font-weight:700;color:var(--yel);font-size:.92rem}
+
+/* ecosystem */
+section.eco{padding-block:56px}
+.sec-h{display:grid;gap:8px;margin-bottom:26px;max-width:720px}
+.sec-h h2{font:400 clamp(2rem,4.8vw,3.1rem)/1.15 var(--paint);color:var(--paper);text-shadow:2px 2px 0 var(--pink)}
+.sec-h p{margin:0;color:var(--mute);font-size:1.05rem}
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:16px}
+.role{background:rgba(10,14,40,.72);border:1px solid var(--line);border-radius:20px;padding:20px;display:grid;gap:10px;align-content:start;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.role .ic{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.role .ic svg{width:28px;height:28px;fill:none;stroke:#fff;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
+.role h3{font:800 1.3rem var(--display)}
+.role .hi{font-weight:700;margin-top:-6px}
+.role p{margin:0;color:#dfe2f5}
+.role ul{margin:0;padding-left:1.1rem;color:var(--mute);font-size:.93rem;display:grid;gap:3px}
+
+/* steps */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px;counter-reset:s}
+.steps li{counter-increment:s;display:grid;grid-template-columns:52px minmax(0,1fr);gap:14px;align-items:start;background:rgba(10,14,40,.6);border:1px solid var(--line);border-radius:18px;padding:16px}
+.steps li::before{content:counter(s);width:52px;height:52px;border-radius:14px;background:var(--yel);color:var(--ink);font:800 1.6rem var(--display);display:grid;place-items:center;box-shadow:3px 3px 0 var(--pink)}
+.steps b{display:block;font:800 1.15rem var(--display)}
+.steps span{color:var(--mute);font-size:.95rem}
+
+/* closing band */
+.close{padding-block:40px 30px}
+.close-card{background:linear-gradient(160deg,var(--cob),#06275f);border-radius:26px;overflow:hidden;border:1px solid var(--line)}
+.close-in{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:center;justify-content:space-between;padding:26px clamp(18px,4vw,36px)}
+.close-in h2{font:400 clamp(1.8rem,4.5vw,2.8rem)/1.15 var(--paint);color:var(--yel);text-shadow:2px 2px 0 var(--pink)}
+.close-in .btn{width:auto}
+footer{padding-block:20px 36px;display:flex;flex-wrap:wrap;gap:10px 24px;justify-content:space-between;align-items:center;color:var(--mute);font-size:.88rem}
+footer .horn{font:400 1.3rem var(--paint);color:var(--yel);text-shadow:1px 1px 0 var(--red)}
+footer a{color:var(--mute)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.dot::before{animation:none}.feed{transition:none}.btn{transition:none}}
 </style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="veil" aria-hidden="true"></div>
 
-<div class="stripe" aria-hidden="true"></div>
-<header>
-  <div class="wrap">
-    <div class="hrow"><h1>Khep<span>.</span></h1><span class="hcta"><a class="cta-sign" id="cta-sign" href="#signup">Sign up</a><a class="cta-join" href="#download">Download the app · ऐप लें</a></span></div>
-    <p class="lede">A freight app for Indian road transport, built around one promise: every load on Khep is already paid for. Shippers fund escrow when they post, truck owners get 90% at loading, and drivers use it in their own language.</p>
-    <p class="note">Clickable prototype. Pick a side, then tap through the app. All names, numbers and vehicles are illustrative examples.</p>
-    <div class="roles" role="group" aria-label="Choose a user">
-      <button id="r-shipper" data-role="shipper">Shipper</button>
-      <button id="r-owner" data-role="owner">Truck owner</button>
-      <button id="r-driver" data-role="driver">Driver</button>
-    </div>
-  </div>
-</header>
+<div class="page">
+  <div class="fringe" aria-hidden="true"></div>
+  <header class="wrap bar">
+    <a class="logo" href="./" aria-label="Khep home"><img src="icons/icon-192.png" alt="" width="40" height="40"><b>Khep</b></a>
+    <a class="get" href="#get">Get the app</a>
+  </header>
 
-<section class="dl-sec" id="download" aria-labelledby="dl-title">
-  <div class="dl-fringe" aria-hidden="true"></div>
-  <div class="wrap dl-grid">
-    <div class="dl-copy">
-      <p class="dl-eyebrow">Free app for Android, iPhone and computer</p>
-      <h2 id="dl-title">Khep ऐप डाउनलोड करें</h2>
-      <p>Drivers get live loads from where to where. Companies see which truck to book. Contractors and farmers find the nearest driver or transporter on a map. Earnings, spend and expenses are tracked for you.</p>
-      <div class="dl-actions">
-        <a class="dl-btn" id="dl-apk" href="download/Khep.apk" download="Khep.apk" type="application/vnd.android.package-archive">
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12M6 10l6 6 6-6M4 20h16"/></svg>
-          <span id="dl-apk-label">Download the app</span></a>
-        <button class="dl-btn" id="dl-install" type="button" hidden>Install on this computer</button>
-        <a class="dl-btn" id="dl-open" href="app.html" hidden>Open the Khep app</a>
-        <a class="dl-btn ghost" id="dl-web" href="app.html">Use it in the browser</a>
-      </div>
-      <p class="dl-small" id="dl-apk-note">Khep for Android · version 1.0.0 · Android 7 or newer · 1.8 MB</p>
-      <p class="dl-status" id="dl-status" role="status" hidden></p>
-      <div class="dl-help" id="dl-android">
-        <b>Installing on Android · इंस्टॉल कैसे करें</b>
-        <ol>
-          <li>Tap <b>Download the app</b>. The file Khep.apk saves to your phone.</li>
-          <li>Open it from the download message, or from your phone's <b>Downloads</b> folder.</li>
-          <li>If Android asks, allow your browser to <b>install unknown apps</b>, then go back.</li>
-          <li>Tap <b>Install</b>, then <b>Open</b>. Khep is now on your home screen.</li>
-        </ol>
-        <p class="dl-small" style="margin-top:6px">Google Play Protect may show a warning because Khep isn't on the Play Store yet. Tap <b>More details</b>, then <b>Install anyway</b>.</p>
-      </div>
-      <div class="dl-help" id="dl-ios" hidden>
-        <b>On iPhone, in Safari:</b>
-        <ol><li>Tap the Share button at the bottom of the screen.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. Khep appears on your home screen.</li></ol>
-      </div>
-      <div class="dl-help" id="dl-other" hidden>
-        <b>On a computer?</b> Scan the QR code with your Android phone and tap <b>Download the app</b> there. To use Khep on this computer, tap <b>Use it in the browser</b>.
-      </div>
-      <p class="dl-small">Play Store and App Store listings are coming next.</p>
-    </div>
-    <div class="dl-side">
-      <img src="icons/icon-512.png" alt="" width="132" height="132" class="dl-icon">
-      <div class="dl-qr" id="dl-qr-box"><div id="dl-qr" aria-label="QR code to open Khep on your phone"></div><span>Scan with your phone camera to get Khep on your phone</span></div>
-    </div>
-  </div>
-</section>
-
-<main class="wrap stage">
-  <div class="phone"><div class="screen" id="screen"></div></div>
-  <section class="why" id="why" aria-live="polite"></section>
-</main>
-
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
-  <symbol id="tg-flower" viewBox="-50 -50 100 100"><g stroke="#10122b" stroke-width="3">
-    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(45)"/>
-    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(135)"/>
-    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(225)"/>
-    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(315)"/>
-    <circle r="14" fill="#ffd400"/><circle r="5.5" fill="#d7261e"/></g></symbol>
-  <clipPath id="tg-eye-l"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z"/></clipPath>
-  <clipPath id="tg-eye-r"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z"/></clipPath>
-</defs></svg>
-
-<section class="tg-sec" id="signup" aria-labelledby="tg-title">
-  <div class="wrap">
-    <div class="tg-head">
-      <p class="tg-eyebrow">Early access · Punjab and Delhi NCR to Mumbai</p>
-      <h2 id="tg-title">Khep से जुड़िए</h2>
-      <p>Sign up as a shipper, truck owner or driver. It takes a minute, and we'll call you when Khep opens on your route.</p>
-    </div>
-
-    <div class="tailgate" id="tailgate">
-      <div class="jhalar" aria-hidden="true"></div>
-      <div class="tg-grid">
-        <div class="tg-art" aria-hidden="true">
-          <div class="eyes">
-            <svg viewBox="0 -12 120 76"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="#fff8e6"/><g clip-path="url(#tg-eye-l)"><g class="pupil"><circle cx="60" cy="30" r="16" fill="#1f9e46" stroke="#10122b" stroke-width="2"/><circle cx="60" cy="30" r="8" fill="#10122b"/><circle cx="55" cy="25" r="3" fill="#fff"/></g></g><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="none" stroke="#10122b" stroke-width="4"/><path d="M22 17 15 6M41 10 38-1M60 8V-4M79 10l3-11M98 17l7-11" stroke="#ffd400" stroke-width="4" stroke-linecap="round"/></svg>
-            <svg viewBox="0 -12 120 76"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="#fff8e6"/><g clip-path="url(#tg-eye-r)"><g class="pupil"><circle cx="60" cy="30" r="16" fill="#1f9e46" stroke="#10122b" stroke-width="2"/><circle cx="60" cy="30" r="8" fill="#10122b"/><circle cx="55" cy="25" r="3" fill="#fff"/></g></g><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="none" stroke="#10122b" stroke-width="4"/><path d="M22 17 15 6M41 10 38-1M60 8V-4M79 10l3-11M98 17l7-11" stroke="#ffd400" stroke-width="4" stroke-linecap="round"/></svg>
-          </div>
-          <div class="tg-painted">Khep</div>
-          <div class="flowers">
-            <svg style="color:#ff9f1c"><use href="#tg-flower"/></svg>
-            <svg class="big" style="color:#e5197e"><use href="#tg-flower"/></svg>
-            <svg style="color:#1f9e46"><use href="#tg-flower"/></svg>
-          </div>
-          <div class="slogan">HORN <span class="ok">OK</span> PLEASE</div>
-          <div class="slogan sm">USE DIPPER AT NIGHT</div>
-          <div class="slogan hi">बुरी नज़र वाले तेरा मुँह काला</div>
+  <main>
+    <section class="wrap hero" aria-labelledby="hero-title">
+      <div class="pitch">
+        <p class="eyebrow">India's truck network · भारत का ट्रक नेटवर्क</p>
+        <h1 id="hero-title">Every truck. Every load. One app.<span>हर ट्रक, हर लोड, एक ऐप</span></h1>
+        <p class="lede">Khep brings drivers, truck owners, companies, contractors and farmers onto one network. Trucks find loads, loads find trucks, and everyone gets paid on time.</p>
+      <aside class="get-card" id="get" aria-labelledby="get-title">
+        <div class="qr-col" id="qr-col">
+        <div class="qr" id="qr-box"><div id="qr" role="img" aria-label="QR code to download the Khep app"></div><img class="badge" src="icons/icon-192.png" alt=""></div>
+        <p class="scan" id="scan">Scan with your phone camera</p>
         </div>
-
-        <form class="tg-form" id="tg-form" novalidate>
-          <div class="road" aria-hidden="true">
-            <svg class="mini" viewBox="0 0 56 30"><rect x="1" y="3" width="34" height="19" rx="2" fill="#e5197e" stroke="#10122b" stroke-width="2"/><path d="M35 9h10l8 7v6H35z" fill="#ffd400" stroke="#10122b" stroke-width="2"/><rect x="40" y="11" width="6" height="5" fill="#9fd3ff" stroke="#10122b" stroke-width="1.5"/><path d="M5 9h26M5 15h26" stroke="#ffd400" stroke-width="2" stroke-dasharray="3 3"/><circle cx="11" cy="24" r="4.5" fill="#10122b"/><circle cx="44" cy="24" r="4.5" fill="#10122b"/></svg>
-          </div>
-          <ol class="tg-steps"><li data-s="1">Who you are</li><li data-s="2">Details</li><li data-s="3">Bilty</li></ol>
-
-          <div class="tg-step" data-step="1">
-            <h3>Aap kaun hain? <span lang="hi">आप कौन हैं?</span></h3>
-            <div class="medals" role="radiogroup" aria-label="I am joining as">
-              <button type="button" class="medal" id="m-driver" role="radio" aria-checked="false" data-join="driver" style="--m:#b85500">
-                <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M3.5 10.5h6M14.5 10.5h6M12 14.5V21"/></svg></span>
-                <b>Driver</b><span lang="hi">लोड चाहिए</span><small>I drive or own trucks and want loads</small></button>
-              <button type="button" class="medal" id="m-company" role="radio" aria-checked="false" data-join="company" style="--m:#e5197e">
-                <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21V9l6-4v4l6-4v4l6-4v16zM7 17h2M11 17h2M15 17h2"/></svg></span>
-                <b>Company</b><span lang="hi">माल भेजना है</span><small>We ship goods and book trucks often</small></button>
-              <button type="button" class="medal" id="m-contractor" role="radio" aria-checked="false" data-join="contractor" style="--m:#1f9e46">
-                <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 15a8 8 0 0 1 16 0M2 15h20v3H2zM12 7V4M9 8l-1-2.5M15 8l1-2.5"/></svg></span>
-                <b>Contractor</b><span lang="hi">कभी-कभी ट्रक चाहिए</span><small>Contractor, farmer or anyone who needs a truck now and then</small></button>
-            </div>
-            <p class="tg-err" id="err1" role="alert"></p>
-            <div class="tg-actions"><button type="button" class="tg-go" data-next="2">Aage chalo · आगे चलो →</button></div>
-          </div>
-
-          <div class="tg-step" data-step="2" hidden>
-            <h3>Thoda apne baare mein <span lang="hi">थोड़ा अपने बारे में</span></h3>
-            <div class="tf-grid">
-              <div class="tf"><label for="su-name">Your name</label><input id="su-name" autocomplete="name" placeholder="Gurpreet Singh"></div>
-              <div class="tf"><label for="su-mobile">Mobile</label><div class="pre"><span>+91</span><input id="su-mobile" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210"></div></div>
-              <div class="tf"><label for="su-city">City you work from</label><input id="su-city" list="su-cities" placeholder="Ludhiana"></div>
-              <div class="tf"><label for="su-lang">App language</label><select id="su-lang"><option>Hindi · हिंदी</option><option>Punjabi · ਪੰਜਾਬੀ</option><option>English</option><option>Marathi · मराठी</option><option>Gujarati · ગુજરાતી</option><option>Tamil · தமிழ்</option><option>Telugu · తెలుగు</option><option>Bengali · বাংলা</option><option>Kannada · ಕನ್ನಡ</option></select></div>
-
-              <div class="tf" data-for="company" hidden><label for="su-company">Company</label><input id="su-company" autocomplete="organization" placeholder="Satluj Yarns Pvt Ltd"></div>
-              <div class="tf" data-for="company" hidden><label for="su-gstin">GSTIN <i>(optional)</i></label><input id="su-gstin" maxlength="15" placeholder="03ABCDE1234F1Z5" style="text-transform:uppercase"></div>
-              <div class="tf full" data-for="company" hidden><label for="su-volume">Trucks you book a month</label><select id="su-volume"><option>1–10</option><option>11–50</option><option>51–200</option><option>More than 200</option></select></div>
-
-              <div class="tf" data-for="driver" hidden><label for="su-fleet">Your trucks</label><select id="su-fleet"><option>I drive someone else's truck</option><option>1, I own it</option><option>2–5</option><option>6–20</option><option>More than 20</option></select></div>
-              <div class="tf" data-for="driver" hidden><label for="su-ttype">Truck type</label><select id="su-ttype"><option>32 ft container</option><option>20–24 ft container</option><option>Open body, 10–14 wheel</option><option>Tractor-trolley</option><option>Trailer</option><option>Tanker</option><option>Small, under 7.5 t</option></select></div>
-              <div class="tf full" data-for="driver" hidden><label for="su-plate">Truck number <i>(optional)</i></label><div class="plate"><span class="ind">IND</span><input id="su-plate" autocomplete="off" spellcheck="false" placeholder="PB 10 HX 4417"></div></div>
-              <div class="tf" data-for="driver" hidden><label for="su-years">Driving trucks for</label><select id="su-years"><option>Less than 2 years</option><option>2–5 years</option><option>5–10 years</option><option>More than 10 years</option></select></div>
-              <div class="tf" data-for="driver" hidden><label for="su-licence">Licence</label><select id="su-licence"><option>Heavy goods vehicle</option><option>Medium goods vehicle</option><option>Light motor vehicle</option></select></div>
-
-              <div class="tf full" data-for="contractor" hidden><label for="su-work">What you do</label><select id="su-work"><option>Construction contractor</option><option>Farmer</option><option>Trader or small business</option><option>House or office shifting</option><option>Events and tents</option><option>Something else</option></select></div>
-
-              <div class="tf" data-for="driver company contractor" hidden><label for="su-deal" id="su-deal-l">Goods you deal in</label><select id="su-deal"><option value="agri">Crops and agriculture</option><option value="construction">Construction material</option><option value="fmcg">FMCG and retail</option><option value="textile">Textiles and yarn</option><option value="steel">Steel and metal</option><option value="chemicals">Chemicals</option><option value="other">Something else</option></select></div>
-              <div class="tf" data-for="driver company contractor" hidden><label for="su-side" id="su-side-l">You are a</label><select id="su-side"><option value="seller">Seller</option><option value="buyer">Buyer</option><option value="both">Both buyer and seller</option></select></div>
-              <fieldset class="tf full crops" id="su-crops" hidden><legend>Which crops? <i>(pick any)</i></legend>
-                <div class="crop-chips">
-                  <label><input type="checkbox" value="Wheat"><span>Wheat · गेहूँ</span></label>
-                  <label><input type="checkbox" value="Paddy / rice"><span>Paddy · धान</span></label>
-                  <label><input type="checkbox" value="Cotton"><span>Cotton · कपास</span></label>
-                  <label><input type="checkbox" value="Sugarcane"><span>Sugarcane · गन्ना</span></label>
-                  <label><input type="checkbox" value="Potato"><span>Potato · आलू</span></label>
-                  <label><input type="checkbox" value="Onion"><span>Onion · प्याज़</span></label>
-                  <label><input type="checkbox" value="Maize"><span>Maize · मक्का</span></label>
-                  <label><input type="checkbox" value="Mustard"><span>Mustard · सरसों</span></label>
-                  <label><input type="checkbox" value="Fruits and vegetables"><span>Fruits and veg · फल-सब्ज़ी</span></label>
-                </div>
-              </fieldset>
-
-              <label class="check tf full" for="su-wa"><input type="checkbox" id="su-wa" checked><span>Send me updates on WhatsApp <span lang="hi">(WhatsApp पर खबर भेजें)</span></span></label>
-            </div>
-            <datalist id="su-cities"><option>Ludhiana</option><option>Delhi</option><option>Gurugram</option><option>Faridabad</option><option>Panipat</option><option>Mandi Gobindgarh</option><option>Jaipur</option><option>Ahmedabad</option><option>Surat</option><option>Vapi</option><option>Bhiwandi</option><option>Mumbai</option><option>Pune</option><option>Nashik</option><option>Indore</option><option>Kanpur</option><option>Kolkata</option><option>Chennai</option><option>Bengaluru</option><option>Hyderabad</option></datalist>
-            <p class="tg-err" id="err2" role="alert"></p>
-            <div class="tg-actions"><button type="button" class="tg-back" data-back="1">← Back</button><button type="button" class="tg-go" data-next="3">Bilty banao · बिल्टी बनाओ →</button></div>
-          </div>
-
-          <div class="tg-step" data-step="3" hidden>
-            <h3>Check your bilty <span lang="hi">अपनी बिल्टी देख लें</span></h3>
-            <div class="bilty" id="bilty"></div>
-            <p class="tg-err" id="err3" role="alert"></p>
-            <div class="tg-actions"><button type="button" class="tg-back" data-back="2">← Change something</button><button type="submit" class="tg-go" id="su-submit">Sign me up · चलो!</button></div>
-          </div>
-
-          <div class="tg-done" hidden>
-            <h3>Shabaash, <span id="done-name"></span>!</h3>
-            <div class="pass-row"><div class="pass"><span class="ind">IND</span><b id="pass-no">KH 26 T 0000</b></div><span class="stamp">पक्का</span></div>
-            <p id="done-msg"></p>
-            <p class="demo-note" id="demo-note" hidden>Demo mode: this sign-up is saved only in your browser and isn't sent anywhere yet.</p>
-            <div class="tg-actions"><button type="button" class="tg-back" id="su-again">Sign up someone else</button><a class="tg-go" href="#download" id="done-dl" style="text-decoration:none">Download the app →</a></div>
-            <a class="tg-back" href="app.html" style="justify-self:start">Or open Khep in this browser</a>
-          </div>
-        </form>
+        <div class="dl-col">
+        <h2 id="get-title">Download Khep</h2>
+        <a class="btn" id="apk" href="download/Khep.apk" download="Khep.apk" type="application/vnd.android.package-archive"><svg viewBox="0 0 24 24"><path d="M12 3v12M6 10l6 6 6-6M4 20h16"/></svg><span id="apk-label">Download for Android</span></a>
+        <p class="meta" id="apk-meta">Version 1.0.0 · Android 7 or newer · 1.8 MB · Free</p>
+        <p class="status" id="status" role="status" hidden></p>
+        <details class="how" id="how-android">
+          <summary>How to install on Android</summary>
+          <ol>
+            <li>Tap <b>Download for Android</b>.</li>
+            <li>Open Khep.apk from the download message or your <b>Downloads</b> folder.</li>
+            <li>If asked, allow your browser to <b>install unknown apps</b>.</li>
+            <li>Tap <b>Install</b>, then <b>Open</b>.</li>
+          </ol>
+          <p>Play Protect may warn you because Khep isn't on the Play Store yet. Tap <b>More details</b>, then <b>Install anyway</b>.</p>
+        </details>
+        <details class="how" id="how-ios" hidden>
+          <summary>Add Khep on iPhone</summary>
+          <ol>
+            <li>Tap <b>Open Khep</b> below, in Safari.</li>
+            <li>Tap the <b>Share</b> button.</li>
+            <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+          </ol>
+        </details>
+        <a class="btn ghost" id="ios-open" href="app.html" hidden>Open Khep</a>
+        <p class="meta">Play Store and App Store listings coming soon.</p>
+        </div>
+      </aside>
+        <div class="live-row"><span class="dot">Live on the network</span><span>Illustration of how Khep moves</span></div>
+        <div class="feed" id="feed" aria-live="polite"></div>
       </div>
-      <div class="tg-bumper">
-        <button type="button" class="horn" id="tg-horn">Horn bajao · हॉर्न बजाओ</button>
-        <span class="tg-note">We use your number only to contact you about Khep.</span>
+    </section>
+
+    <section class="wrap eco" aria-labelledby="eco-title">
+      <div class="sec-h">
+        <h2 id="eco-title">One network for everyone who moves goods</h2>
+        <p>Sign up in the app as who you are. Khep shows you only what you need.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="plan">
-  <div class="wrap">
-    <div style="display:grid;gap:10px">
-      <h2>The solution on one page</h2>
-      <p style="max-width:68ch">Indian trucking is mostly small owners with a few trucks each, connected to shippers through layers of commission agents. Money moves late, prices are opaque, return trips run empty and drivers carry the cost of long waits. Khep fixes the money first, because guaranteed payment is what pulls small owners off the broker network. Everything else builds on the trip data that payment flow creates.</p>
-    </div>
-
-    <ul class="pillars">
-      <li><h3>Escrow-backed loads</h3><p>Shipper funds the freight before posting. 90% goes to the owner by UPI at loading, the rest on e-POD. Deductions need photo proof within 24 hours.</p></li>
-      <li><h3>Fair lane rates</h3><p>A price band per lane and truck type from completed trips, shown to both sides. Ends the phone-around for quotes.</p></li>
-      <li><h3>Return-load matching</h3><p>Back-haul offered for the truck's arrival time and city while the forward trip is still running.</p></li>
-      <li><h3>Paperwork on the trip</h3><p>E-way bill from the invoice, digital LR/bilty, e-POD with consignee OTP, vehicle and licence checks, expiry alerts.</p></li>
-      <li><h3>Driver-first app</h3><p>Hindi and regional languages, voice, one big button per step, auto-billed detention, rest stops with safe parking.</p></li>
-      <li><h3>Credit from trip history</h3><p>Fuel and toll credit lines and invoice discounting, underwritten on the owner's Khep payment record.</p></li>
-    </ul>
-
-    <div class="cols">
-      <div style="display:grid;gap:12px;min-width:0">
-        <h3>How it makes money</h3>
-        <div class="tablewrap"><table>
-          <thead><tr><th>Stream</th><th>Who pays</th><th>Pricing</th></tr></thead>
-          <tbody>
-            <tr><td>Transaction fee</td><td>Truck owner</td><td>2% flat per trip, against 5–10% agent commission</td></tr>
-            <tr><td>Shipper workspace</td><td>Shippers with 50+ trips a month</td><td>Monthly plan: multi-site, approvals, GST and freight reports</td></tr>
-            <tr><td>Fuel and toll credit</td><td>Truck owner</td><td>Interest spread with a partner lender, cashback from fuel partners</td></tr>
-            <tr><td>Invoice discounting</td><td>Owners with large shippers outside escrow</td><td>Discount fee on early payout</td></tr>
-          </tbody>
-        </table></div>
+      <div class="roles">
+        <article class="role">
+          <span class="ic" style="background:#b85500"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M3.5 10.5h6M14.5 10.5h6M12 14.5V21"/></svg></span>
+          <h3>Drivers and truck owners</h3><span class="hi" style="color:#ffb35c">लोड चाहिए</span>
+          <p>Loads from where to where, nearest pickup first.</p>
+          <ul><li>90% paid at loading</li><li>Return loads so you don't drive home empty</li><li>Earnings and expenses for every trip</li></ul>
+        </article>
+        <article class="role">
+          <span class="ic" style="background:#e5197e"><svg viewBox="0 0 24 24"><path d="M3 21V9l6-4v4l6-4v4l6-4v16zM7 17h2M11 17h2M15 17h2"/></svg></span>
+          <h3>Companies</h3><span class="hi" style="color:#ff7dbd">माल भेजना है</span>
+          <p>Verified trucks near you, and a fair price for every route.</p>
+          <ul><li>Live tracking and digital papers</li><li>Spend by route and truck type</li><li>Pay into escrow, release on delivery</li></ul>
+        </article>
+        <article class="role">
+          <span class="ic" style="background:#1f9e46"><svg viewBox="0 0 24 24"><path d="M4 15a8 8 0 0 1 16 0M2 15h20v3H2zM12 7V4M9 8l-1-2.5M15 8l1-2.5"/></svg></span>
+          <h3>Contractors</h3><span class="hi" style="color:#6fe09a">कभी-कभी ट्रक चाहिए</span>
+          <p>The nearest driver or transporter, on a map, when you need just one truck.</p>
+          <ul><li>Tractor-trolleys and small trucks too</li><li>Share a truck with people nearby</li></ul>
+        </article>
+        <article class="role">
+          <span class="ic" style="background:#0b3d91"><svg viewBox="0 0 24 24"><path d="M12 21V9M12 9c0-3 2-5 5-5 0 3-2 5-5 5zM12 13c0-3-2-5-5-5 0 3 2 5 5 5zM12 17c0-2.5 1.8-4 4-4 0 2.5-1.8 4-4 4z"/></svg></span>
+          <h3>Farmers and traders</h3><span class="hi" style="color:#ffd400">फ़सल बेचनी है</span>
+          <p>See which mandi pays more after the truck fare, and reach buyers in other cities.</p>
+          <ul><li>Crop calendar for harvest weeks</li><li>Buyers and sellers for your goods</li></ul>
+        </article>
       </div>
-      <div style="display:grid;gap:12px;min-width:0">
-        <h3>Rollout</h3>
-        <ol class="phases">
-          <li><div><b>One corridor.</b> <span class="sub">Punjab and Delhi NCR to Bhiwandi/Mumbai. 50 mid-size shippers, 500 trucks, full-truckload only. Prove escrow and the 90% advance.</span></div></li>
-          <li><div><b>Return loads and credit.</b> <span class="sub">Add back-haul matching once both ends of the corridor have shippers. Launch fuel credit using six months of payment history.</span></div></li>
-          <li><div><b>Five corridors.</b> <span class="sub">Add the busiest lanes out of Gujarat, Chennai and Kolkata. Add Tamil, Telugu, Bengali and Marathi to the driver app.</span></div></li>
-        </ol>
+    </section>
+
+    <section class="wrap eco" aria-labelledby="how-title" style="padding-top:0">
+      <div class="sec-h"><h2 id="how-title">Start in three steps</h2></div>
+      <ol class="steps">
+        <li><div><b>Scan or tap Download</b><span>Scan the QR code with your phone, or tap Download on your Android phone.</span></div></li>
+        <li><div><b>Install Khep</b><span>It's 1.8 MB and installs in a few seconds.</span></div></li>
+        <li><div><b>Sign up in the app</b><span>Choose driver, company or contractor. Your loads, trucks and map are ready.</span></div></li>
+      </ol>
+    </section>
+
+    <section class="wrap close" aria-label="Download">
+      <div class="close-card"><div class="fringe" aria-hidden="true"></div>
+        <div class="close-in"><h2>HORN OK PLEASE. Get Khep.</h2><a class="btn" href="#get">Download the app</a></div>
       </div>
-    </div>
+    </section>
+  </main>
 
-    <div style="display:grid;gap:12px">
-      <h3>What has to be true, and how to test it</h3>
-      <ul class="risks">
-        <li><b>Shippers will pre-fund.</b> Most pay on 30–90 day credit today. Test: offer a lower rate (the owner's saved commission passed back) in exchange for escrow, and count how many of 50 shippers accept.</li>
-        <li><b>Owners leave their agents.</b> Agents also give credit and fill gaps. Test: track repeat bookings per owner after the first paid trip.</li>
-        <li><b>Drivers will use it.</b> Test the five-step trip screen with 20 drivers at a transport nagar, by voice and by tap, before writing more features.</li>
-        <li><b>The rate band is trusted.</b> It needs enough trips per lane. Seed it from shipper historical data until volume builds.</li>
-      </ul>
-      <p class="note">This plan was drafted from general knowledge of the Indian trucking market, not from the five research threads, which were not available in this session. Figures such as agent commission, payment terms and empty-running share are commonly cited industry estimates and should be checked against that research.</p>
-    </div>
-  </div>
-</section>
+  <footer class="wrap">
+    <span class="horn">बुरी नज़र वाले तेरा मुँह काला</span>
+    <span>The map and activity on this page are an illustration, not live data. <a href="app.html">Use Khep in your browser</a></span>
+  </footer>
+</div>
 
-<script>
-(function(){
-const inr = n => "₹" + n.toLocaleString("en-IN");
-const ICON = {
-  post:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
-  truck:'<svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/></svg>',
-  pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg>',
-  list:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>',
-  back:'<svg viewBox="0 0 24 24"><path d="M4 12h14M10 6l-6 6 6 6"/></svg>',
-  wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2"/></svg>',
-  road:'<svg viewBox="0 0 24 24"><path d="M6 21 9 3M18 21 15 3M12 6v2M12 11v2M12 16v2"/></svg>',
-  rupee:'<svg viewBox="0 0 24 24"><path d="M7 4h10M7 8h10M7 4c6 0 6 8 0 8l7 8"/></svg>',
-  bed:'<svg viewBox="0 0 24 24"><path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.5"/></svg>'
-};
-const S = {
-  role:"shipper",
-  tab:{shipper:"post", owner:"loads", driver:"trip"},
-  posted:false, booked:null, price:102000,
-  returnBooked:null, lang:"hi", step:1, otp:false
-};
-try{ const r = localStorage.getItem("khep-role"); if(r) S.role = r; }catch(e){}
-
-const TABS = {
-  shipper:[["post","Post load","post"],["trucks","Trucks","truck"],["track","Track","pin"]],
-  owner:[["loads","Loads","list"],["return","Return trip","back"],["money","Money","wallet"]],
-  driver:[["trip","trip","road"],["exp","exp","rupee"],["stops","stops","bed"]]
-};
-const T = {
-  en:{trip:"Trip",exp:"Expenses",stops:"Rest stops",
-    steps:["Reached loading point","Goods loaded","Departed","Reached delivery","Delivery OTP"],
-    hints:["Tap when you reach the factory gate.","Take 3 photos of the load and the seal.","Start the trip. Tracking is on.","Tap at the delivery gate. The waiting clock starts.","Ask the receiver for the 4-digit code."],
-    done:"Done", wait:"Waiting at loading", waitTxt:"3 h 10 m waited. 4 hours are free, then ₹250 per hour is added to the bill automatically.",
-    speak:"Speak instead of typing", otpBtn:"Confirm delivery", complete:"Trip complete. Balance payment released to your owner.",
-    diesel:"Diesel",toll:"Toll",food:"Food",add:"Add expense with photo",left:"Trip allowance left",card:"Fuel card",fast:"FASTag, logged automatically",cash:"Cash, photo receipt",
-    park:"truck parking",shower:"shower",h24:"open 24 h",safe:"guarded",km:"km ahead"},
-  hi:{trip:"सफ़र",exp:"खर्चा",stops:"रुकने की जगह",
-    steps:["लोडिंग पॉइंट पहुँचे","माल लोड हुआ","रवाना हुए","डिलीवरी पर पहुँचे","डिलीवरी OTP"],
-    hints:["फ़ैक्टरी गेट पर पहुँचकर दबाएँ।","माल और सील की 3 फ़ोटो लें।","सफ़र शुरू करें। लोकेशन चालू है।","डिलीवरी गेट पर दबाएँ। इंतज़ार की घड़ी शुरू होगी।","माल लेने वाले से 4 अंकों का कोड पूछें।"],
-    done:"हो गया", wait:"लोडिंग पर इंतज़ार", waitTxt:"3 घं 10 मि हो गए। 4 घंटे मुफ़्त, उसके बाद ₹250 प्रति घंटा अपने-आप बिल में जुड़ेगा।",
-    speak:"लिखने की जगह बोलें", otpBtn:"डिलीवरी पक्की करें", complete:"सफ़र पूरा। बाकी पेमेंट आपके मालिक को भेज दिया गया।",
-    diesel:"डीज़ल",toll:"टोल",food:"खाना",add:"फ़ोटो के साथ खर्चा जोड़ें",left:"सफ़र भत्ता बाकी",card:"फ़्यूल कार्ड",fast:"FASTag, अपने-आप दर्ज",cash:"नकद, रसीद की फ़ोटो",
-    park:"ट्रक पार्किंग",shower:"नहाने की सुविधा",h24:"24 घंटे खुला",safe:"चौकीदार",km:"कि.मी. आगे"}
-};
-
-const TRUCKS = [
-  {no:"PB 10 HX 4417", co:"Gurpreet Roadlines, Ludhiana", fleet:"6 trucks", rate:4.7, ontime:96, trips:212, quote:102000},
-  {no:"HR 55 AD 7781", co:"Shree Balaji Transport, Panipat", fleet:"2 trucks", rate:4.5, ontime:91, trips:88, quote:99500},
-  {no:"PB 65 BC 1203", co:"Sandhu Carriers, Mohali", fleet:"1 truck, owner-driver", rate:4.8, ontime:94, trips:41, quote:104000}
-];
-const LOADS = [
-  {lane:"Ludhiana → Jaipur", what:"Bicycle parts, 7 t", truck:"22 ft closed", price:38500, med:37000, when:"Today 18:00", who:"Hero-line Cycles (example)", pays:"Paid in 0 days"},
-  {lane:"Ludhiana → Ahmedabad", what:"Hosiery cartons, 8 t", truck:"22 ft closed", price:61000, med:62500, when:"Tomorrow 09:00", who:"Satluj Knits", pays:"Paid in 0 days"},
-  {lane:"Mandi Gobindgarh → Kanpur", what:"Steel pipes, 9 t", truck:"22 ft open", price:44000, med:43000, when:"Tomorrow 14:00", who:"Gobind Tubes", pays:"Paid in 0 days"}
-];
-const RETURNS = [
-  {lane:"Bhiwandi → Ludhiana", what:"FMCG cartons, 14 t", price:74000, gap:"Loads 4 h after you arrive", det:"0 km detour"},
-  {lane:"Vapi → Ludhiana", what:"Chemical drums, 16 t", price:78500, gap:"Next morning 08:00", det:"160 km back south"},
-  {lane:"Pune → Panipat", what:"Auto parts, 12 t", price:81000, gap:"Next day 12:00", det:"150 km detour"}
-];
-
-const WHY = {
-  "shipper:post":{t:"Post a load that is already paid for",
-    p:"Rates are opaque. A logistics manager calls five or more agents at the transport nagar, gets quotes that differ by 15%, and still can't tell which is fair.",
-    h:"Khep shows a rate band for this exact lane and truck type, from trips completed on the platform. The shipper funds escrow when posting, so every truck owner sees a load with guaranteed payment.",
-    m:"Time to confirm a truck: from half a day of calls to under 30 minutes."},
-  "shipper:trucks":{t:"Pick a truck you can trust",
-    p:"Shippers worry about fake trucks, lapsed insurance and drivers with no track record. Agents hide who the real owner is.",
-    h:"Every truck is checked against the government vehicle registry (VAHAN) and every driver against the licence registry (SARATHI). On-time rate and claims come from real Khep trips, and the shipper sees the actual owner.",
-    m:"Share of trips with a damage or shortage claim."},
-  "shipper:track":{t:"See the trip and its papers in one place",
-    p:"After the truck leaves, shippers chase location and documents on calls and WhatsApp. E-way bills expire mid-route and trucks get stopped.",
-    h:"Tracking runs from the driver's phone with consent, or SIM tracking as a fallback. The e-way bill is generated from the invoice with an extension reminder before it lapses. LR, invoice and e-POD sit on the trip.",
-    m:"Calls per trip to check status, and trips stopped for paperwork."},
-  "owner:loads":{t:"Only loads that pay on time",
-    p:"Most trucks belong to small owners with a handful of vehicles. They rely on agents who take 5–10% and then wait 30–90 days for the balance, often with unexplained deductions.",
-    h:"Every load on the board is escrow-backed. The owner gets 90% by UPI the moment loading is confirmed and the rest on e-POD. Khep takes a flat 2%. The lane median beside each price shows whether it is fair.",
-    m:"Days from delivery to full payment. Target: same day."},
-  "owner:return":{t:"Don't drive home empty",
-    p:"A large share of return trips run empty or wait days at the destination for a load, which wipes out the margin from the forward trip.",
-    h:"While the truck is still on the forward trip, Khep offers back-haul loads matched to its arrival city and time, with the detour shown in kilometres. The owner books before the truck arrives.",
-    m:"Empty kilometres per truck per month, and hours idle at destination."},
-  "owner:money":{t:"Know where every rupee is",
-    p:"Owners run on informal credit for diesel and tolls at high interest. Paperwork lapses into fines, and disputed deductions eat into margins.",
-    h:"One ledger per trip. Deductions must be raised within 24 hours with photos, or the balance releases. A fuel and toll credit line is sized from the owner's Khep payment record. Expiry alerts cover insurance, permit, fitness and PUC.",
-    m:"Cost of working capital, and fines paid for expired documents."},
-  "driver:trip":{t:"One big button per step, in the driver's language",
-    p:"Many drivers aren't comfortable with English or text-heavy apps. They wait hours unpaid at loading and unloading, and that waiting time rarely gets billed.",
-    h:"The driver app is Hindi-first with voice input and five steps. When the truck enters the loading or delivery geofence, a detention clock starts and charges past the free hours go on the bill automatically. The consignee's OTP closes the trip and releases payment.",
-    m:"Share of trips closed with e-POD, and detention billed versus waited."},
-  "driver:exp":{t:"No cash fights over expenses",
-    p:"Owners hand drivers cash advances, and every trip ends in an argument about what was spent on diesel, tolls and food.",
-    h:"Diesel goes on the fuel card and tolls are logged from FASTag automatically. Cash spends are added with a receipt photo. Driver and owner see the same running balance.",
-    m:"Trips settled without a dispute."},
-  "driver:stops":{t:"Safe places to stop",
-    p:"India is short of truck drivers, and long hours, unsafe parking and poor roadside facilities drive many out of the job. Parked trucks are also a target for cargo theft.",
-    h:"A list of rest stops along the route with guarded parking, showers and food, rated by drivers. Later, Khep partners with highway dhabas and fuel stations for driver discounts.",
-    m:"Driver retention per fleet, and theft incidents at stops."}
-};
-
-const screen = document.getElementById("screen");
-const why = document.getElementById("why");
-
-function appbar(){
-  if(S.role==="shipper") return `<div class="appbar"><b>Khep</b><small>Satluj Yarns Pvt Ltd<br>Shipper</small></div>`;
-  if(S.role==="owner") return `<div class="appbar"><b>Khep</b><small>Gurpreet Roadlines<br>6 trucks</small></div>`;
-  return `<div class="appbar"><b>Khep</b><div class="lang" role="group" aria-label="Language">
-    <button data-lang="hi" aria-pressed="${S.lang==="hi"}">हिंदी</button><button data-lang="en" aria-pressed="${S.lang==="en"}">English</button></div></div>`;
-}
-function tabs(){
-  const L = T[S.lang];
-  return `<nav class="tabs" role="tablist">${TABS[S.role].map(([id,label,ic])=>{
-    const name = S.role==="driver" ? L[label] : label;
-    return `<button role="tab" data-tab="${id}" aria-selected="${S.tab[S.role]===id}">${ICON[ic]}<span>${name}</span></button>`;
-  }).join("")}</nav>`;
-}
-function routeSvg(progress){
-  const x = 20 + progress*300;
-  return `<svg viewBox="0 0 340 64" role="img" aria-label="Route Ludhiana to Bhiwandi">
-    <line x1="20" y1="28" x2="320" y2="28" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
-    <line x1="20" y1="28" x2="${x}" y2="28" stroke="var(--ok)" stroke-width="6" stroke-linecap="round"/>
-    ${[[20,"Ludhiana"],[120,"Jaipur"],[220,"Ahmedabad"],[320,"Bhiwandi"]].map(([cx,n],i)=>`<circle cx="${cx}" cy="28" r="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="${cx}" y="56" text-anchor="${i===0?"start":i===3?"end":"middle"}" font-size="11" fill="var(--muted)" font-family="Mukta,sans-serif">${n}</text>`).join("")}
-    <rect x="${x-11}" y="16" width="22" height="24" rx="5" fill="var(--accent)"/><text x="${x}" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent-ink)" font-family="Mukta,sans-serif">T</text>
-  </svg>`;
-}
-
-const V = {};
-V["shipper:post"] = () => {
-  const lo=96000, hi=108000, pct=Math.max(0,Math.min(100,(S.price-lo)/(hi-lo)*100));
-  return `
-  <div class="card">
-    <div class="two">
-      <div class="field"><label for="f-from">From</label><input id="f-from" value="Ludhiana, PB"></div>
-      <div class="field"><label for="f-to">To</label><input id="f-to" value="Bhiwandi, MH"></div>
-    </div>
-    <div class="two">
-      <div class="field"><label for="f-what">Material</label><input id="f-what" value="Cotton yarn"></div>
-      <div class="field"><label for="f-wt">Weight</label><input id="f-wt" value="18 tonnes"></div>
-    </div>
-    <div class="two">
-      <div class="field"><label for="f-truck">Truck</label><select id="f-truck"><option>32 ft MXL container</option><option>32 ft SXL container</option><option>22 ft closed body</option><option>Open body, 10-wheel</option></select></div>
-      <div class="field"><label for="f-date">Loading</label><input id="f-date" value="26 Nov, 08:00"></div>
-    </div>
-  </div>
-  <div class="card">
-    <div class="row"><b>Fair rate for this lane</b><span class="chip">142 trips, last 30 days</span></div>
-    <div class="band"><i style="left:calc(${pct}% - 2px)"></i></div>
-    <div class="row sub num"><span>${inr(lo)}</span><span>median ${inr(102000)}</span><span>${inr(hi)}</span></div>
-    <div class="field"><label for="f-price">Your price</label><input id="f-price" class="num" type="number" step="500" value="${S.price}"></div>
-    <div class="sub">≈ ${inr(Math.round(S.price/1690))}/km over 1,690 km · tolls by truck owner</div>
-  </div>
-  <button class="btn" data-act="post" ${S.posted?"disabled":""}>${S.posted?"Posted · "+inr(S.price)+" in escrow":"Fund escrow and post load"}</button>
-  <p class="sub" style="margin:0">Money stays in a bank escrow account. 90% goes to the truck owner at loading, 10% on delivery proof.</p>`;
-};
-V["shipper:trucks"] = () => {
-  if(!S.posted) return `<div class="card"><b>No load posted yet</b><span class="sub">Post a load first. Verified trucks on this lane will appear here within minutes.</span><button class="btn small ghost" data-go="post">Post a load</button></div>`;
-  return `<div class="sec">3 verified trucks for Ludhiana → Bhiwandi</div>` + TRUCKS.map((t,i)=>`
-  <div class="card">
-    <div class="row"><span class="mono">${t.no}</span><span class="price num">${inr(t.quote)}</span></div>
-    <div><b>${t.co}</b><div class="sub">${t.fleet} · ★ ${t.rate} · ${t.ontime}% on time · ${t.trips} Khep trips</div></div>
-    <div class="chips"><span class="chip ok">RC verified</span><span class="chip ok">Insurance valid</span><span class="chip ok">Driver licence verified</span></div>
-    ${S.booked===i?`<span class="chip ok" style="justify-self:start">Booked</span>`:`<button class="btn small" data-act="book" data-i="${i}" ${S.booked!==null?"disabled":""}>Book this truck</button>`}
-  </div>`).join("");
-};
-V["shipper:track"] = () => {
-  if(S.booked===null) return `<div class="card"><b>Nothing to track yet</b><span class="sub">Book a truck and its live trip shows here.</span><button class="btn small ghost" data-go="trucks">See trucks</button></div>`;
-  const t = TRUCKS[S.booked];
-  return `
-  <div class="card">
-    <div class="row"><span class="lane">Ludhiana → Bhiwandi</span><span class="chip">On the way</span></div>
-    <div class="sub"><span class="mono">${t.no}</span> · near Jaipur bypass · 1,140 km left</div>
-    <div class="route">${routeSvg(.34)}</div>
-    <div class="row"><span class="sub">Expected arrival</span><b>Thu 28 Nov, 14:00</b></div>
-  </div>
-  <div class="card ledger">
-    <b>Payment</b>
-    <div class="row num"><span>Advance paid to owner at loading</span><b>${inr(Math.round(t.quote*.9))}</b></div>
-    <div class="row num"><span>Held until delivery proof</span><b>${inr(t.quote-Math.round(t.quote*.9))}</b></div>
-  </div>
-  <div class="card ledger">
-    <b>Documents</b>
-    <div class="row"><span>E-way bill <span class="mono">3811 2457 9061</span></span><span class="chip ok">Valid to 03 Dec</span></div>
-    <div class="row"><span>Lorry receipt <span class="mono">KHP-LDH-24117</span></span><span class="chip ok">Signed</span></div>
-    <div class="row"><span>Tax invoice <span class="mono">SY/2026/1182</span></span><span class="chip ok">Attached</span></div>
-    <div class="row"><span>Delivery proof (e-POD)</span><span class="chip warn">At delivery</span></div>
-  </div>
-  <div class="card"><b>Waiting time</b><span class="sub">6 free hours at unloading. After that ₹250 per hour is added to the bill and paid to the owner.</span></div>`;
-};
-V["owner:loads"] = () => `
-  <div class="chips"><span class="chip">PB 10 JK 0912 · 22 ft · free at Ludhiana</span></div>
-  ${LOADS.map(l=>`
-  <div class="card">
-    <div class="row"><span class="lane">${l.lane}</span><span class="price num">${inr(l.price)}</span></div>
-    <div class="sub">${l.what} · ${l.truck} · loads ${l.when}</div>
-    <div class="row sub num"><span>Lane median ${inr(l.med)}</span><span>${l.price>=l.med?"above median":"below median"}</span></div>
-    <div class="chips"><span class="chip ok">Payment secured</span><span class="chip">90% at loading: ${inr(Math.round(l.price*.9))}</span><span class="chip">Khep fee 2%</span></div>
-    <button class="btn small" data-act="toast" data-msg="Request sent. ${l.who} usually confirms in 15 min.">Take this load</button>
-  </div>`).join("")}`;
-V["owner:return"] = () => `
-  <div class="card">
-    <div class="row"><span class="mono">PB 10 HX 4417</span><span class="chip">Forward trip running</span></div>
-    <b>Reaches Bhiwandi Thu 28 Nov, about 14:00</b>
-    <span class="sub">Without a return load this truck drives 1,690 km home empty or waits at Bhiwandi.</span>
-  </div>
-  <div class="sec">Return loads for that time and place</div>
-  ${RETURNS.map((r,i)=>`
-  <div class="card">
-    <div class="row"><span class="lane">${r.lane}</span><span class="price num">${inr(r.price)}</span></div>
-    <div class="sub">${r.what} · ${r.gap} · ${r.det}</div>
-    <div class="chips"><span class="chip ok">Payment secured</span></div>
-    ${S.returnBooked===i?`<span class="chip ok" style="justify-self:start">Booked · 1,690 empty km avoided</span>`:`<button class="btn small" data-act="ret" data-i="${i}" ${S.returnBooked!==null?"disabled":""}>Book return</button>`}
-  </div>`).join("")}`;
-V["owner:money"] = () => `
-  <div class="card ledger">
-    <div class="row"><b>This trip · PB 10 HX 4417</b><span class="sub">Ludhiana → Bhiwandi</span></div>
-    <div class="row num"><span>Freight</span><b>${inr(102000)}</b></div>
-    <div class="row num"><span>Advance by UPI · 26 Nov 10:42</span><b style="color:var(--ok)">${inr(91800)}</b></div>
-    <div class="row num"><span>Balance on e-POD</span><b>${inr(8160)}</b></div>
-    <div class="row num"><span>Khep fee 2%</span><span>− ${inr(2040)}</span></div>
-    <div class="row sub"><span>Deduction window</span><span>24 h after delivery, photos required</span></div>
-  </div>
-  <div class="card">
-    <div class="row"><b>Fuel and toll credit</b><span class="chip">From your Khep record</span></div>
-    <div class="meter"><i style="width:28%"></i></div>
-    <div class="row sub num"><span>${inr(42300)} used</span><span>limit ${inr(150000)}</span></div>
-    <span class="sub">Repaid automatically from trip balances. 212 trips, no missed repayment.</span>
-  </div>
-  <div class="card ledger">
-    <b>Documents expiring</b>
-    <div class="row"><span><span class="mono">PB 10 HX 4417</span> insurance</span><span class="chip warn">12 Dec</span></div>
-    <div class="row"><span><span class="mono">PB 10 JK 0912</span> national permit</span><span class="chip warn">03 Jan</span></div>
-    <div class="row"><span><span class="mono">PB 10 JK 0912</span> PUC</span><span class="chip ok">Valid to Apr</span></div>
-  </div>`;
-V["driver:trip"] = () => {
-  const L=T[S.lang];
-  if(S.otp) return `<div class="bigstep"><div class="t">${L.complete}</div></div>
-    <div class="card"><div class="row num"><span>${S.lang==="hi"?"इंतज़ार का पैसा जुड़ा":"Waiting charge added"}</span><b>${inr(500)}</b></div></div>
-    <button class="btn ghost" data-act="reset">${S.lang==="hi"?"डेमो दोबारा चलाएँ":"Restart demo"}</button>`;
-  const cur = S.step;
-  return `
-  <div class="card"><div class="row"><span class="lane">Ludhiana → Bhiwandi</span><span class="mono">PB 10 HX 4417</span></div>
-    <span class="sub">Satluj Yarns · ${S.lang==="hi"?"गेट 2, फ़ोकल पॉइंट":"Gate 2, Focal Point"}</span></div>
-  <div class="bigstep">
-    <div class="t">${L.steps[cur]}</div>
-    <div>${L.hints[cur]}</div>
-    ${cur===4?`<div class="otp">${[0,1,2,3].map(i=>`<input id="otp${i}" inputmode="numeric" maxlength="1" aria-label="Digit ${i+1}" value="${"4172"[i]}">`).join("")}</div>
-      <button class="btn" data-act="otp">${L.otpBtn}</button>`
-    :`<button class="btn" data-act="step">${L.done}</button>`}
-    <button class="btn ghost small" data-act="toast" data-msg="${S.lang==="hi"?"बोलिए… (डेमो)":"Listening… (demo)"}" style="justify-self:start">${L.speak}</button>
-  </div>
-  ${cur<=1?`<div class="card"><div class="row"><b>${L.wait}</b><span class="chip warn">3:10</span></div><div class="meter"><i style="width:79%"></i></div><span class="sub">${L.waitTxt}</span></div>`:""}
-  <div class="card steps">${L.steps.map((s,i)=>`<div class="step ${i<cur?"done":i===cur?"now":""}"><span class="dot">${i<cur?"✓":i+1}</span><span style="padding-top:2px">${s}</span></div>`).join("")}</div>`;
-};
-V["driver:exp"] = () => { const L=T[S.lang]; return `
-  <div class="card"><div class="row"><b>${L.left}</b><span class="price num">${inr(2360)}</span></div></div>
-  <div class="card ledger">
-    <div class="row"><span>${L.diesel}<div class="sub">${L.card} · 196 L</div></span><b class="num">${inr(18400)}</b></div>
-    <div class="row"><span>${L.toll}<div class="sub">${L.fast} · 9</div></span><b class="num">${inr(6210)}</b></div>
-    <div class="row"><span>${L.food}<div class="sub">${L.cash}</div></span><b class="num">${inr(640)}</b></div>
-  </div>
-  <button class="btn" data-act="toast" data-msg="${S.lang==="hi"?"कैमरा खुलेगा (डेमो)":"Camera opens (demo)"}">${L.add}</button>`; };
-V["driver:stops"] = () => { const L=T[S.lang]; const st=[
-  ["Khep Rest Point, Shahpura","NH-48, Rajasthan",42,true,true,true],
-  ["Highway dhaba, Kishangarh","NH-48, Rajasthan",118,true,false,true],
-  ["Khep Rest Point, Himmatnagar","NH-48, Gujarat",386,true,true,true]];
-  return st.map(s=>`<div class="card">
-    <div class="row"><b>${s[0]}</b><span class="num sub">${s[2]} ${L.km}</span></div>
-    <span class="sub">${s[1]} · ★ 4.${s[3]&&s[4]?6:2}</span>
-    <div class="chips"><span class="chip ok">${L.park}</span>${s[4]?`<span class="chip">${L.shower}</span>`:""}<span class="chip">${L.h24}</span>${s[5]?`<span class="chip ok">${L.safe}</span>`:""}</div>
-  </div>`).join(""); };
-
-function renderWhy(){
-  const key = S.role+":"+S.tab[S.role], w = WHY[key];
-  const who = {shipper:"Shipper",owner:"Truck owner",driver:"Driver"}[S.role];
-  const tour = TABS[S.role].map(([id,label])=>`<button data-tab="${id}" aria-current="${S.tab[S.role]===id}">${S.role==="driver"?T.en[label]:label}</button>`).join("");
-  why.innerHTML = `<div class="eyebrow">${who} · why this screen</div>
-    <h2>${w.t}</h2>
-    <dl><div><dt>The problem</dt><dd>${w.p}</dd></div>
-    <div><dt>What Khep does</dt><dd>${w.h}</dd></div>
-    <div class="measure"><dt>How we'd know it works</dt><dd>${w.m}</dd></div></dl>
-    <div class="tour" aria-label="Screens">${tour}</div>`;
-}
-function render(){
-  document.querySelectorAll(".roles button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.role===S.role));
-  const key = S.role+":"+S.tab[S.role];
-  screen.innerHTML = appbar() + `<div class="content">${V[key]()}</div>` + tabs() + `<div class="toast" id="toast" role="status"></div>`;
-  renderWhy();
-}
-let tt;
-function toast(m){ const el=document.getElementById("toast"); if(!el) return; el.textContent=m; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2400); }
-
-document.addEventListener("click", e=>{
-  const b = e.target.closest("button"); if(!b) return;
-  if(b.dataset.role){ S.role=b.dataset.role; try{localStorage.setItem("khep-role",S.role)}catch(_){} render(); return; }
-  if(b.dataset.tab){ S.tab[S.role]=b.dataset.tab; render(); return; }
-  if(b.dataset.go){ S.tab[S.role]=b.dataset.go; render(); return; }
-  if(b.dataset.lang){ S.lang=b.dataset.lang; render(); return; }
-  const a = b.dataset.act; if(!a) return;
-  if(a==="post"){ const p=document.getElementById("f-price"); S.price=Math.max(1000,parseInt(p.value,10)||102000); S.posted=true; S.tab.shipper="trucks"; render(); toast(inr(S.price)+" held in escrow. Load is live."); }
-  else if(a==="book"){ S.booked=+b.dataset.i; render(); toast("Truck booked. Driver details sent by SMS."); setTimeout(()=>{S.tab.shipper="track"; if(S.role==="shipper") render();},900); }
-  else if(a==="ret"){ S.returnBooked=+b.dataset.i; render(); toast("Return load booked. No empty run home."); }
-  else if(a==="step"){ S.step=Math.min(4,S.step+1); render(); if(S.step===2) toast(S.lang==="hi"?"₹91,800 एडवांस मालिक को भेजा गया":"₹91,800 advance sent to owner"); }
-  else if(a==="otp"){ S.otp=true; render(); }
-  else if(a==="reset"){ S.step=1; S.otp=false; render(); }
-  else if(a==="toast"){ toast(b.dataset.msg); }
-});
-document.addEventListener("input", e=>{
-  if(e.target.id==="f-price"){ const v=parseInt(e.target.value,10); if(v>0){ S.price=v; const band=screen.querySelector(".band i"); const pct=Math.max(0,Math.min(100,(v-96000)/12000*100)); if(band) band.style.left=`calc(${pct}% - 2px)`; } }
-});
-render();
-})();
-</script>
-<script>
-(function(){
-// Paste a form endpoint here (for example a Formspree form URL) to receive sign-ups.
-// Left empty, sign-ups are kept in the visitor's browser only and the success screen says so.
-const SIGNUP_ENDPOINT = "";
-
-const form = document.getElementById("tg-form"), tg = document.getElementById("tailgate");
-if(!form) return;
-const q = s => form.querySelector(s), qa = s => [...form.querySelectorAll(s)];
-const S = {step:1, role:null, rec:null, started:false};
-const ROLE = {driver:"Driver", company:"Company", contractor:"Contractor"};
-const DEAL = {agri:"Crops and agriculture", construction:"Construction material", fmcg:"FMCG and retail", textile:"Textiles and yarn", steel:"Steel and metal", chemicals:"Chemicals", other:"Something else"};
-const SIDE = {seller:"Seller", buyer:"Buyer", both:"Buyer and seller"};
-const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const val = id => q("#"+id).value.trim();
-const fmtMobile = m => m.replace(/(\d{5})(\d{5})/, "$1 $2");
-const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-function go(n){
-  S.step = n;
-  qa(".tg-step").forEach(el => el.hidden = +el.dataset.step !== n);
-  q(".tg-done").hidden = n !== 4;
-  qa(".tg-steps li").forEach(li => li.setAttribute("aria-current", +li.dataset.s === Math.min(n,3) ? "step" : "false"));
-  q(".mini").style.left = `calc(${(n-1)/3} * (100% - 56px))`;
-  if(S.started){ const h = form.querySelector(n===4 ? ".tg-done h3" : `.tg-step[data-step="${n}"] h3`); if(h){ h.tabIndex = -1; h.focus({preventScroll:true}); } }
-  S.started = true;
-}
-
-qa(".medal").forEach(b => b.addEventListener("click", () => {
-  S.role = b.dataset.join;
-  qa(".medal").forEach(m => m.setAttribute("aria-checked", m === b));
-  qa("[data-for]").forEach(g => g.hidden = !g.dataset.for.split(" ").includes(S.role));
-  q("#su-deal-l").textContent = S.role === "driver" ? "Loads you like to carry" : "Goods you deal in";
-  q("#su-side-l").textContent = S.role === "driver" ? "You mostly work for" : "You are a";
-  const side = q("#su-side");
-  side.options[0].text = S.role === "driver" ? "Sellers sending goods" : "Seller";
-  side.options[1].text = S.role === "driver" ? "Buyers collecting goods" : "Buyer";
-  side.options[2].text = S.role === "driver" ? "Both" : "Both buyer and seller";
-  syncCrops();
-  q("#err1").textContent = "";
-}));
-function syncCrops(){ q("#su-crops").hidden = !S.role || q("#su-deal").value !== "agri"; }
-q("#su-deal").addEventListener("change", syncCrops);
-
-function fail(id, msg, box){ const el = q("#"+id); el.setAttribute("aria-invalid","true"); q(box).textContent = msg; el.focus(); return false; }
-function check2(){
-  qa("[aria-invalid]").forEach(e => e.removeAttribute("aria-invalid")); q("#err2").textContent = "";
-  if(val("su-name").length < 2) return fail("su-name", "Enter your name.", "#err2");
-  if(!/^[6-9]\d{9}$/.test(val("su-mobile"))) return fail("su-mobile", "Enter a 10-digit mobile number that starts with 6, 7, 8 or 9.", "#err2");
-  if(val("su-city").length < 2) return fail("su-city", "Enter the city you work from.", "#err2");
-  if(S.role === "company"){
-    if(val("su-company").length < 2) return fail("su-company", "Enter your company name.", "#err2");
-    const g = val("su-gstin").toUpperCase();
-    if(g && !/^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(g)) return fail("su-gstin", "That GSTIN doesn't look right. It has 15 characters, like 03ABCDE1234F1Z5. You can also leave it empty.", "#err2");
-  }
-  if(S.role === "driver"){
-    const p = val("su-plate").replace(/\s/g,"").toUpperCase();
-    if(p && !/^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}$/.test(p)) return fail("su-plate", "Enter a truck number like PB 10 HX 4417, or leave it empty.", "#err2");
-  }
-  return true;
-}
-
-function bilty(){
-  const r = {role:S.role, name:val("su-name"), mobile:val("su-mobile"), city:val("su-city"), language:val("su-lang"), whatsapp:q("#su-wa").checked,
-    deal:q("#su-deal").value, side:q("#su-side").value, crops:q("#su-deal").value === "agri" ? qa("#su-crops input:checked").map(c => c.value) : []};
-  if(S.role === "company"){ r.company = val("su-company"); r.gstin = val("su-gstin").toUpperCase(); r.trucksPerMonth = val("su-volume"); }
-  if(S.role === "driver"){ r.trucksOwned = val("su-fleet"); r.truckNumber = val("su-plate").toUpperCase(); r.truckType = val("su-ttype"); r.experience = val("su-years"); r.licence = val("su-licence"); }
-  if(S.role === "contractor"){ r.work = val("su-work"); }
-  const city3 = (r.city.toUpperCase().replace(/[^A-Z]/g,"") || "IND").slice(0,3);
-  r.lr = `KHP-${city3}-${Math.floor(10000 + Math.random()*90000)}`;
-  S.rec = r;
-  const rows = [["Joining as", ROLE[r.role]], ["Name", r.name], ["Mobile", "+91 " + fmtMobile(r.mobile)], ["City", r.city]];
-  if(r.role === "company"){ rows.push(["Company", r.company]); if(r.gstin) rows.push(["GSTIN", r.gstin]); rows.push(["Trucks a month", r.trucksPerMonth]); }
-  if(r.role === "driver"){ rows.push(["Trucks", r.trucksOwned], ["Truck type", r.truckType]); if(r.truckNumber) rows.push(["Truck number", r.truckNumber]); rows.push(["Driving for", r.experience], ["Licence", r.licence]); }
-  if(r.role === "contractor") rows.push(["Work", r.work]);
-  rows.push([r.role === "driver" ? "Loads you carry" : "Goods", DEAL[r.deal]]);
-  if(r.crops.length) rows.push(["Crops", r.crops.join(", ")]);
-  if(r.role !== "driver") rows.push(["You are a", SIDE[r.side]]);
-  rows.push(["App language", r.language], ["WhatsApp updates", r.whatsapp ? "Yes" : "No"]);
-  q("#bilty").innerHTML = `<div class="bilty-h"><span>Khep lorry receipt · sign-up copy</span><span class="mono">${esc(r.lr)}</span></div>
-    <dl>${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
-}
-
-function next(to){
-  if(to === 2 && !S.role){ q("#err1").textContent = "Pick one: driver, company or contractor."; return; }
-  if(to === 3){ if(!check2()) return; bilty(); }
-  go(to);
-}
-form.addEventListener("click", e => {
-  const b = e.target.closest("button"); if(!b) return;
-  if(b.dataset.next) next(+b.dataset.next);
-  else if(b.dataset.back) go(+b.dataset.back);
-  else if(b.id === "su-again"){ form.reset(); S.role = null; qa(".medal").forEach(m => m.setAttribute("aria-checked","false")); qa("[data-for]").forEach(g => g.hidden = true); syncCrops(); go(1); }
-});
-
-q("#su-mobile").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g,"").replace(/^91(?=\d{10})/,"").slice(0,10); });
-q("#su-plate").addEventListener("input", e => {
-  const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"");
-  const m = raw.match(/^([A-Z]{0,2})(\d{0,2})([A-Z]{0,3})(\d{0,4})/);
-  e.target.value = [m[1],m[2],m[3],m[4]].filter(Boolean).join(" ");
-});
-
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  if(S.step < 3){ next(S.step + 1); return; }
-  if(S.step !== 3) return;
-  const btn = q("#su-submit"); btn.disabled = true; btn.textContent = "Sending…"; q("#err3").textContent = "";
-  const rec = {...S.rec, signedUpAt: new Date().toISOString()};
-  try{
-    if(SIGNUP_ENDPOINT){
-      const res = await fetch(SIGNUP_ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(rec)});
-      if(!res.ok) throw new Error("HTTP " + res.status);
-    }
-    try{ const list = JSON.parse(localStorage.getItem("khep-signups") || "[]"); list.push(rec); localStorage.setItem("khep-signups", JSON.stringify(list)); }catch(_){}
-    done(rec);
-  }catch(err){
-    q("#err3").textContent = "Your sign-up didn't go through. Check your internet connection and tap Sign me up again.";
-  }finally{
-    btn.disabled = false; btn.textContent = "Sign me up · चलो!";
-  }
-});
-
-function done(r){
-  const code = {driver:"D", company:"C", contractor:"K"}[r.role];
-  r.pass = `KH 26 ${code} ${Math.floor(1000 + Math.random()*9000)}`;
-  q("#pass-no").textContent = r.pass;
-  q("#done-name").textContent = r.name.split(/\s+/)[0];
-  q("#done-msg").textContent = `Your Khep account is ready. Open it to see ${{driver:"live loads near you", company:"trucks you can book", contractor:"drivers and transporters near you"}[r.role]}.`;
-  try{ localStorage.setItem("khep-user", JSON.stringify(r)); }catch(_){}
-  joinLink();
-  q("#demo-note").hidden = !!SIGNUP_ENDPOINT;
-  go(4); honk(); petals();
-}
-
-let ac;
-function honk(){
-  try{
-    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
-    const t = ac.currentTime, lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800; lp.connect(ac.destination);
-    [[0,.24,[392,494]],[.32,.55,[330,415]]].forEach(([s,d,fs]) => {
-      const g = ac.createGain(); g.gain.setValueAtTime(0,t+s); g.gain.linearRampToValueAtTime(.16,t+s+.02); g.gain.setValueAtTime(.16,t+s+d-.05); g.gain.linearRampToValueAtTime(0,t+s+d); g.connect(lp);
-      fs.forEach(f => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.connect(g); o.start(t+s); o.stop(t+s+d+.02); });
-    });
-  }catch(_){}
-  if(!calm){ tg.classList.remove("shake"); void tg.offsetWidth; tg.classList.add("shake"); }
-}
-document.getElementById("tg-horn").addEventListener("click", honk);
-
-function petals(){
-  if(calm) return;
-  const cols = ["#ff9f1c","#ffd400","#e5197e","#d7261e","#ff6f00"];
-  for(let i = 0; i < 48; i++){
-    const p = document.createElement("i"); p.className = "petal";
-    p.style.left = Math.random()*100 + "%"; p.style.background = cols[i % cols.length];
-    p.style.animationDelay = (Math.random()*.7) + "s"; p.style.animationDuration = (2 + Math.random()*1.6) + "s";
-    p.style.setProperty("--r", (Math.random()*900 - 450) + "deg"); p.style.setProperty("--x", (Math.random()*160 - 80) + "px");
-    tg.appendChild(p); setTimeout(() => p.remove(), 4600);
-  }
-}
-
-// The painted eyes follow the pointer.
-const pupils = [...document.querySelectorAll(".eyes .pupil")];
-let raf = 0, px = 0, py = 0;
-if(!calm && pupils.length) window.addEventListener("pointermove", e => {
-  px = e.clientX; py = e.clientY;
-  if(raf) return;
-  raf = requestAnimationFrame(() => { raf = 0; pupils.forEach(p => {
-    const b = p.ownerSVGElement.getBoundingClientRect(), cx = b.left + b.width/2, cy = b.top + b.height*.55;
-    const dx = px - cx, dy = py - cy, d = Math.hypot(dx,dy) || 1, k = Math.min(1, d/300);
-    p.setAttribute("transform", `translate(${(dx/d*13*k).toFixed(1)} ${(dy/d*6*k).toFixed(1)})`);
-  }); });
-}, {passive:true});
-
-// Signed-up visitors get a shortcut into the app from the header.
-function joinLink(){
-  try{ if(localStorage.getItem("khep-user")){ const a = document.getElementById("cta-sign"); a.href = "app.html"; a.textContent = "Open my Khep"; } }catch(_){}
-}
-joinLink();
-go(1);
-})();
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// Download section: install the app where the browser allows it, explain the steps where it doesn't.
 (function(){
-  const $ = id => document.getElementById(id);
-  const ua = navigator.userAgent;
-  const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const mobile = iOS || /Android/i.test(ua);
-  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
-  let prompt = null;
+"use strict";
+const $ = id => document.getElementById(id);
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const android = /Android/i.test(ua);
-  // Android: the APK download is the main route. iPhone: add to home screen. Computer: QR code to the phone.
-  if(iOS || standalone){ $("dl-apk").hidden = true; $("dl-apk-note").hidden = true; $("dl-android").hidden = true; }
-  if(!android && !iOS){ $("dl-android").hidden = true; $("dl-apk-label").textContent = "Download for Android (APK)"; }
-  if(standalone){ $("dl-open").hidden = false; $("dl-web").hidden = true; }
-  else if(iOS){ $("dl-ios").hidden = false; $("dl-web").textContent = "Open Khep"; }
-  else if(!android){ $("dl-other").hidden = false; }
+/* ---------- live background: trucks moving on India's highway network ---------- */
+const CITIES = [
+ ["Ludhiana",30.90,75.86],["Amritsar",31.63,74.87],["Chandigarh",30.73,76.78],["Delhi",28.70,77.10],["Panipat",29.39,76.97],["Jaipur",26.91,75.79],
+ ["Agra",27.18,78.01],["Lucknow",26.85,80.95],["Kanpur",26.45,80.33],["Patna",25.59,85.14],["Kolkata",22.57,88.36],["Guwahati",26.14,91.74],
+ ["Ahmedabad",23.02,72.57],["Rajkot",22.30,70.80],["Surat",21.17,72.83],["Mumbai",19.08,72.88],["Pune",18.52,73.86],["Nashik",20.00,73.79],
+ ["Indore",22.72,75.86],["Bhopal",23.26,77.41],["Nagpur",21.15,79.09],["Raipur",21.25,81.63],["Hyderabad",17.39,78.49],["Vijayawada",16.51,80.65],
+ ["Visakhapatnam",17.69,83.22],["Bengaluru",12.97,77.59],["Chennai",13.08,80.27],["Coimbatore",11.02,76.96],["Kochi",9.93,76.27],["Kota",25.21,75.86],
+ ["Varanasi",25.32,82.97],["Bhubaneswar",20.30,85.82],["Jodhpur",26.24,73.02],["Goa",15.30,74.12],["Madurai",9.93,78.12]
+];
+const LABELS = new Set(["Delhi","Mumbai","Kolkata","Chennai","Bengaluru","Ludhiana","Ahmedabad","Hyderabad","Nagpur","Guwahati"]);
+const COLORS = ["#ffd400","#e5197e","#3ee07f","#ff9f1c","#7aa2ff"];
+const cv = $("bg"), ctx = cv.getContext("2d");
+let W = 0, H = 0, DPR = 1, P = [], EDGES = [], ADJ = [], trucks = [], pulses = [], last = 0, staticLayer = null;
 
-  $("dl-apk").addEventListener("click", () => {
-    const s = $("dl-status"); s.hidden = false;
-    s.textContent = android ? "Downloading Khep.apk… When it finishes, tap the download message to install." : "Downloading Khep.apk. Send it to an Android phone, or scan the QR code with the phone instead.";
-    if(android) $("dl-android").classList.add("lit");
+// connect each city to its nearest neighbours to form a road-like network
+(function buildGraph(){
+  const n = CITIES.length; ADJ = Array.from({length:n}, () => new Set());
+  const d = (a, b) => Math.hypot(CITIES[a][1]-CITIES[b][1], (CITIES[a][2]-CITIES[b][2]) * Math.cos(CITIES[a][1]*Math.PI/180));
+  for(let i = 0; i < n; i++){
+    const near = [...Array(n).keys()].filter(j => j !== i).sort((a, b) => d(i, a) - d(i, b)).slice(0, 3);
+    near.forEach(j => { if(d(i, j) < 9){ ADJ[i].add(j); ADJ[j].add(i); } });
+  }
+  const seen = new Set();
+  ADJ.forEach((s, i) => s.forEach(j => { const k = i < j ? i + "-" + j : j + "-" + i; if(!seen.has(k)){ seen.add(k); EDGES.push([Math.min(i,j), Math.max(i,j)]); } }));
+  ADJ = ADJ.map(s => [...s]);
+})();
+
+function layout(){
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  // fit India's bounding box; on wide screens sit the map to the right of the text
+  const wide = W > 900;
+  const box = wide ? {x:W*0.5, y:H*0.07, w:W*0.48, h:H*0.88} : {x:W*0.04, y:H*0.08, w:W*0.92, h:H*0.8};
+  const lat0 = 8, lat1 = 33, lng0 = 68.5, lng1 = 93;
+  const sx = box.w / (lng1 - lng0), sy = box.h / (lat1 - lat0), s = Math.min(sx, sy * 1.08);
+  const ox = box.x + (box.w - (lng1 - lng0) * s) / 2, oy = box.y + (box.h - (lat1 - lat0) * s / 1.08) / 2;
+  P = CITIES.map(([, lat, lng]) => [ox + (lng - lng0) * s, oy + (lat1 - lat) * s / 1.08]);
+  drawStatic();
+}
+function ctrl(a, b){ // gentle curve so routes look like roads, not rulers
+  const [x1, y1] = P[a], [x2, y2] = P[b], mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, dy = y2 - y1;
+  const k = ((a * 7 + b * 13) % 5 - 2) * 0.06; return [mx - dy * k, my + dx * k];
+}
+function at(e, t){ const [a, b] = e, [x1, y1] = P[a], [x2, y2] = P[b], [cx, cy] = ctrl(a, b), u = 1 - t;
+  return [u*u*x1 + 2*u*t*cx + t*t*x2, u*u*y1 + 2*u*t*cy + t*t*y2]; }
+function drawStatic(){
+  staticLayer = document.createElement("canvas"); staticLayer.width = cv.width; staticLayer.height = cv.height;
+  const g = staticLayer.getContext("2d"); g.scale(DPR, DPR);
+  // faint survey grid
+  g.strokeStyle = "rgba(122,162,255,0.05)"; g.lineWidth = 1;
+  for(let x = 0; x < W; x += 48){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, H); g.stroke(); }
+  for(let y = 0; y < H; y += 48){ g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+  // routes
+  EDGES.forEach(([a, b]) => { const [cx, cy] = ctrl(a, b);
+    g.strokeStyle = "rgba(255,248,230,0.10)"; g.lineWidth = 3; g.beginPath(); g.moveTo(...P[a]); g.quadraticCurveTo(cx, cy, ...P[b]); g.stroke();
+    g.strokeStyle = "rgba(255,212,0,0.16)"; g.lineWidth = 1; g.setLineDash([4, 6]); g.beginPath(); g.moveTo(...P[a]); g.quadraticCurveTo(cx, cy, ...P[b]); g.stroke(); g.setLineDash([]); });
+  // cities
+  g.font = "600 12px Mukta, system-ui, sans-serif"; g.textBaseline = "middle";
+  CITIES.forEach(([name], i) => { const [x, y] = P[i], big = LABELS.has(name);
+    g.fillStyle = big ? "rgba(255,248,230,0.9)" : "rgba(255,248,230,0.45)"; g.beginPath(); g.arc(x, y, big ? 3.2 : 2.2, 0, Math.PI*2); g.fill();
+    if(big && W > 420){ g.fillStyle = "rgba(255,248,230,0.55)"; g.fillText(name, x + 7, y); } });
+}
+function spawn(){
+  const e = EDGES[Math.floor(Math.random() * EDGES.length)], fwd = Math.random() < .5;
+  return {e, dir: fwd ? 1 : -1, t: Math.random(), v: (0.05 + Math.random() * 0.09), c: COLORS[Math.floor(Math.random()*COLORS.length)], trail: []};
+}
+function step(tr, dt){
+  const [a, b] = tr.e, [x1, y1] = P[a], [x2, y2] = P[b];
+  const len = Math.max(30, Math.hypot(x2 - x1, y2 - y1));
+  tr.t += tr.dir * tr.v * dt * (160 / len);
+  if(tr.t > 1 || tr.t < 0){
+    const city = tr.t > 1 ? b : a;
+    if(Math.random() < .35) pulses.push({i:city, r:0, c:tr.c});
+    const nexts = ADJ[city].filter(j => j !== (city === a ? b : a));
+    const nb = nexts.length ? nexts[Math.floor(Math.random()*nexts.length)] : (city === a ? b : a);
+    tr.e = city < nb ? [city, nb] : [nb, city]; tr.dir = city < nb ? 1 : -1; tr.t = tr.dir > 0 ? 0 : 1;
+  }
+}
+function frame(now){
+  const dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height);
+  if(staticLayer) ctx.drawImage(staticLayer, 0, 0);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  pulses = pulses.filter(p => p.r < 26);
+  pulses.forEach(p => { p.r += dt * 30; const [x, y] = P[p.i]; ctx.strokeStyle = p.c; ctx.globalAlpha = Math.max(0, 1 - p.r / 26); ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(x, y, p.r, 0, Math.PI*2); ctx.stroke(); });
+  ctx.globalAlpha = 1;
+  trucks.forEach(tr => {
+    if(dt) step(tr, dt);
+    const [x, y] = at(tr.e, tr.t);
+    tr.trail.push([x, y]); if(tr.trail.length > 14) tr.trail.shift();
+    for(let i = 1; i < tr.trail.length; i++){ ctx.strokeStyle = tr.c; ctx.globalAlpha = i / tr.trail.length * .55; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(...tr.trail[i-1]); ctx.lineTo(...tr.trail[i]); ctx.stroke(); }
+    ctx.globalAlpha = .25; ctx.fillStyle = tr.c; ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI*2); ctx.fill();
+    ctx.globalAlpha = 1; ctx.beginPath(); ctx.arc(x, y, 2.8, 0, Math.PI*2); ctx.fill();
   });
+  ctx.globalAlpha = 1;
+  if(!calm) requestAnimationFrame(frame);
+}
+function start(){
+  layout();
+  const n = W < 600 ? 34 : 70; trucks = Array.from({length:n}, spawn);
+  if(calm){ trucks.forEach(tr => { for(let i = 0; i < 14; i++){ tr.trail.push(at(tr.e, Math.max(0, Math.min(1, tr.t - tr.dir * (14 - i) * 0.012)))); } }); frame(0); }
+  else requestAnimationFrame(t => { last = t; frame(t); });
+}
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { layout(); trucks.forEach(t => t.trail = []); if(calm) frame(0); }, 150); });
+start();
 
-  window.addEventListener("beforeinstallprompt", e => {
-    e.preventDefault(); prompt = e;
-    if(!android) $("dl-install").hidden = false;
-  });
-  window.addEventListener("appinstalled", () => {
-    $("dl-install").hidden = true; $("dl-open").hidden = false;
-  });
-  $("dl-install").addEventListener("click", async () => {
-    if(!prompt) return;
-    prompt.prompt();
-    const r = await prompt.userChoice; prompt = null;
-    $("dl-install").hidden = true;
-    if(r.outcome === "accepted") $("dl-open").hidden = false; else $("dl-other").hidden = false;
-  });
+/* ---------- activity feed (illustrative) ---------- */
+const PLATES = ["PB 10 HX 4417","HR 55 AD 7781","RJ 14 GB 2290","MH 04 KT 6120","GJ 01 BT 3345","UP 78 CN 9012","KA 01 AF 5521","TN 09 BZ 7130","WB 23 D 4410","MP 09 HF 0832"];
+const TRUCKS = ["32 ft container","22 ft closed body","Open body, 14 wheel","Trailer","Tractor-trolley","Small truck"];
+const GOODS = ["Wheat, 250 quintal","Paddy, 220 quintal","Cotton bales","Cement, 400 bags","Steel pipes, 9 t","Onion, 18 t","Cotton yarn, 18 t","Potato, 300 bags","TMT bars, 16 t","FMCG cartons, 9 t"];
+const pickR = a => a[Math.floor(Math.random() * a.length)];
+const cityN = () => pickR(CITIES)[0];
+function feedItem(){
+  const kind = Math.random();
+  if(kind < .45){ return `<span class="plate"><i>IND</i><b>${pickR(PLATES)}</b></span><span class="what">${pickR(TRUCKS)} free in ${cityN()}</span><span class="sub">looking for a load</span>`; }
+  if(kind < .8){ let a = cityN(), b; do { b = cityN(); } while(b === a); return `<span class="what">Load posted: ${pickR(GOODS)}</span><span class="sub">${a} → ${b} · payment secured</span>`; }
+  let a = cityN(), b; do { b = cityN(); } while(b === a); return `<span class="plate"><i>IND</i><b>${pickR(PLATES)}</b></span><span class="what">Delivered in ${b}</span><span class="sub">from ${a} · driver paid in full</span>`;
+}
+const feed = $("feed");
+feed.innerHTML = feedItem();
+if(!calm) setInterval(() => { if(document.hidden) return; feed.classList.add("fade"); setTimeout(() => { feed.innerHTML = feedItem(); feed.classList.remove("fade"); }, 350); }, 3200);
 
-  // A QR code helps people on a computer move to their phone. Phones don't need it.
-  if(mobile || !window.QRCode || location.protocol === "file:"){ $("dl-qr-box").hidden = true; }
-  else { new QRCode($("dl-qr"), {text: location.origin + location.pathname.replace(/[^/]*$/, "") + "#download", width:280, height:280, colorDark:"#10122b", colorLight:"#fff8e6"}); }
+/* ---------- download: Android gets the APK, iPhone gets home-screen steps, computers get the QR ---------- */
+const ua = navigator.userAgent;
+const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+const android = /Android/i.test(ua);
+const here = location.origin + location.pathname.replace(/[^/]*$/, "");
+if(window.QRCode && location.protocol !== "file:") new QRCode($("qr"), {text: here + "#get", width:400, height:400, colorDark:"#10122b", colorLight:"#fff8e6", correctLevel: QRCode.CorrectLevel.H});
+else if(window.QRCode) new QRCode($("qr"), {text: "https://anshumantewary-pm.github.io/khep/#get", width:400, height:400, colorDark:"#10122b", colorLight:"#fff8e6", correctLevel: QRCode.CorrectLevel.H});
+if(android || iOS){ $("qr-col").hidden = true; }
+if(iOS){ $("apk").hidden = true; $("apk-meta").hidden = true; $("how-android").hidden = true; $("how-ios").hidden = false; $("how-ios").open = true; $("ios-open").hidden = false; }
+if(android) $("how-android").open = false;
+if(!android && !iOS) $("apk-label").textContent = "Download APK for Android";
+$("apk").addEventListener("click", () => {
+  const s = $("status"); s.hidden = false;
+  s.textContent = android ? "Downloading Khep.apk… Tap the download message when it finishes." : "Downloading Khep.apk. Copy it to an Android phone, or scan the QR code with the phone.";
+  if(android) $("how-android").open = true;
+});
 
-  if("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
 })();
 </script>
-
 </body>
 </html>

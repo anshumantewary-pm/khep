@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sign up · Khep</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#10122b">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&family=Yatra+One&display=swap">
+<style>
+:root{--display:"Baloo 2","Mukta",system-ui,sans-serif;--body:"Mukta",system-ui,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:#10122b;color:#fff8e6;font:16px/1.5 var(--body)}
+[hidden]{display:none!important}
+h1,h2,h3{line-height:1.15;margin:0;text-wrap:balance}
+.mono{font-family:var(--mono)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.su-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px 0}
+.su-top a.logo{font:400 2rem "Yatra One","Baloo 2",system-ui,sans-serif;color:#ffd400;text-decoration:none;text-shadow:2px 2px 0 #e5197e}
+.su-top a.back{color:#b9c3ea;font-weight:600}
+.tg-sec .wrap{padding-block:20px 56px}
+/* ---------- Sign-up: the painted back of a goods truck. A deliberate single look, same in light and dark. ---------- */
+.tg-sec{--t-ink:#10122b;--t-cob:#0b3d91;--t-cob2:#06275f;--t-pink:#e5197e;--t-saff:#ff9f1c;--t-saffd:#b85500;--t-grn:#1f9e46;--t-yel:#ffd400;--t-red:#d7261e;--t-paper:#fff8e6;--t-mute:#615c78;
+  --t-paint:"Yatra One","Baloo 2",system-ui,sans-serif;
+  background-color:var(--t-ink);background-image:radial-gradient(circle at 8% 10%,rgba(229,25,126,.32),transparent 32%),radial-gradient(circle at 92% 88%,rgba(255,159,28,.26),transparent 36%);color:var(--t-paper)}
+.tg-sec .wrap{padding-block:56px 72px;display:grid;gap:28px}
+.tg-head{display:grid;gap:8px;max-width:700px}
+.tg-eyebrow{margin:0;font:700 .85rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--t-saff)}
+.tg-head h2{font-family:var(--t-paint);font-weight:400;font-size:clamp(2.4rem,7vw,4.2rem);line-height:1.2;color:var(--t-yel);text-shadow:3px 3px 0 var(--t-pink),6px 6px 0 var(--t-cob)}
+.tg-head p{margin:0;font-size:1.1rem;color:#e6e2fb;max-width:56ch}
+.tailgate{position:relative;overflow:hidden;border-radius:22px;border:12px solid transparent;background:linear-gradient(160deg,var(--t-cob),var(--t-cob2)) padding-box,repeating-linear-gradient(45deg,var(--t-red) 0 14px,var(--t-yel) 14px 28px,var(--t-grn) 28px 42px,var(--t-pink) 42px 56px) border-box;box-shadow:0 30px 60px -25px rgba(0,0,0,.75)}
+.tailgate.shake{animation:tg-shake .5s}
+@keyframes tg-shake{20%{transform:translate(-5px,1px) rotate(-.5deg)}40%{transform:translate(5px,-1px) rotate(.5deg)}60%{transform:translate(-3px,0)}80%{transform:translate(2px,1px)}}
+.jhalar{height:30px;background:repeating-linear-gradient(90deg,var(--t-pink) 0 28px,var(--t-yel) 28px 56px,var(--t-grn) 56px 84px,var(--t-saff) 84px 112px);-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/28px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/28px 100%}
+.tg-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:28px;padding:18px clamp(14px,3vw,32px) 28px}
+@media (max-width:860px){.tg-grid{grid-template-columns:minmax(0,1fr)}}
+.tg-art{display:grid;justify-items:center;align-content:center;gap:12px;text-align:center;min-width:0}
+.eyes{display:flex;gap:14px;justify-content:center}
+.eyes svg{width:min(120px,36vw);height:auto;display:block}
+.tg-painted{font-family:var(--t-paint);font-size:clamp(3.6rem,10vw,5.6rem);line-height:1.05;color:var(--t-paper);text-shadow:4px 4px 0 var(--t-pink),8px 8px 0 var(--t-ink);transform:rotate(-4deg)}
+.flowers{display:flex;gap:8px;align-items:center}
+.flowers svg{width:44px;height:44px;display:block}
+.flowers svg.big{width:76px;height:76px;animation:tg-spin 20s linear infinite}
+@keyframes tg-spin{to{transform:rotate(360deg)}}
+.slogan{font-family:var(--t-paint);font-size:clamp(1.7rem,4.4vw,2.3rem);color:var(--t-yel);text-shadow:2px 2px 0 var(--t-red);letter-spacing:.03em;line-height:1.15}
+.slogan .ok{display:inline-grid;place-items:center;width:1.9em;height:1.9em;border-radius:50%;background:var(--t-pink);color:var(--t-paper);text-shadow:none;font-size:.7em;vertical-align:middle;border:3px solid var(--t-yel)}
+.slogan.sm{font-family:var(--body);font-weight:800;font-size:.95rem;color:var(--t-paper);text-shadow:none;background:var(--t-red);padding:3px 14px;border-radius:6px;letter-spacing:.14em}
+.slogan.hi{font-size:1.15rem;color:var(--t-saff);text-shadow:none}
+.tg-form{background:var(--t-paper);color:var(--t-ink);border-radius:16px;border:3px solid var(--t-ink);box-shadow:8px 8px 0 var(--t-pink);padding:18px clamp(14px,3vw,26px) 22px;display:grid;gap:16px;min-width:0;align-content:start}
+.road{position:relative;height:40px}
+.road::before{content:"";position:absolute;left:0;right:0;bottom:4px;height:5px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--t-ink) 0 14px,transparent 14px 22px)}
+.mini{position:absolute;bottom:9px;left:0;width:56px;height:30px;transition:left .7s cubic-bezier(.45,1.5,.5,1)}
+.tg-steps{list-style:none;margin:-6px 0 0;padding:0;display:flex;justify-content:space-between;gap:6px;font:700 .76rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--t-mute)}
+.tg-steps li[aria-current="step"]{color:var(--t-pink)}
+.tg-step,.tg-done{display:grid;gap:14px}
+.tg-step h3,.tg-done h3{font-family:var(--t-paint);font-weight:400;font-size:1.8rem;line-height:1.2;color:var(--t-cob);outline:none}
+.tg-step h3 span{display:block;font-size:1.05rem;color:var(--t-pink)}
+.medals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.medals{grid-template-columns:minmax(0,1fr)}}
+.medal{--m:var(--t-pink);display:grid;gap:2px;justify-items:center;text-align:center;padding:14px 8px 12px;border-radius:16px;border:3px solid var(--t-ink);background:#fff;color:var(--t-ink);cursor:pointer;font-family:var(--body);box-shadow:4px 4px 0 var(--t-ink);transition:transform .2s,box-shadow .2s,background-color .2s}
+.medal .ic{width:48px;height:48px;border-radius:50%;background:var(--m);display:grid;place-items:center;border:3px solid var(--t-ink);margin-bottom:4px}
+.medal .ic svg{width:26px;height:26px;fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.medal b{font:800 1.1rem var(--display)}
+.medal span{font-weight:700;color:var(--m)}
+.medal small{color:var(--t-mute);font-size:.8rem;line-height:1.3}
+.medal:hover{transform:translate(-2px,-2px) rotate(-1.5deg);box-shadow:6px 6px 0 var(--t-ink)}
+.medal[aria-checked="true"]{background:var(--m);color:#fff;transform:rotate(-2deg);box-shadow:6px 6px 0 var(--t-ink)}
+.medal[aria-checked="true"] span,.medal[aria-checked="true"] small{color:#fff}
+.medal[aria-checked="true"] .ic{background:var(--t-ink)}
+.medal:focus-visible,.tg-go:focus-visible,.horn:focus-visible,.tg-back:focus-visible{outline:3px solid var(--t-cob);outline-offset:3px}
+.tf-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.tf-grid{grid-template-columns:minmax(0,1fr)}}
+.tf{display:grid;gap:4px;min-width:0;align-content:start}
+.tf.full{grid-column:1/-1}
+.tf label{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--t-cob)}
+.tf label i{font-style:normal;text-transform:none;letter-spacing:0;color:var(--t-mute);font-weight:500}
+.tf input,.tf select{font:500 1rem var(--body);color:var(--t-ink);background:#fff;border:2.5px solid var(--t-ink);border-radius:10px;padding:9px 11px;width:100%;min-width:0;color-scheme:light}
+.tf input:focus,.tf select:focus{outline:none;box-shadow:4px 4px 0 var(--t-saff)}
+.tf [aria-invalid="true"]{border-color:var(--t-red);background:#fff0ee}
+.pre{display:flex;border:2.5px solid var(--t-ink);border-radius:10px;overflow:hidden;background:#fff}
+.pre > span{display:grid;place-items:center;padding:0 10px;background:var(--t-yel);font-weight:800;border-right:2.5px solid var(--t-ink)}
+.pre input{border:0;border-radius:0}
+.pre input:focus{box-shadow:none}
+.pre:focus-within{box-shadow:4px 4px 0 var(--t-saff)}
+.plate{display:flex;align-items:stretch;border:3px solid #111;border-radius:9px;background:var(--t-yel);overflow:hidden}
+.plate .ind{display:grid;place-items:center;padding:0 8px;background:#1d3fa6;color:#fff;font:700 .72rem var(--body);letter-spacing:.06em}
+.plate input{border:0;border-radius:0;background:transparent;font:700 1.35rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#111;padding:8px 10px}
+.plate input::placeholder{color:rgba(17,17,17,.4)}
+.plate input:focus{box-shadow:none}
+.plate:focus-within{box-shadow:4px 4px 0 var(--t-saff)}
+.plate:has([aria-invalid="true"]){border-color:var(--t-red)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.check input{width:20px;height:20px;accent-color:var(--t-pink);margin-top:3px;flex:none}
+@media (max-width:820px){.dl-grid{grid-template-columns:minmax(0,1fr)}}
+.crops{border:0;margin:0;padding:0}
+.crops legend{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--t-cob);padding:0;margin-bottom:6px}
+.crops legend i{font-style:normal;text-transform:none;letter-spacing:0;color:var(--t-mute);font-weight:500}
+.crop-chips{display:flex;flex-wrap:wrap;gap:8px}
+.crop-chips label{position:relative;cursor:pointer}
+.crop-chips input{position:absolute;opacity:0;width:1px;height:1px}
+.crop-chips span{display:inline-block;padding:6px 12px;border:2.5px solid var(--t-ink);border-radius:999px;background:#fff;font-weight:600;font-size:.9rem;transition:transform .15s}
+.crop-chips input:checked + span{background:var(--t-grn);color:#fff;transform:rotate(-2deg);box-shadow:3px 3px 0 var(--t-ink)}
+.crop-chips input:focus-visible + span{outline:3px solid var(--t-cob);outline-offset:2px}
+.tg-err{margin:0;color:var(--t-red);font-weight:700}
+.tg-err:empty{display:none}
+.tg-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.tg-go{font:800 1.1rem var(--display);border:3px solid var(--t-ink);border-radius:14px;padding:10px 22px;background:var(--t-yel);color:var(--t-ink);cursor:pointer;box-shadow:5px 5px 0 var(--t-pink);transition:transform .15s,box-shadow .15s;margin-left:auto}
+.tg-go:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 var(--t-pink)}
+.tg-go:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--t-pink)}
+.tg-go:disabled{opacity:.6;cursor:wait}
+.tg-back{font:700 .95rem var(--body);background:none;border:0;color:var(--t-cob);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 2px}
+.bilty{border:2px dashed var(--t-ink);border-radius:10px;padding:14px;background:#fffdf3 repeating-linear-gradient(0deg,transparent 0 27px,rgba(11,61,145,.08) 27px 28px);display:grid;gap:10px;font-variant-numeric:tabular-nums}
+.bilty-h{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:2px solid var(--t-ink);padding-bottom:6px;font:700 .78rem var(--body);letter-spacing:.08em;text-transform:uppercase}
+.bilty dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:5px 16px}
+.bilty dt{color:var(--t-mute);font-size:.88rem}
+.bilty dd{margin:0;font-weight:700;overflow-wrap:anywhere}
+.pass-row{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.pass{display:flex;align-items:stretch;border:4px solid #111;border-radius:12px;background:var(--t-yel);overflow:hidden;box-shadow:6px 6px 0 var(--t-pink);animation:tg-pop .55s cubic-bezier(.3,1.6,.5,1)}
+.pass .ind{display:grid;place-items:center;padding:0 9px;background:#1d3fa6;color:#fff;font:700 .75rem var(--body)}
+.pass b{font:700 clamp(1.4rem,5vw,2rem) var(--mono);letter-spacing:.1em;padding:8px 16px;color:#111;white-space:nowrap}
+.stamp{font:400 1.2rem var(--t-paint);color:var(--t-red);border:3px solid var(--t-red);border-radius:8px;padding:0 12px;transform:rotate(-9deg);animation:tg-stamp .4s .35s both}
+@keyframes tg-pop{from{transform:scale(.5) rotate(-8deg);opacity:0}}
+@keyframes tg-stamp{from{transform:scale(2.2) rotate(-9deg);opacity:0}}
+.tg-done p{margin:0;max-width:52ch}
+.demo-note{font-size:.85rem;color:var(--t-mute);background:#fff;border:1.5px dashed var(--t-mute);border-radius:8px;padding:6px 10px}
+.tg-bumper{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px clamp(14px,3vw,32px) 14px;background:repeating-linear-gradient(-45deg,#111 0 16px,var(--t-yel) 16px 32px)}
+.horn{font:800 1rem var(--display);border:3px solid #111;border-radius:999px;padding:8px 20px;background:var(--t-red);color:#fff;cursor:pointer;box-shadow:3px 3px 0 #111}
+.horn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111}
+.tg-note{background:#111;color:var(--t-paper);font-size:.85rem;padding:4px 10px;border-radius:6px}
+.petal{position:absolute;top:-24px;width:12px;height:16px;border-radius:70% 0 70% 0;border:1.5px solid rgba(16,18,43,.6);pointer-events:none;z-index:5;animation:tg-fall linear forwards}
+@keyframes tg-fall{to{transform:translate(var(--x),1100px) rotate(var(--r));opacity:.3}}
+@media (prefers-reduced-motion:reduce){.flowers svg.big,.tailgate.shake,.pass,.stamp{animation:none}.mini,.medal,.tg-go,.cta-join{transition:none}}
+
+</style>
+</head>
+<body>
+<div class="wrap su-top"><a class="logo" href="app.html">Khep</a><a class="back" href="app.html?demo=driver">Just look around first</a></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="tg-flower" viewBox="-50 -50 100 100"><g stroke="#10122b" stroke-width="3">
+    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(45)"/>
+    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(90)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(135)"/>
+    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(180)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(225)"/>
+    <ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(270)"/><ellipse cx="0" cy="-27" rx="11" ry="20" fill="currentColor" transform="rotate(315)"/>
+    <circle r="14" fill="#ffd400"/><circle r="5.5" fill="#d7261e"/></g></symbol>
+  <clipPath id="tg-eye-l"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z"/></clipPath>
+  <clipPath id="tg-eye-r"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z"/></clipPath>
+</defs></svg>
+
+<section class="tg-sec" id="signup" aria-labelledby="tg-title">
+  <div class="wrap">
+    <div class="tg-head">
+      <p class="tg-eyebrow">Takes one minute · एक मिनट लगेगा</p>
+      <h2 id="tg-title">Khep से जुड़िए</h2>
+      <p>Tell us who you are and Khep sets itself up for you: live loads for drivers, trucks to book for companies, the nearest driver for contractors.</p>
+    </div>
+
+    <div class="tailgate" id="tailgate">
+      <div class="jhalar" aria-hidden="true"></div>
+      <div class="tg-grid">
+        <div class="tg-art" aria-hidden="true">
+          <div class="eyes">
+            <svg viewBox="0 -12 120 76"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="#fff8e6"/><g clip-path="url(#tg-eye-l)"><g class="pupil"><circle cx="60" cy="30" r="16" fill="#1f9e46" stroke="#10122b" stroke-width="2"/><circle cx="60" cy="30" r="8" fill="#10122b"/><circle cx="55" cy="25" r="3" fill="#fff"/></g></g><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="none" stroke="#10122b" stroke-width="4"/><path d="M22 17 15 6M41 10 38-1M60 8V-4M79 10l3-11M98 17l7-11" stroke="#ffd400" stroke-width="4" stroke-linecap="round"/></svg>
+            <svg viewBox="0 -12 120 76"><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="#fff8e6"/><g clip-path="url(#tg-eye-r)"><g class="pupil"><circle cx="60" cy="30" r="16" fill="#1f9e46" stroke="#10122b" stroke-width="2"/><circle cx="60" cy="30" r="8" fill="#10122b"/><circle cx="55" cy="25" r="3" fill="#fff"/></g></g><path d="M6 30 Q60 -6 114 30 Q60 66 6 30Z" fill="none" stroke="#10122b" stroke-width="4"/><path d="M22 17 15 6M41 10 38-1M60 8V-4M79 10l3-11M98 17l7-11" stroke="#ffd400" stroke-width="4" stroke-linecap="round"/></svg>
+          </div>
+          <div class="tg-painted">Khep</div>
+          <div class="flowers">
+            <svg style="color:#ff9f1c"><use href="#tg-flower"/></svg>
+            <svg class="big" style="color:#e5197e"><use href="#tg-flower"/></svg>
+            <svg style="color:#1f9e46"><use href="#tg-flower"/></svg>
+          </div>
+          <div class="slogan">HORN <span class="ok">OK</span> PLEASE</div>
+          <div class="slogan sm">USE DIPPER AT NIGHT</div>
+          <div class="slogan hi">बुरी नज़र वाले तेरा मुँह काला</div>
+        </div>
+
+        <form class="tg-form" id="tg-form" novalidate>
+          <div class="road" aria-hidden="true">
+            <svg class="mini" viewBox="0 0 56 30"><rect x="1" y="3" width="34" height="19" rx="2" fill="#e5197e" stroke="#10122b" stroke-width="2"/><path d="M35 9h10l8 7v6H35z" fill="#ffd400" stroke="#10122b" stroke-width="2"/><rect x="40" y="11" width="6" height="5" fill="#9fd3ff" stroke="#10122b" stroke-width="1.5"/><path d="M5 9h26M5 15h26" stroke="#ffd400" stroke-width="2" stroke-dasharray="3 3"/><circle cx="11" cy="24" r="4.5" fill="#10122b"/><circle cx="44" cy="24" r="4.5" fill="#10122b"/></svg>
+          </div>
+          <ol class="tg-steps"><li data-s="1">Who you are</li><li data-s="2">Details</li><li data-s="3">Bilty</li></ol>
+
+          <div class="tg-step" data-step="1">
+            <h3>Aap kaun hain? <span lang="hi">आप कौन हैं?</span></h3>
+            <div class="medals" role="radiogroup" aria-label="I am joining as">
+              <button type="button" class="medal" id="m-driver" role="radio" aria-checked="false" data-join="driver" style="--m:#b85500">
+                <span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.5"/><path d="M3.5 10.5h6M14.5 10.5h6M12 14.5V21"/></svg></span>
+                <b>Driver</b><span lang="hi">लोड चाहिए</span><small>I drive or own trucks and want loads</small></button>
+              <button type="button" class="medal" id="m-company" role="radio" aria-checked="false" data-join="company" style="--m:#e5197e">
+                <span class="ic"><svg viewBox="0 0 24 24"><path d="M3 21V9l6-4v4l6-4v4l6-4v16zM7 17h2M11 17h2M15 17h2"/></svg></span>
+                <b>Company</b><span lang="hi">माल भेजना है</span><small>We ship goods and book trucks often</small></button>
+              <button type="button" class="medal" id="m-contractor" role="radio" aria-checked="false" data-join="contractor" style="--m:#1f9e46">
+                <span class="ic"><svg viewBox="0 0 24 24"><path d="M4 15a8 8 0 0 1 16 0M2 15h20v3H2zM12 7V4M9 8l-1-2.5M15 8l1-2.5"/></svg></span>
+                <b>Contractor</b><span lang="hi">कभी-कभी ट्रक चाहिए</span><small>Contractor, farmer or anyone who needs a truck now and then</small></button>
+            </div>
+            <p class="tg-err" id="err1" role="alert"></p>
+            <div class="tg-actions"><button type="button" class="tg-go" data-next="2">Aage chalo · आगे चलो →</button></div>
+          </div>
+
+          <div class="tg-step" data-step="2" hidden>
+            <h3>Thoda apne baare mein <span lang="hi">थोड़ा अपने बारे में</span></h3>
+            <div class="tf-grid">
+              <div class="tf"><label for="su-name">Your name</label><input id="su-name" autocomplete="name" placeholder="Gurpreet Singh"></div>
+              <div class="tf"><label for="su-mobile">Mobile</label><div class="pre"><span>+91</span><input id="su-mobile" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210"></div></div>
+              <div class="tf"><label for="su-city">City you work from</label><input id="su-city" list="su-cities" placeholder="Ludhiana"></div>
+              <div class="tf"><label for="su-lang">App language</label><select id="su-lang"><option>Hindi · हिंदी</option><option>Punjabi · ਪੰਜਾਬੀ</option><option>English</option><option>Marathi · मराठी</option><option>Gujarati · ગુજરાતી</option><option>Tamil · தமிழ்</option><option>Telugu · తెలుగు</option><option>Bengali · বাংলা</option><option>Kannada · ಕನ್ನಡ</option></select></div>
+
+              <div class="tf" data-for="company" hidden><label for="su-company">Company</label><input id="su-company" autocomplete="organization" placeholder="Satluj Yarns Pvt Ltd"></div>
+              <div class="tf" data-for="company" hidden><label for="su-gstin">GSTIN <i>(optional)</i></label><input id="su-gstin" maxlength="15" placeholder="03ABCDE1234F1Z5" style="text-transform:uppercase"></div>
+              <div class="tf full" data-for="company" hidden><label for="su-volume">Trucks you book a month</label><select id="su-volume"><option>1–10</option><option>11–50</option><option>51–200</option><option>More than 200</option></select></div>
+
+              <div class="tf" data-for="driver" hidden><label for="su-fleet">Your trucks</label><select id="su-fleet"><option>I drive someone else's truck</option><option>1, I own it</option><option>2–5</option><option>6–20</option><option>More than 20</option></select></div>
+              <div class="tf" data-for="driver" hidden><label for="su-ttype">Truck type</label><select id="su-ttype"><option>32 ft container</option><option>20–24 ft container</option><option>Open body, 10–14 wheel</option><option>Tractor-trolley</option><option>Trailer</option><option>Tanker</option><option>Small, under 7.5 t</option></select></div>
+              <div class="tf full" data-for="driver" hidden><label for="su-plate">Truck number <i>(optional)</i></label><div class="plate"><span class="ind">IND</span><input id="su-plate" autocomplete="off" spellcheck="false" placeholder="PB 10 HX 4417"></div></div>
+              <div class="tf" data-for="driver" hidden><label for="su-years">Driving trucks for</label><select id="su-years"><option>Less than 2 years</option><option>2–5 years</option><option>5–10 years</option><option>More than 10 years</option></select></div>
+              <div class="tf" data-for="driver" hidden><label for="su-licence">Licence</label><select id="su-licence"><option>Heavy goods vehicle</option><option>Medium goods vehicle</option><option>Light motor vehicle</option></select></div>
+
+              <div class="tf full" data-for="contractor" hidden><label for="su-work">What you do</label><select id="su-work"><option>Construction contractor</option><option>Farmer</option><option>Trader or small business</option><option>House or office shifting</option><option>Events and tents</option><option>Something else</option></select></div>
+
+              <div class="tf" data-for="driver company contractor" hidden><label for="su-deal" id="su-deal-l">Goods you deal in</label><select id="su-deal"><option value="agri">Crops and agriculture</option><option value="construction">Construction material</option><option value="fmcg">FMCG and retail</option><option value="textile">Textiles and yarn</option><option value="steel">Steel and metal</option><option value="chemicals">Chemicals</option><option value="other">Something else</option></select></div>
+              <div class="tf" data-for="driver company contractor" hidden><label for="su-side" id="su-side-l">You are a</label><select id="su-side"><option value="seller">Seller</option><option value="buyer">Buyer</option><option value="both">Both buyer and seller</option></select></div>
+              <fieldset class="tf full crops" id="su-crops" hidden><legend>Which crops? <i>(pick any)</i></legend>
+                <div class="crop-chips">
+                  <label><input type="checkbox" value="Wheat"><span>Wheat · गेहूँ</span></label>
+                  <label><input type="checkbox" value="Paddy / rice"><span>Paddy · धान</span></label>
+                  <label><input type="checkbox" value="Cotton"><span>Cotton · कपास</span></label>
+                  <label><input type="checkbox" value="Sugarcane"><span>Sugarcane · गन्ना</span></label>
+                  <label><input type="checkbox" value="Potato"><span>Potato · आलू</span></label>
+                  <label><input type="checkbox" value="Onion"><span>Onion · प्याज़</span></label>
+                  <label><input type="checkbox" value="Maize"><span>Maize · मक्का</span></label>
+                  <label><input type="checkbox" value="Mustard"><span>Mustard · सरसों</span></label>
+                  <label><input type="checkbox" value="Fruits and vegetables"><span>Fruits and veg · फल-सब्ज़ी</span></label>
+                </div>
+              </fieldset>
+
+              <label class="check tf full" for="su-wa"><input type="checkbox" id="su-wa" checked><span>Send me updates on WhatsApp <span lang="hi">(WhatsApp पर खबर भेजें)</span></span></label>
+            </div>
+            <datalist id="su-cities"><option>Ludhiana</option><option>Delhi</option><option>Gurugram</option><option>Faridabad</option><option>Panipat</option><option>Mandi Gobindgarh</option><option>Jaipur</option><option>Ahmedabad</option><option>Surat</option><option>Vapi</option><option>Bhiwandi</option><option>Mumbai</option><option>Pune</option><option>Nashik</option><option>Indore</option><option>Kanpur</option><option>Kolkata</option><option>Chennai</option><option>Bengaluru</option><option>Hyderabad</option></datalist>
+            <p class="tg-err" id="err2" role="alert"></p>
+            <div class="tg-actions"><button type="button" class="tg-back" data-back="1">← Back</button><button type="button" class="tg-go" data-next="3">Bilty banao · बिल्टी बनाओ →</button></div>
+          </div>
+
+          <div class="tg-step" data-step="3" hidden>
+            <h3>Check your bilty <span lang="hi">अपनी बिल्टी देख लें</span></h3>
+            <div class="bilty" id="bilty"></div>
+            <p class="tg-err" id="err3" role="alert"></p>
+            <div class="tg-actions"><button type="button" class="tg-back" data-back="2">← Change something</button><button type="submit" class="tg-go" id="su-submit">Sign me up · चलो!</button></div>
+          </div>
+
+          <div class="tg-done" hidden>
+            <h3>Shabaash, <span id="done-name"></span>!</h3>
+            <div class="pass-row"><div class="pass"><span class="ind">IND</span><b id="pass-no">KH 26 T 0000</b></div><span class="stamp">पक्का</span></div>
+            <p id="done-msg"></p>
+            <p class="demo-note" id="demo-note" hidden>Demo mode: this sign-up is saved only in your browser and isn't sent anywhere yet.</p>
+            <div class="tg-actions"><button type="button" class="tg-back" id="su-again">Sign up someone else</button><a class="tg-go" href="app.html" id="done-open" style="text-decoration:none">Open my Khep →</a></div>
+          </div>
+        </form>
+      </div>
+      <div class="tg-bumper">
+        <button type="button" class="horn" id="tg-horn">Horn bajao · हॉर्न बजाओ</button>
+        <span class="tg-note">We use your number only to contact you about Khep.</span>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+// Paste a form endpoint here (for example a Formspree form URL) to receive sign-ups.
+// Left empty, sign-ups are kept in the visitor's browser only and the success screen says so.
+const SIGNUP_ENDPOINT = "";
+
+const form = document.getElementById("tg-form"), tg = document.getElementById("tailgate");
+if(!form) return;
+const q = s => form.querySelector(s), qa = s => [...form.querySelectorAll(s)];
+const S = {step:1, role:null, rec:null, started:false};
+const ROLE = {driver:"Driver", company:"Company", contractor:"Contractor"};
+const DEAL = {agri:"Crops and agriculture", construction:"Construction material", fmcg:"FMCG and retail", textile:"Textiles and yarn", steel:"Steel and metal", chemicals:"Chemicals", other:"Something else"};
+const SIDE = {seller:"Seller", buyer:"Buyer", both:"Buyer and seller"};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const val = id => q("#"+id).value.trim();
+const fmtMobile = m => m.replace(/(\d{5})(\d{5})/, "$1 $2");
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+function go(n){
+  S.step = n;
+  qa(".tg-step").forEach(el => el.hidden = +el.dataset.step !== n);
+  q(".tg-done").hidden = n !== 4;
+  qa(".tg-steps li").forEach(li => li.setAttribute("aria-current", +li.dataset.s === Math.min(n,3) ? "step" : "false"));
+  q(".mini").style.left = `calc(${(n-1)/3} * (100% - 56px))`;
+  if(S.started){ const h = form.querySelector(n===4 ? ".tg-done h3" : `.tg-step[data-step="${n}"] h3`); if(h){ h.tabIndex = -1; h.focus({preventScroll:true}); } }
+  S.started = true;
+}
+
+qa(".medal").forEach(b => b.addEventListener("click", () => {
+  S.role = b.dataset.join;
+  qa(".medal").forEach(m => m.setAttribute("aria-checked", m === b));
+  qa("[data-for]").forEach(g => g.hidden = !g.dataset.for.split(" ").includes(S.role));
+  q("#su-deal-l").textContent = S.role === "driver" ? "Loads you like to carry" : "Goods you deal in";
+  q("#su-side-l").textContent = S.role === "driver" ? "You mostly work for" : "You are a";
+  const side = q("#su-side");
+  side.options[0].text = S.role === "driver" ? "Sellers sending goods" : "Seller";
+  side.options[1].text = S.role === "driver" ? "Buyers collecting goods" : "Buyer";
+  side.options[2].text = S.role === "driver" ? "Both" : "Both buyer and seller";
+  syncCrops();
+  q("#err1").textContent = "";
+}));
+function syncCrops(){ q("#su-crops").hidden = !S.role || q("#su-deal").value !== "agri"; }
+q("#su-deal").addEventListener("change", syncCrops);
+
+function fail(id, msg, box){ const el = q("#"+id); el.setAttribute("aria-invalid","true"); q(box).textContent = msg; el.focus(); return false; }
+function check2(){
+  qa("[aria-invalid]").forEach(e => e.removeAttribute("aria-invalid")); q("#err2").textContent = "";
+  if(val("su-name").length < 2) return fail("su-name", "Enter your name.", "#err2");
+  if(!/^[6-9]\d{9}$/.test(val("su-mobile"))) return fail("su-mobile", "Enter a 10-digit mobile number that starts with 6, 7, 8 or 9.", "#err2");
+  if(val("su-city").length < 2) return fail("su-city", "Enter the city you work from.", "#err2");
+  if(S.role === "company"){
+    if(val("su-company").length < 2) return fail("su-company", "Enter your company name.", "#err2");
+    const g = val("su-gstin").toUpperCase();
+    if(g && !/^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(g)) return fail("su-gstin", "That GSTIN doesn't look right. It has 15 characters, like 03ABCDE1234F1Z5. You can also leave it empty.", "#err2");
+  }
+  if(S.role === "driver"){
+    const p = val("su-plate").replace(/\s/g,"").toUpperCase();
+    if(p && !/^[A-Z]{2}\d{1,2}[A-Z]{0,3}\d{4}$/.test(p)) return fail("su-plate", "Enter a truck number like PB 10 HX 4417, or leave it empty.", "#err2");
+  }
+  return true;
+}
+
+function bilty(){
+  const r = {role:S.role, name:val("su-name"), mobile:val("su-mobile"), city:val("su-city"), language:val("su-lang"), whatsapp:q("#su-wa").checked,
+    deal:q("#su-deal").value, side:q("#su-side").value, crops:q("#su-deal").value === "agri" ? qa("#su-crops input:checked").map(c => c.value) : []};
+  if(S.role === "company"){ r.company = val("su-company"); r.gstin = val("su-gstin").toUpperCase(); r.trucksPerMonth = val("su-volume"); }
+  if(S.role === "driver"){ r.trucksOwned = val("su-fleet"); r.truckNumber = val("su-plate").toUpperCase(); r.truckType = val("su-ttype"); r.experience = val("su-years"); r.licence = val("su-licence"); }
+  if(S.role === "contractor"){ r.work = val("su-work"); }
+  const city3 = (r.city.toUpperCase().replace(/[^A-Z]/g,"") || "IND").slice(0,3);
+  r.lr = `KHP-${city3}-${Math.floor(10000 + Math.random()*90000)}`;
+  S.rec = r;
+  const rows = [["Joining as", ROLE[r.role]], ["Name", r.name], ["Mobile", "+91 " + fmtMobile(r.mobile)], ["City", r.city]];
+  if(r.role === "company"){ rows.push(["Company", r.company]); if(r.gstin) rows.push(["GSTIN", r.gstin]); rows.push(["Trucks a month", r.trucksPerMonth]); }
+  if(r.role === "driver"){ rows.push(["Trucks", r.trucksOwned], ["Truck type", r.truckType]); if(r.truckNumber) rows.push(["Truck number", r.truckNumber]); rows.push(["Driving for", r.experience], ["Licence", r.licence]); }
+  if(r.role === "contractor") rows.push(["Work", r.work]);
+  rows.push([r.role === "driver" ? "Loads you carry" : "Goods", DEAL[r.deal]]);
+  if(r.crops.length) rows.push(["Crops", r.crops.join(", ")]);
+  if(r.role !== "driver") rows.push(["You are a", SIDE[r.side]]);
+  rows.push(["App language", r.language], ["WhatsApp updates", r.whatsapp ? "Yes" : "No"]);
+  q("#bilty").innerHTML = `<div class="bilty-h"><span>Khep lorry receipt · sign-up copy</span><span class="mono">${esc(r.lr)}</span></div>
+    <dl>${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
+}
+
+function next(to){
+  if(to === 2 && !S.role){ q("#err1").textContent = "Pick one: driver, company or contractor."; return; }
+  if(to === 3){ if(!check2()) return; bilty(); }
+  go(to);
+}
+form.addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.next) next(+b.dataset.next);
+  else if(b.dataset.back) go(+b.dataset.back);
+  else if(b.id === "su-again"){ form.reset(); S.role = null; qa(".medal").forEach(m => m.setAttribute("aria-checked","false")); qa("[data-for]").forEach(g => g.hidden = true); syncCrops(); go(1); }
+});
+
+q("#su-mobile").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g,"").replace(/^91(?=\d{10})/,"").slice(0,10); });
+q("#su-plate").addEventListener("input", e => {
+  const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"");
+  const m = raw.match(/^([A-Z]{0,2})(\d{0,2})([A-Z]{0,3})(\d{0,4})/);
+  e.target.value = [m[1],m[2],m[3],m[4]].filter(Boolean).join(" ");
+});
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if(S.step < 3){ next(S.step + 1); return; }
+  if(S.step !== 3) return;
+  const btn = q("#su-submit"); btn.disabled = true; btn.textContent = "Sending…"; q("#err3").textContent = "";
+  const rec = {...S.rec, signedUpAt: new Date().toISOString()};
+  try{
+    if(SIGNUP_ENDPOINT){
+      const res = await fetch(SIGNUP_ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(rec)});
+      if(!res.ok) throw new Error("HTTP " + res.status);
+    }
+    try{ const list = JSON.parse(localStorage.getItem("khep-signups") || "[]"); list.push(rec); localStorage.setItem("khep-signups", JSON.stringify(list)); }catch(_){}
+    done(rec);
+  }catch(err){
+    q("#err3").textContent = "Your sign-up didn't go through. Check your internet connection and tap Sign me up again.";
+  }finally{
+    btn.disabled = false; btn.textContent = "Sign me up · चलो!";
+  }
+});
+
+function done(r){
+  const code = {driver:"D", company:"C", contractor:"K"}[r.role];
+  r.pass = `KH 26 ${code} ${Math.floor(1000 + Math.random()*9000)}`;
+  q("#pass-no").textContent = r.pass;
+  q("#done-name").textContent = r.name.split(/\s+/)[0];
+  q("#done-msg").textContent = `Your Khep account is ready. Open it to see ${{driver:"live loads near you", company:"trucks you can book", contractor:"drivers and transporters near you"}[r.role]}.`;
+  try{ localStorage.setItem("khep-user", JSON.stringify(r)); }catch(_){}
+  joinLink();
+  q("#demo-note").hidden = !!SIGNUP_ENDPOINT;
+  go(4); honk(); petals();
+}
+
+let ac;
+function honk(){
+  try{
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    const t = ac.currentTime, lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800; lp.connect(ac.destination);
+    [[0,.24,[392,494]],[.32,.55,[330,415]]].forEach(([s,d,fs]) => {
+      const g = ac.createGain(); g.gain.setValueAtTime(0,t+s); g.gain.linearRampToValueAtTime(.16,t+s+.02); g.gain.setValueAtTime(.16,t+s+d-.05); g.gain.linearRampToValueAtTime(0,t+s+d); g.connect(lp);
+      fs.forEach(f => { const o = ac.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.connect(g); o.start(t+s); o.stop(t+s+d+.02); });
+    });
+  }catch(_){}
+  if(!calm){ tg.classList.remove("shake"); void tg.offsetWidth; tg.classList.add("shake"); }
+}
+document.getElementById("tg-horn").addEventListener("click", honk);
+
+function petals(){
+  if(calm) return;
+  const cols = ["#ff9f1c","#ffd400","#e5197e","#d7261e","#ff6f00"];
+  for(let i = 0; i < 48; i++){
+    const p = document.createElement("i"); p.className = "petal";
+    p.style.left = Math.random()*100 + "%"; p.style.background = cols[i % cols.length];
+    p.style.animationDelay = (Math.random()*.7) + "s"; p.style.animationDuration = (2 + Math.random()*1.6) + "s";
+    p.style.setProperty("--r", (Math.random()*900 - 450) + "deg"); p.style.setProperty("--x", (Math.random()*160 - 80) + "px");
+    tg.appendChild(p); setTimeout(() => p.remove(), 4600);
+  }
+}
+
+// The painted eyes follow the pointer.
+const pupils = [...document.querySelectorAll(".eyes .pupil")];
+let raf = 0, px = 0, py = 0;
+if(!calm && pupils.length) window.addEventListener("pointermove", e => {
+  px = e.clientX; py = e.clientY;
+  if(raf) return;
+  raf = requestAnimationFrame(() => { raf = 0; pupils.forEach(p => {
+    const b = p.ownerSVGElement.getBoundingClientRect(), cx = b.left + b.width/2, cy = b.top + b.height*.55;
+    const dx = px - cx, dy = py - cy, d = Math.hypot(dx,dy) || 1, k = Math.min(1, d/300);
+    p.setAttribute("transform", `translate(${(dx/d*13*k).toFixed(1)} ${(dy/d*6*k).toFixed(1)})`);
+  }); });
+}, {passive:true});
+
+// Signed-up visitors get a shortcut into the app from the header.
+function joinLink(){}
+joinLink();
+go(1);
+})();
+</script>
+<script>if("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});</script>
+</body>
+</html>

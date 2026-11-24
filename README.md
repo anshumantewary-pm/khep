@@ -8,8 +8,10 @@ Live site: https://anshumantewary-pm.github.io/khep/
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The website: what Khep is, the **Download the app** section, sign-up, and a clickable concept prototype |
+| `index.html` | The landing page: a live animated map of trucks moving across India, who Khep is for, and the app download (QR code on computers, APK on Android, home-screen steps on iPhone) |
 | `app.html` | The Khep app, installable on Android, iPhone and desktop as a Progressive Web App |
+| `signup.html` | Sign-up, opened from inside the app |
+| `download/Khep.apk` | The Android app the website serves |
 | `manifest.webmanifest`, `sw.js`, `icons/` | What makes the app installable and lets it open offline |
 
 ## The app, by role
