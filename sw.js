@@ -1,6 +1,6 @@
 // Khep service worker: lets the installed app open offline.
 // Bump VERSION whenever app files change so phones pick up the new version.
-const VERSION = "khep-v2";
+const VERSION = "khep-v3";
 const SHELL = [
   "./", "./index.html", "./app.html", "./manifest.webmanifest",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/maskable-192.png", "./icons/maskable-512.png",
@@ -26,6 +26,8 @@ self.addEventListener("fetch", e => {
 
   // Map tiles always come from the network; caching them breaks the tile server's usage policy.
   if (url.hostname.endsWith("tile.openstreetmap.org")) return;
+  // The APK download goes straight to the network so people always get the latest build.
+  if (url.pathname.endsWith(".apk")) return;
 
   // Pages: try the network first so updates show up, fall back to the saved copy offline.
   if (req.mode === "navigate") {

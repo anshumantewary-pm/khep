@@ -228,6 +228,9 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mu
 .dl-help{background:rgba(255,255,255,.1);border-radius:12px;padding:12px 16px;max-width:60ch}
 .dl-help ol{margin:6px 0 0;padding-left:1.2rem;display:grid;gap:2px}
 .dl-small{margin:0;font-size:.85rem;color:#b9c3ea}
+.dl-status{margin:0;font-weight:700;color:var(--d-yel)}
+.dl-help.lit{background:rgba(255,212,0,.16);box-shadow:inset 0 0 0 2px var(--d-yel)}
+.dl-btn svg{flex:none}
 .dl-side{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center}
 .dl-icon{border-radius:30px;box-shadow:6px 6px 0 var(--d-pink);transform:rotate(-5deg)}
 .dl-qr{background:var(--d-paper);color:var(--d-ink);border-radius:14px;padding:12px;display:grid;gap:8px;justify-items:center;max-width:180px;text-align:center;font-size:.82rem;font-weight:600;border:3px solid var(--d-ink)}
@@ -294,18 +297,31 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mu
       <h2 id="dl-title">Khep ऐप डाउनलोड करें</h2>
       <p>Drivers get live loads from where to where. Companies see which truck to book. Contractors and farmers find the nearest driver or transporter on a map. Earnings, spend and expenses are tracked for you.</p>
       <div class="dl-actions">
-        <button class="dl-btn" id="dl-install" type="button" hidden>Download the app</button>
+        <a class="dl-btn" id="dl-apk" href="download/Khep.apk" download="Khep.apk" type="application/vnd.android.package-archive">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round"><path d="M12 3v12M6 10l6 6 6-6M4 20h16"/></svg>
+          <span id="dl-apk-label">Download the app</span></a>
+        <button class="dl-btn" id="dl-install" type="button" hidden>Install on this computer</button>
         <a class="dl-btn" id="dl-open" href="app.html" hidden>Open the Khep app</a>
-        <a class="dl-btn" id="dl-apk" href="https://github.com/anshumantewary-pm/khep/releases/latest/download/Khep.apk">Download for Android (APK)</a>
-        <a class="dl-btn ghost" href="#signup">Sign up first</a>
+        <a class="dl-btn ghost" id="dl-web" href="app.html">Use it in the browser</a>
       </div>
-      <p class="dl-small" id="dl-apk-note">Android 7 or newer, about 1.8 MB. When you open the file, Android may ask you to allow installs from your browser.</p>
+      <p class="dl-small" id="dl-apk-note">Khep for Android · version 1.0.0 · Android 7 or newer · 1.8 MB</p>
+      <p class="dl-status" id="dl-status" role="status" hidden></p>
+      <div class="dl-help" id="dl-android">
+        <b>Installing on Android · इंस्टॉल कैसे करें</b>
+        <ol>
+          <li>Tap <b>Download the app</b>. The file Khep.apk saves to your phone.</li>
+          <li>Open it from the download message, or from your phone's <b>Downloads</b> folder.</li>
+          <li>If Android asks, allow your browser to <b>install unknown apps</b>, then go back.</li>
+          <li>Tap <b>Install</b>, then <b>Open</b>. Khep is now on your home screen.</li>
+        </ol>
+        <p class="dl-small" style="margin-top:6px">Google Play Protect may show a warning because Khep isn't on the Play Store yet. Tap <b>More details</b>, then <b>Install anyway</b>.</p>
+      </div>
       <div class="dl-help" id="dl-ios" hidden>
         <b>On iPhone, in Safari:</b>
         <ol><li>Tap the Share button at the bottom of the screen.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. Khep appears on your home screen.</li></ol>
       </div>
       <div class="dl-help" id="dl-other" hidden>
-        <b>To install:</b> open this page in Chrome or Edge, then tap <b>Install app</b> or <b>Add to Home screen</b> in the browser menu.
+        <b>On a computer?</b> Scan the QR code with your Android phone and tap <b>Download the app</b> there. To use Khep on this computer, tap <b>Use it in the browser</b>.
       </div>
       <p class="dl-small">Play Store and App Store listings are coming next.</p>
     </div>
@@ -1005,14 +1021,23 @@ go(1);
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
   let prompt = null;
 
-  if(iOS || standalone){ $("dl-apk").hidden = true; $("dl-apk-note").hidden = true; }
-  if(standalone){ $("dl-open").hidden = false; }
-  else if(iOS){ $("dl-ios").hidden = false; }
-  else { $("dl-other").hidden = false; }
+  const android = /Android/i.test(ua);
+  // Android: the APK download is the main route. iPhone: add to home screen. Computer: QR code to the phone.
+  if(iOS || standalone){ $("dl-apk").hidden = true; $("dl-apk-note").hidden = true; $("dl-android").hidden = true; }
+  if(!android && !iOS){ $("dl-android").hidden = true; $("dl-apk-label").textContent = "Download for Android (APK)"; }
+  if(standalone){ $("dl-open").hidden = false; $("dl-web").hidden = true; }
+  else if(iOS){ $("dl-ios").hidden = false; $("dl-web").textContent = "Open Khep"; }
+  else if(!android){ $("dl-other").hidden = false; }
+
+  $("dl-apk").addEventListener("click", () => {
+    const s = $("dl-status"); s.hidden = false;
+    s.textContent = android ? "Downloading Khep.apk… When it finishes, tap the download message to install." : "Downloading Khep.apk. Send it to an Android phone, or scan the QR code with the phone instead.";
+    if(android) $("dl-android").classList.add("lit");
+  });
 
   window.addEventListener("beforeinstallprompt", e => {
     e.preventDefault(); prompt = e;
-    $("dl-install").hidden = false; $("dl-other").hidden = true;
+    if(!android) $("dl-install").hidden = false;
   });
   window.addEventListener("appinstalled", () => {
     $("dl-install").hidden = true; $("dl-open").hidden = false;
@@ -1027,7 +1052,7 @@ go(1);
 
   // A QR code helps people on a computer move to their phone. Phones don't need it.
   if(mobile || !window.QRCode || location.protocol === "file:"){ $("dl-qr-box").hidden = true; }
-  else { new QRCode($("dl-qr"), {text: location.origin + location.pathname.replace(/[^/]*$/, ""), width:280, height:280, colorDark:"#10122b", colorLight:"#fff8e6"}); }
+  else { new QRCode($("dl-qr"), {text: location.origin + location.pathname.replace(/[^/]*$/, "") + "#download", width:280, height:280, colorDark:"#10122b", colorLight:"#fff8e6"}); }
 
   if("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
 })();
