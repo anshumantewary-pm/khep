@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Khep Freight App</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: a working phone prototype on the left, a "why this screen" panel on the right, then the plan below. Truck-art stripe is the one bold flourish. */
+:root{
+  --bg:#eceef5; --surface:#ffffff; --sunk:#f4f5fa; --ink:#161a33; --muted:#585e80; --line:#d5d8e6;
+  --brand:#24317a; --brand-soft:#e3e7fb; --accent:#f2a516; --accent-ink:#3a2500; --red:#c8372d;
+  --ok:#17804f; --ok-soft:#dcf3e7; --warn:#a96a00; --warn-soft:#fdf0d4; --frame:#161a33;
+  --display:"Baloo 2","Mukta",system-ui,sans-serif; --body:"Mukta",system-ui,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1121; --surface:#171b31; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50;
+  --brand:#97a6ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --red:#ef6a5e;
+  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --frame:#000000; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0e1121; --surface:#171b31; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50;
+  --brand:#97a6ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --red:#ef6a5e;
+  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --frame:#000000; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.stripe{height:10px;background:repeating-linear-gradient(-45deg,var(--accent) 0 14px,var(--brand) 14px 28px,var(--red) 28px 42px,var(--brand) 42px 56px)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header .wrap{padding-block:28px 8px;display:grid;gap:10px}
+h1,h2,h3{font-family:var(--display);line-height:1.1;text-wrap:balance;margin:0}
+h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.01em}
+h1 span{color:var(--accent)}
+.lede{max-width:62ch;color:var(--muted);margin:0;font-size:1.05rem}
+.note{font-size:.85rem;color:var(--muted);margin:0}
+.roles{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.roles button{font:600 .95rem var(--body);padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.roles button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--surface)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.stage{display:grid;grid-template-columns:minmax(0,390px) minmax(0,1fr);gap:32px;padding-block:20px 40px;align-items:start}
+@media (max-width:820px){.stage{grid-template-columns:minmax(0,1fr)}}
+/* phone */
+.phone{width:100%;max-width:390px;margin:0 auto;background:var(--frame);border-radius:40px;padding:12px;box-shadow:0 20px 50px -20px rgba(20,24,60,.45)}
+.screen{background:var(--sunk);border-radius:30px;overflow:hidden;height:720px;display:flex;flex-direction:column;position:relative}
+.appbar{background:var(--brand);color:var(--surface);padding:14px 18px 12px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.appbar b{font-family:var(--display);font-size:1.35rem;font-weight:800;letter-spacing:.01em}
+.appbar small{opacity:.85;font-size:.8rem;text-align:right}
+.content{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);background:var(--surface)}
+.tabs button{background:none;border:0;padding:10px 4px 12px;font:600 .82rem var(--body);color:var(--muted);cursor:pointer;display:grid;justify-items:center;gap:2px}
+.tabs button[aria-selected="true"]{color:var(--brand)}
+.tabs button[aria-selected="true"] svg{stroke:var(--brand)}
+.tabs svg{width:22px;height:22px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:grid;gap:6px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.lane{font-family:var(--display);font-weight:700;font-size:1.1rem}
+.sub{color:var(--muted);font-size:.85rem}
+.mono{font-family:var(--mono);font-size:.82rem;letter-spacing:.02em}
+.num{font-variant-numeric:tabular-nums}
+.price{font-family:var(--display);font-weight:800;font-size:1.25rem}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--brand-soft);color:var(--brand);white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.field{display:grid;gap:2px}
+.field label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.field input,.field select{font:500 1rem var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;width:100%}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.band{position:relative;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--ok-soft),var(--ok) 50%,var(--ok-soft));margin:6px 0 2px}
+.band i{position:absolute;top:-5px;width:4px;height:20px;border-radius:2px;background:var(--ink)}
+.btn{font:700 1rem var(--body);border:0;border-radius:12px;padding:12px 14px;background:var(--accent);color:var(--accent-ink);cursor:pointer;width:100%}
+.btn.ghost{background:var(--surface);color:var(--brand);border:1.5px solid var(--brand)}
+.btn.small{width:auto;padding:7px 14px;font-size:.9rem}
+.btn:disabled{opacity:.5;cursor:default}
+.sec{font:700 .78rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:4px 2px -4px}
+.route svg{width:100%;height:64px;display:block}
+.steps{display:grid;gap:0}
+.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;padding-bottom:12px;position:relative}
+.step:not(:last-child)::before{content:"";position:absolute;left:13px;top:26px;bottom:0;width:2px;background:var(--line)}
+.dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);background:var(--surface);display:grid;place-items:center;font:700 .8rem var(--body);color:var(--muted)}
+.step.done .dot{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.step.now .dot{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
+.bigstep{background:var(--brand);color:var(--surface);border-radius:16px;padding:16px;display:grid;gap:10px}
+.bigstep .t{font-family:var(--display);font-size:1.5rem;font-weight:800;line-height:1.15}
+.bigstep .btn{font-size:1.15rem;padding:16px}
+.otp{display:flex;gap:8px}
+.otp input{width:52px;text-align:center;font:700 1.4rem var(--mono);padding:8px 0;border-radius:10px;border:0;background:var(--surface);color:var(--ink)}
+.lang{display:flex;gap:4px;background:rgba(255,255,255,.15);border-radius:999px;padding:3px}
+.lang button{border:0;background:none;color:var(--surface);font:600 .8rem var(--body);padding:3px 10px;border-radius:999px;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--surface);color:var(--brand)}
+.meter{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--warn)}
+.toast{position:absolute;left:14px;right:14px;bottom:76px;background:var(--ink);color:var(--surface);border-radius:12px;padding:10px 14px;font-weight:600;font-size:.92rem;transition:opacity .25s, transform .25s;opacity:0;transform:translateY(8px);pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.ledger .row{padding:6px 0;border-bottom:1px dashed var(--line)}
+.ledger .row:last-child{border-bottom:0}
+/* why panel */
+.why{display:grid;gap:18px;min-width:0}
+.why .eyebrow{font:700 .8rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.why h2{font-size:clamp(1.6rem,3vw,2.1rem);font-weight:800}
+.why dl{display:grid;gap:14px;margin:0}
+.why dt{font:700 .8rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.why dd{margin:2px 0 0;max-width:62ch}
+.why .measure{border-left:4px solid var(--accent);padding:6px 0 6px 14px;background:none}
+.tour{display:flex;flex-wrap:wrap;gap:6px}
+.tour button{font:500 .85rem var(--body);border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:5px 10px;cursor:pointer}
+.tour button[aria-current="true"]{border-color:var(--brand);color:var(--brand);font-weight:700}
+/* plan */
+.plan{background:var(--surface);border-top:1px solid var(--line)}
+.plan .wrap{padding-block:40px 56px;display:grid;gap:36px}
+.plan h2{font-size:clamp(1.6rem,3.5vw,2.2rem);font-weight:800}
+.plan h3{font-size:1.2rem;font-weight:700}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px 28px;margin:0;padding:0;list-style:none}
+.pillars li{display:grid;gap:4px;padding-top:12px;border-top:3px solid var(--brand)}
+.pillars p,.plan p{margin:0;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.phases{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:ph}
+.phases li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;counter-increment:ph}
+.phases li::before{content:counter(ph);width:44px;height:44px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:800 1.3rem var(--display);display:grid;place-items:center}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:32px}
+.risks{margin:0;padding-left:1.1rem;display:grid;gap:8px;color:var(--muted)}
+.risks b{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+
+<div class="stripe" aria-hidden="true"></div>
+<header>
+  <div class="wrap">
+    <h1>Khep<span>.</span></h1>
+    <p class="lede">A freight app for Indian road transport, built around one promise: every load on Khep is already paid for. Shippers fund escrow when they post, truck owners get 90% at loading, and drivers use it in their own language.</p>
+    <p class="note">Clickable prototype. Pick a side, then tap through the app. All names, numbers and vehicles are illustrative examples.</p>
+    <div class="roles" role="group" aria-label="Choose a user">
+      <button id="r-shipper" data-role="shipper">Shipper</button>
+      <button id="r-owner" data-role="owner">Truck owner</button>
+      <button id="r-driver" data-role="driver">Driver</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap stage">
+  <div class="phone"><div class="screen" id="screen"></div></div>
+  <section class="why" id="why" aria-live="polite"></section>
+</main>
+
+<section class="plan">
+  <div class="wrap">
+    <div style="display:grid;gap:10px">
+      <h2>The solution on one page</h2>
+      <p style="max-width:68ch">Indian trucking is mostly small owners with a few trucks each, connected to shippers through layers of commission agents. Money moves late, prices are opaque, return trips run empty and drivers carry the cost of long waits. Khep fixes the money first, because guaranteed payment is what pulls small owners off the broker network. Everything else builds on the trip data that payment flow creates.</p>
+    </div>
+
+    <ul class="pillars">
+      <li><h3>Escrow-backed loads</h3><p>Shipper funds the freight before posting. 90% goes to the owner by UPI at loading, the rest on e-POD. Deductions need photo proof within 24 hours.</p></li>
+      <li><h3>Fair lane rates</h3><p>A price band per lane and truck type from completed trips, shown to both sides. Ends the phone-around for quotes.</p></li>
+      <li><h3>Return-load matching</h3><p>Back-haul offered for the truck's arrival time and city while the forward trip is still running.</p></li>
+      <li><h3>Paperwork on the trip</h3><p>E-way bill from the invoice, digital LR/bilty, e-POD with consignee OTP, vehicle and licence checks, expiry alerts.</p></li>
+      <li><h3>Driver-first app</h3><p>Hindi and regional languages, voice, one big button per step, auto-billed detention, rest stops with safe parking.</p></li>
+      <li><h3>Credit from trip history</h3><p>Fuel and toll credit lines and invoice discounting, underwritten on the owner's Khep payment record.</p></li>
+    </ul>
+
+    <div class="cols">
+      <div style="display:grid;gap:12px;min-width:0">
+        <h3>How it makes money</h3>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Stream</th><th>Who pays</th><th>Pricing</th></tr></thead>
+          <tbody>
+            <tr><td>Transaction fee</td><td>Truck owner</td><td>2% flat per trip, against 5–10% agent commission</td></tr>
+            <tr><td>Shipper workspace</td><td>Shippers with 50+ trips a month</td><td>Monthly plan: multi-site, approvals, GST and freight reports</td></tr>
+            <tr><td>Fuel and toll credit</td><td>Truck owner</td><td>Interest spread with a partner lender, cashback from fuel partners</td></tr>
+            <tr><td>Invoice discounting</td><td>Owners with large shippers outside escrow</td><td>Discount fee on early payout</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div style="display:grid;gap:12px;min-width:0">
+        <h3>Rollout</h3>
+        <ol class="phases">
+          <li><div><b>One corridor.</b> <span class="sub">Punjab and Delhi NCR to Bhiwandi/Mumbai. 50 mid-size shippers, 500 trucks, full-truckload only. Prove escrow and the 90% advance.</span></div></li>
+          <li><div><b>Return loads and credit.</b> <span class="sub">Add back-haul matching once both ends of the corridor have shippers. Launch fuel credit using six months of payment history.</span></div></li>
+          <li><div><b>Five corridors.</b> <span class="sub">Add the busiest lanes out of Gujarat, Chennai and Kolkata. Add Tamil, Telugu, Bengali and Marathi to the driver app.</span></div></li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="display:grid;gap:12px">
+      <h3>What has to be true, and how to test it</h3>
+      <ul class="risks">
+        <li><b>Shippers will pre-fund.</b> Most pay on 30–90 day credit today. Test: offer a lower rate (the owner's saved commission passed back) in exchange for escrow, and count how many of 50 shippers accept.</li>
+        <li><b>Owners leave their agents.</b> Agents also give credit and fill gaps. Test: track repeat bookings per owner after the first paid trip.</li>
+        <li><b>Drivers will use it.</b> Test the five-step trip screen with 20 drivers at a transport nagar, by voice and by tap, before writing more features.</li>
+        <li><b>The rate band is trusted.</b> It needs enough trips per lane. Seed it from shipper historical data until volume builds.</li>
+      </ul>
+      <p class="note">This plan was drafted from general knowledge of the Indian trucking market, not from the five research threads, which were not available in this session. Figures such as agent commission, payment terms and empty-running share are commonly cited industry estimates and should be checked against that research.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+const inr = n => "₹" + n.toLocaleString("en-IN");
+const ICON = {
+  post:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',
+  truck:'<svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/></svg>',
+  pin:'<svg viewBox="0 0 24 24"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg>',
+  list:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M4 12h14M10 6l-6 6 6 6"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M16 12h2"/></svg>',
+  road:'<svg viewBox="0 0 24 24"><path d="M6 21 9 3M18 21 15 3M12 6v2M12 11v2M12 16v2"/></svg>',
+  rupee:'<svg viewBox="0 0 24 24"><path d="M7 4h10M7 8h10M7 4c6 0 6 8 0 8l7 8"/></svg>',
+  bed:'<svg viewBox="0 0 24 24"><path d="M3 18V8M3 14h18v4M21 14v-2a3 3 0 0 0-3-3h-7v5"/><circle cx="7" cy="11" r="1.5"/></svg>'
+};
+const S = {
+  role:"shipper",
+  tab:{shipper:"post", owner:"loads", driver:"trip"},
+  posted:false, booked:null, price:102000,
+  returnBooked:null, lang:"hi", step:1, otp:false
+};
+try{ const r = localStorage.getItem("khep-role"); if(r) S.role = r; }catch(e){}
+
+const TABS = {
+  shipper:[["post","Post load","post"],["trucks","Trucks","truck"],["track","Track","pin"]],
+  owner:[["loads","Loads","list"],["return","Return trip","back"],["money","Money","wallet"]],
+  driver:[["trip","trip","road"],["exp","exp","rupee"],["stops","stops","bed"]]
+};
+const T = {
+  en:{trip:"Trip",exp:"Expenses",stops:"Rest stops",
+    steps:["Reached loading point","Goods loaded","Departed","Reached delivery","Delivery OTP"],
+    hints:["Tap when you reach the factory gate.","Take 3 photos of the load and the seal.","Start the trip. Tracking is on.","Tap at the delivery gate. The waiting clock starts.","Ask the receiver for the 4-digit code."],
+    done:"Done", wait:"Waiting at loading", waitTxt:"3 h 10 m waited. 4 hours are free, then ₹250 per hour is added to the bill automatically.",
+    speak:"Speak instead of typing", otpBtn:"Confirm delivery", complete:"Trip complete. Balance payment released to your owner.",
+    diesel:"Diesel",toll:"Toll",food:"Food",add:"Add expense with photo",left:"Trip allowance left",card:"Fuel card",fast:"FASTag, logged automatically",cash:"Cash, photo receipt",
+    park:"truck parking",shower:"shower",h24:"open 24 h",safe:"guarded",km:"km ahead"},
+  hi:{trip:"सफ़र",exp:"खर्चा",stops:"रुकने की जगह",
+    steps:["लोडिंग पॉइंट पहुँचे","माल लोड हुआ","रवाना हुए","डिलीवरी पर पहुँचे","डिलीवरी OTP"],
+    hints:["फ़ैक्टरी गेट पर पहुँचकर दबाएँ।","माल और सील की 3 फ़ोटो लें।","सफ़र शुरू करें। लोकेशन चालू है।","डिलीवरी गेट पर दबाएँ। इंतज़ार की घड़ी शुरू होगी।","माल लेने वाले से 4 अंकों का कोड पूछें।"],
+    done:"हो गया", wait:"लोडिंग पर इंतज़ार", waitTxt:"3 घं 10 मि हो गए। 4 घंटे मुफ़्त, उसके बाद ₹250 प्रति घंटा अपने-आप बिल में जुड़ेगा।",
+    speak:"लिखने की जगह बोलें", otpBtn:"डिलीवरी पक्की करें", complete:"सफ़र पूरा। बाकी पेमेंट आपके मालिक को भेज दिया गया।",
+    diesel:"डीज़ल",toll:"टोल",food:"खाना",add:"फ़ोटो के साथ खर्चा जोड़ें",left:"सफ़र भत्ता बाकी",card:"फ़्यूल कार्ड",fast:"FASTag, अपने-आप दर्ज",cash:"नकद, रसीद की फ़ोटो",
+    park:"ट्रक पार्किंग",shower:"नहाने की सुविधा",h24:"24 घंटे खुला",safe:"चौकीदार",km:"कि.मी. आगे"}
+};
+
+const TRUCKS = [
+  {no:"PB 10 HX 4417", co:"Gurpreet Roadlines, Ludhiana", fleet:"6 trucks", rate:4.7, ontime:96, trips:212, quote:102000},
+  {no:"HR 55 AD 7781", co:"Shree Balaji Transport, Panipat", fleet:"2 trucks", rate:4.5, ontime:91, trips:88, quote:99500},
+  {no:"PB 65 BC 1203", co:"Sandhu Carriers, Mohali", fleet:"1 truck, owner-driver", rate:4.8, ontime:94, trips:41, quote:104000}
+];
+const LOADS = [
+  {lane:"Ludhiana → Jaipur", what:"Bicycle parts, 7 t", truck:"22 ft closed", price:38500, med:37000, when:"Today 18:00", who:"Hero-line Cycles (example)", pays:"Paid in 0 days"},
+  {lane:"Ludhiana → Ahmedabad", what:"Hosiery cartons, 8 t", truck:"22 ft closed", price:61000, med:62500, when:"Tomorrow 09:00", who:"Satluj Knits", pays:"Paid in 0 days"},
+  {lane:"Mandi Gobindgarh → Kanpur", what:"Steel pipes, 9 t", truck:"22 ft open", price:44000, med:43000, when:"Tomorrow 14:00", who:"Gobind Tubes", pays:"Paid in 0 days"}
+];
+const RETURNS = [
+  {lane:"Bhiwandi → Ludhiana", what:"FMCG cartons, 14 t", price:74000, gap:"Loads 4 h after you arrive", det:"0 km detour"},
+  {lane:"Vapi → Ludhiana", what:"Chemical drums, 16 t", price:78500, gap:"Next morning 08:00", det:"160 km back south"},
+  {lane:"Pune → Panipat", what:"Auto parts, 12 t", price:81000, gap:"Next day 12:00", det:"150 km detour"}
+];
+
+const WHY = {
+  "shipper:post":{t:"Post a load that is already paid for",
+    p:"Rates are opaque. A logistics manager calls five or more agents at the transport nagar, gets quotes that differ by 15%, and still can't tell which is fair.",
+    h:"Khep shows a rate band for this exact lane and truck type, from trips completed on the platform. The shipper funds escrow when posting, so every truck owner sees a load with guaranteed payment.",
+    m:"Time to confirm a truck: from half a day of calls to under 30 minutes."},
+  "shipper:trucks":{t:"Pick a truck you can trust",
+    p:"Shippers worry about fake trucks, lapsed insurance and drivers with no track record. Agents hide who the real owner is.",
+    h:"Every truck is checked against the government vehicle registry (VAHAN) and every driver against the licence registry (SARATHI). On-time rate and claims come from real Khep trips, and the shipper sees the actual owner.",
+    m:"Share of trips with a damage or shortage claim."},
+  "shipper:track":{t:"See the trip and its papers in one place",
+    p:"After the truck leaves, shippers chase location and documents on calls and WhatsApp. E-way bills expire mid-route and trucks get stopped.",
+    h:"Tracking runs from the driver's phone with consent, or SIM tracking as a fallback. The e-way bill is generated from the invoice with an extension reminder before it lapses. LR, invoice and e-POD sit on the trip.",
+    m:"Calls per trip to check status, and trips stopped for paperwork."},
+  "owner:loads":{t:"Only loads that pay on time",
+    p:"Most trucks belong to small owners with a handful of vehicles. They rely on agents who take 5–10% and then wait 30–90 days for the balance, often with unexplained deductions.",
+    h:"Every load on the board is escrow-backed. The owner gets 90% by UPI the moment loading is confirmed and the rest on e-POD. Khep takes a flat 2%. The lane median beside each price shows whether it is fair.",
+    m:"Days from delivery to full payment. Target: same day."},
+  "owner:return":{t:"Don't drive home empty",
+    p:"A large share of return trips run empty or wait days at the destination for a load, which wipes out the margin from the forward trip.",
+    h:"While the truck is still on the forward trip, Khep offers back-haul loads matched to its arrival city and time, with the detour shown in kilometres. The owner books before the truck arrives.",
+    m:"Empty kilometres per truck per month, and hours idle at destination."},
+  "owner:money":{t:"Know where every rupee is",
+    p:"Owners run on informal credit for diesel and tolls at high interest. Paperwork lapses into fines, and disputed deductions eat into margins.",
+    h:"One ledger per trip. Deductions must be raised within 24 hours with photos, or the balance releases. A fuel and toll credit line is sized from the owner's Khep payment record. Expiry alerts cover insurance, permit, fitness and PUC.",
+    m:"Cost of working capital, and fines paid for expired documents."},
+  "driver:trip":{t:"One big button per step, in the driver's language",
+    p:"Many drivers aren't comfortable with English or text-heavy apps. They wait hours unpaid at loading and unloading, and that waiting time rarely gets billed.",
+    h:"The driver app is Hindi-first with voice input and five steps. When the truck enters the loading or delivery geofence, a detention clock starts and charges past the free hours go on the bill automatically. The consignee's OTP closes the trip and releases payment.",
+    m:"Share of trips closed with e-POD, and detention billed versus waited."},
+  "driver:exp":{t:"No cash fights over expenses",
+    p:"Owners hand drivers cash advances, and every trip ends in an argument about what was spent on diesel, tolls and food.",
+    h:"Diesel goes on the fuel card and tolls are logged from FASTag automatically. Cash spends are added with a receipt photo. Driver and owner see the same running balance.",
+    m:"Trips settled without a dispute."},
+  "driver:stops":{t:"Safe places to stop",
+    p:"India is short of truck drivers, and long hours, unsafe parking and poor roadside facilities drive many out of the job. Parked trucks are also a target for cargo theft.",
+    h:"A list of rest stops along the route with guarded parking, showers and food, rated by drivers. Later, Khep partners with highway dhabas and fuel stations for driver discounts.",
+    m:"Driver retention per fleet, and theft incidents at stops."}
+};
+
+const screen = document.getElementById("screen");
+const why = document.getElementById("why");
+
+function appbar(){
+  if(S.role==="shipper") return `<div class="appbar"><b>Khep</b><small>Satluj Yarns Pvt Ltd<br>Shipper</small></div>`;
+  if(S.role==="owner") return `<div class="appbar"><b>Khep</b><small>Gurpreet Roadlines<br>6 trucks</small></div>`;
+  return `<div class="appbar"><b>Khep</b><div class="lang" role="group" aria-label="Language">
+    <button data-lang="hi" aria-pressed="${S.lang==="hi"}">हिंदी</button><button data-lang="en" aria-pressed="${S.lang==="en"}">English</button></div></div>`;
+}
+function tabs(){
+  const L = T[S.lang];
+  return `<nav class="tabs" role="tablist">${TABS[S.role].map(([id,label,ic])=>{
+    const name = S.role==="driver" ? L[label] : label;
+    return `<button role="tab" data-tab="${id}" aria-selected="${S.tab[S.role]===id}">${ICON[ic]}<span>${name}</span></button>`;
+  }).join("")}</nav>`;
+}
+function routeSvg(progress){
+  const x = 20 + progress*300;
+  return `<svg viewBox="0 0 340 64" role="img" aria-label="Route Ludhiana to Bhiwandi">
+    <line x1="20" y1="28" x2="320" y2="28" stroke="var(--line)" stroke-width="6" stroke-linecap="round"/>
+    <line x1="20" y1="28" x2="${x}" y2="28" stroke="var(--ok)" stroke-width="6" stroke-linecap="round"/>
+    ${[[20,"Ludhiana"],[120,"Jaipur"],[220,"Ahmedabad"],[320,"Bhiwandi"]].map(([cx,n],i)=>`<circle cx="${cx}" cy="28" r="6" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/><text x="${cx}" y="56" text-anchor="${i===0?"start":i===3?"end":"middle"}" font-size="11" fill="var(--muted)" font-family="Mukta,sans-serif">${n}</text>`).join("")}
+    <rect x="${x-11}" y="16" width="22" height="24" rx="5" fill="var(--accent)"/><text x="${x}" y="33" text-anchor="middle" font-size="12" font-weight="700" fill="var(--accent-ink)" font-family="Mukta,sans-serif">T</text>
+  </svg>`;
+}
+
+const V = {};
+V["shipper:post"] = () => {
+  const lo=96000, hi=108000, pct=Math.max(0,Math.min(100,(S.price-lo)/(hi-lo)*100));
+  return `
+  <div class="card">
+    <div class="two">
+      <div class="field"><label for="f-from">From</label><input id="f-from" value="Ludhiana, PB"></div>
+      <div class="field"><label for="f-to">To</label><input id="f-to" value="Bhiwandi, MH"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label for="f-what">Material</label><input id="f-what" value="Cotton yarn"></div>
+      <div class="field"><label for="f-wt">Weight</label><input id="f-wt" value="18 tonnes"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label for="f-truck">Truck</label><select id="f-truck"><option>32 ft MXL container</option><option>32 ft SXL container</option><option>22 ft closed body</option><option>Open body, 10-wheel</option></select></div>
+      <div class="field"><label for="f-date">Loading</label><input id="f-date" value="26 Nov, 08:00"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="row"><b>Fair rate for this lane</b><span class="chip">142 trips, last 30 days</span></div>
+    <div class="band"><i style="left:calc(${pct}% - 2px)"></i></div>
+    <div class="row sub num"><span>${inr(lo)}</span><span>median ${inr(102000)}</span><span>${inr(hi)}</span></div>
+    <div class="field"><label for="f-price">Your price</label><input id="f-price" class="num" type="number" step="500" value="${S.price}"></div>
+    <div class="sub">≈ ${inr(Math.round(S.price/1690))}/km over 1,690 km · tolls by truck owner</div>
+  </div>
+  <button class="btn" data-act="post" ${S.posted?"disabled":""}>${S.posted?"Posted · "+inr(S.price)+" in escrow":"Fund escrow and post load"}</button>
+  <p class="sub" style="margin:0">Money stays in a bank escrow account. 90% goes to the truck owner at loading, 10% on delivery proof.</p>`;
+};
+V["shipper:trucks"] = () => {
+  if(!S.posted) return `<div class="card"><b>No load posted yet</b><span class="sub">Post a load first. Verified trucks on this lane will appear here within minutes.</span><button class="btn small ghost" data-go="post">Post a load</button></div>`;
+  return `<div class="sec">3 verified trucks for Ludhiana → Bhiwandi</div>` + TRUCKS.map((t,i)=>`
+  <div class="card">
+    <div class="row"><span class="mono">${t.no}</span><span class="price num">${inr(t.quote)}</span></div>
+    <div><b>${t.co}</b><div class="sub">${t.fleet} · ★ ${t.rate} · ${t.ontime}% on time · ${t.trips} Khep trips</div></div>
+    <div class="chips"><span class="chip ok">RC verified</span><span class="chip ok">Insurance valid</span><span class="chip ok">Driver licence verified</span></div>
+    ${S.booked===i?`<span class="chip ok" style="justify-self:start">Booked</span>`:`<button class="btn small" data-act="book" data-i="${i}" ${S.booked!==null?"disabled":""}>Book this truck</button>`}
+  </div>`).join("");
+};
+V["shipper:track"] = () => {
+  if(S.booked===null) return `<div class="card"><b>Nothing to track yet</b><span class="sub">Book a truck and its live trip shows here.</span><button class="btn small ghost" data-go="trucks">See trucks</button></div>`;
+  const t = TRUCKS[S.booked];
+  return `
+  <div class="card">
+    <div class="row"><span class="lane">Ludhiana → Bhiwandi</span><span class="chip">On the way</span></div>
+    <div class="sub"><span class="mono">${t.no}</span> · near Jaipur bypass · 1,140 km left</div>
+    <div class="route">${routeSvg(.34)}</div>
+    <div class="row"><span class="sub">Expected arrival</span><b>Thu 28 Nov, 14:00</b></div>
+  </div>
+  <div class="card ledger">
+    <b>Payment</b>
+    <div class="row num"><span>Advance paid to owner at loading</span><b>${inr(Math.round(t.quote*.9))}</b></div>
+    <div class="row num"><span>Held until delivery proof</span><b>${inr(t.quote-Math.round(t.quote*.9))}</b></div>
+  </div>
+  <div class="card ledger">
+    <b>Documents</b>
+    <div class="row"><span>E-way bill <span class="mono">3811 2457 9061</span></span><span class="chip ok">Valid to 03 Dec</span></div>
+    <div class="row"><span>Lorry receipt <span class="mono">KHP-LDH-24117</span></span><span class="chip ok">Signed</span></div>
+    <div class="row"><span>Tax invoice <span class="mono">SY/2026/1182</span></span><span class="chip ok">Attached</span></div>
+    <div class="row"><span>Delivery proof (e-POD)</span><span class="chip warn">At delivery</span></div>
+  </div>
+  <div class="card"><b>Waiting time</b><span class="sub">6 free hours at unloading. After that ₹250 per hour is added to the bill and paid to the owner.</span></div>`;
+};
+V["owner:loads"] = () => `
+  <div class="chips"><span class="chip">PB 10 JK 0912 · 22 ft · free at Ludhiana</span></div>
+  ${LOADS.map(l=>`
+  <div class="card">
+    <div class="row"><span class="lane">${l.lane}</span><span class="price num">${inr(l.price)}</span></div>
+    <div class="sub">${l.what} · ${l.truck} · loads ${l.when}</div>
+    <div class="row sub num"><span>Lane median ${inr(l.med)}</span><span>${l.price>=l.med?"above median":"below median"}</span></div>
+    <div class="chips"><span class="chip ok">Payment secured</span><span class="chip">90% at loading: ${inr(Math.round(l.price*.9))}</span><span class="chip">Khep fee 2%</span></div>
+    <button class="btn small" data-act="toast" data-msg="Request sent. ${l.who} usually confirms in 15 min.">Take this load</button>
+  </div>`).join("")}`;
+V["owner:return"] = () => `
+  <div class="card">
+    <div class="row"><span class="mono">PB 10 HX 4417</span><span class="chip">Forward trip running</span></div>
+    <b>Reaches Bhiwandi Thu 28 Nov, about 14:00</b>
+    <span class="sub">Without a return load this truck drives 1,690 km home empty or waits at Bhiwandi.</span>
+  </div>
+  <div class="sec">Return loads for that time and place</div>
+  ${RETURNS.map((r,i)=>`
+  <div class="card">
+    <div class="row"><span class="lane">${r.lane}</span><span class="price num">${inr(r.price)}</span></div>
+    <div class="sub">${r.what} · ${r.gap} · ${r.det}</div>
+    <div class="chips"><span class="chip ok">Payment secured</span></div>
+    ${S.returnBooked===i?`<span class="chip ok" style="justify-self:start">Booked · 1,690 empty km avoided</span>`:`<button class="btn small" data-act="ret" data-i="${i}" ${S.returnBooked!==null?"disabled":""}>Book return</button>`}
+  </div>`).join("")}`;
+V["owner:money"] = () => `
+  <div class="card ledger">
+    <div class="row"><b>This trip · PB 10 HX 4417</b><span class="sub">Ludhiana → Bhiwandi</span></div>
+    <div class="row num"><span>Freight</span><b>${inr(102000)}</b></div>
+    <div class="row num"><span>Advance by UPI · 26 Nov 10:42</span><b style="color:var(--ok)">${inr(91800)}</b></div>
+    <div class="row num"><span>Balance on e-POD</span><b>${inr(8160)}</b></div>
+    <div class="row num"><span>Khep fee 2%</span><span>− ${inr(2040)}</span></div>
+    <div class="row sub"><span>Deduction window</span><span>24 h after delivery, photos required</span></div>
+  </div>
+  <div class="card">
+    <div class="row"><b>Fuel and toll credit</b><span class="chip">From your Khep record</span></div>
+    <div class="meter"><i style="width:28%"></i></div>
+    <div class="row sub num"><span>${inr(42300)} used</span><span>limit ${inr(150000)}</span></div>
+    <span class="sub">Repaid automatically from trip balances. 212 trips, no missed repayment.</span>
+  </div>
+  <div class="card ledger">
+    <b>Documents expiring</b>
+    <div class="row"><span><span class="mono">PB 10 HX 4417</span> insurance</span><span class="chip warn">12 Dec</span></div>
+    <div class="row"><span><span class="mono">PB 10 JK 0912</span> national permit</span><span class="chip warn">03 Jan</span></div>
+    <div class="row"><span><span class="mono">PB 10 JK 0912</span> PUC</span><span class="chip ok">Valid to Apr</span></div>
+  </div>`;
+V["driver:trip"] = () => {
+  const L=T[S.lang];
+  if(S.otp) return `<div class="bigstep"><div class="t">${L.complete}</div></div>
+    <div class="card"><div class="row num"><span>${S.lang==="hi"?"इंतज़ार का पैसा जुड़ा":"Waiting charge added"}</span><b>${inr(500)}</b></div></div>
+    <button class="btn ghost" data-act="reset">${S.lang==="hi"?"डेमो दोबारा चलाएँ":"Restart demo"}</button>`;
+  const cur = S.step;
+  return `
+  <div class="card"><div class="row"><span class="lane">Ludhiana → Bhiwandi</span><span class="mono">PB 10 HX 4417</span></div>
+    <span class="sub">Satluj Yarns · ${S.lang==="hi"?"गेट 2, फ़ोकल पॉइंट":"Gate 2, Focal Point"}</span></div>
+  <div class="bigstep">
+    <div class="t">${L.steps[cur]}</div>
+    <div>${L.hints[cur]}</div>
+    ${cur===4?`<div class="otp">${[0,1,2,3].map(i=>`<input id="otp${i}" inputmode="numeric" maxlength="1" aria-label="Digit ${i+1}" value="${"4172"[i]}">`).join("")}</div>
+      <button class="btn" data-act="otp">${L.otpBtn}</button>`
+    :`<button class="btn" data-act="step">${L.done}</button>`}
+    <button class="btn ghost small" data-act="toast" data-msg="${S.lang==="hi"?"बोलिए… (डेमो)":"Listening… (demo)"}" style="justify-self:start">${L.speak}</button>
+  </div>
+  ${cur<=1?`<div class="card"><div class="row"><b>${L.wait}</b><span class="chip warn">3:10</span></div><div class="meter"><i style="width:79%"></i></div><span class="sub">${L.waitTxt}</span></div>`:""}
+  <div class="card steps">${L.steps.map((s,i)=>`<div class="step ${i<cur?"done":i===cur?"now":""}"><span class="dot">${i<cur?"✓":i+1}</span><span style="padding-top:2px">${s}</span></div>`).join("")}</div>`;
+};
+V["driver:exp"] = () => { const L=T[S.lang]; return `
+  <div class="card"><div class="row"><b>${L.left}</b><span class="price num">${inr(2360)}</span></div></div>
+  <div class="card ledger">
+    <div class="row"><span>${L.diesel}<div class="sub">${L.card} · 196 L</div></span><b class="num">${inr(18400)}</b></div>
+    <div class="row"><span>${L.toll}<div class="sub">${L.fast} · 9</div></span><b class="num">${inr(6210)}</b></div>
+    <div class="row"><span>${L.food}<div class="sub">${L.cash}</div></span><b class="num">${inr(640)}</b></div>
+  </div>
+  <button class="btn" data-act="toast" data-msg="${S.lang==="hi"?"कैमरा खुलेगा (डेमो)":"Camera opens (demo)"}">${L.add}</button>`; };
+V["driver:stops"] = () => { const L=T[S.lang]; const st=[
+  ["Khep Rest Point, Shahpura","NH-48, Rajasthan",42,true,true,true],
+  ["Highway dhaba, Kishangarh","NH-48, Rajasthan",118,true,false,true],
+  ["Khep Rest Point, Himmatnagar","NH-48, Gujarat",386,true,true,true]];
+  return st.map(s=>`<div class="card">
+    <div class="row"><b>${s[0]}</b><span class="num sub">${s[2]} ${L.km}</span></div>
+    <span class="sub">${s[1]} · ★ 4.${s[3]&&s[4]?6:2}</span>
+    <div class="chips"><span class="chip ok">${L.park}</span>${s[4]?`<span class="chip">${L.shower}</span>`:""}<span class="chip">${L.h24}</span>${s[5]?`<span class="chip ok">${L.safe}</span>`:""}</div>
+  </div>`).join(""); };
+
+function renderWhy(){
+  const key = S.role+":"+S.tab[S.role], w = WHY[key];
+  const who = {shipper:"Shipper",owner:"Truck owner",driver:"Driver"}[S.role];
+  const tour = TABS[S.role].map(([id,label])=>`<button data-tab="${id}" aria-current="${S.tab[S.role]===id}">${S.role==="driver"?T.en[label]:label}</button>`).join("");
+  why.innerHTML = `<div class="eyebrow">${who} · why this screen</div>
+    <h2>${w.t}</h2>
+    <dl><div><dt>The problem</dt><dd>${w.p}</dd></div>
+    <div><dt>What Khep does</dt><dd>${w.h}</dd></div>
+    <div class="measure"><dt>How we'd know it works</dt><dd>${w.m}</dd></div></dl>
+    <div class="tour" aria-label="Screens">${tour}</div>`;
+}
+function render(){
+  document.querySelectorAll(".roles button").forEach(b=>b.setAttribute("aria-pressed", b.dataset.role===S.role));
+  const key = S.role+":"+S.tab[S.role];
+  screen.innerHTML = appbar() + `<div class="content">${V[key]()}</div>` + tabs() + `<div class="toast" id="toast" role="status"></div>`;
+  renderWhy();
+}
+let tt;
+function toast(m){ const el=document.getElementById("toast"); if(!el) return; el.textContent=m; el.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("show"),2400); }
+
+document.addEventListener("click", e=>{
+  const b = e.target.closest("button"); if(!b) return;
+  if(b.dataset.role){ S.role=b.dataset.role; try{localStorage.setItem("khep-role",S.role)}catch(_){} render(); return; }
+  if(b.dataset.tab){ S.tab[S.role]=b.dataset.tab; render(); return; }
+  if(b.dataset.go){ S.tab[S.role]=b.dataset.go; render(); return; }
+  if(b.dataset.lang){ S.lang=b.dataset.lang; render(); return; }
+  const a = b.dataset.act; if(!a) return;
+  if(a==="post"){ const p=document.getElementById("f-price"); S.price=Math.max(1000,parseInt(p.value,10)||102000); S.posted=true; S.tab.shipper="trucks"; render(); toast(inr(S.price)+" held in escrow. Load is live."); }
+  else if(a==="book"){ S.booked=+b.dataset.i; render(); toast("Truck booked. Driver details sent by SMS."); setTimeout(()=>{S.tab.shipper="track"; if(S.role==="shipper") render();},900); }
+  else if(a==="ret"){ S.returnBooked=+b.dataset.i; render(); toast("Return load booked. No empty run home."); }
+  else if(a==="step"){ S.step=Math.min(4,S.step+1); render(); if(S.step===2) toast(S.lang==="hi"?"₹91,800 एडवांस मालिक को भेजा गया":"₹91,800 advance sent to owner"); }
+  else if(a==="otp"){ S.otp=true; render(); }
+  else if(a==="reset"){ S.step=1; S.otp=false; render(); }
+  else if(a==="toast"){ toast(b.dataset.msg); }
+});
+document.addEventListener("input", e=>{
+  if(e.target.id==="f-price"){ const v=parseInt(e.target.value,10); if(v>0){ S.price=v; const band=screen.querySelector(".band i"); const pct=Math.max(0,Math.min(100,(v-96000)/12000*100)); if(band) band.style.left=`calc(${pct}% - 2px)`; } }
+});
+render();
+})();
+</script>
+
+</body>
+</html>
