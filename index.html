@@ -296,8 +296,10 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mu
       <div class="dl-actions">
         <button class="dl-btn" id="dl-install" type="button" hidden>Download the app</button>
         <a class="dl-btn" id="dl-open" href="app.html" hidden>Open the Khep app</a>
+        <a class="dl-btn" id="dl-apk" href="https://github.com/anshumantewary-pm/khep/releases/latest/download/Khep.apk">Download for Android (APK)</a>
         <a class="dl-btn ghost" href="#signup">Sign up first</a>
       </div>
+      <p class="dl-small" id="dl-apk-note">Android 7 or newer, about 1.8 MB. When you open the file, Android may ask you to allow installs from your browser.</p>
       <div class="dl-help" id="dl-ios" hidden>
         <b>On iPhone, in Safari:</b>
         <ol><li>Tap the Share button at the bottom of the screen.</li><li>Tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>. Khep appears on your home screen.</li></ol>
@@ -305,7 +307,7 @@ th{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--mu
       <div class="dl-help" id="dl-other" hidden>
         <b>To install:</b> open this page in Chrome or Edge, then tap <b>Install app</b> or <b>Add to Home screen</b> in the browser menu.
       </div>
-      <p class="dl-small">Installs in seconds and takes under 1 MB. Play Store and App Store listings are coming next.</p>
+      <p class="dl-small">Play Store and App Store listings are coming next.</p>
     </div>
     <div class="dl-side">
       <img src="icons/icon-512.png" alt="" width="132" height="132" class="dl-icon">
@@ -1003,6 +1005,7 @@ go(1);
   const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
   let prompt = null;
 
+  if(iOS || standalone){ $("dl-apk").hidden = true; $("dl-apk-note").hidden = true; }
   if(standalone){ $("dl-open").hidden = false; }
   else if(iOS){ $("dl-ios").hidden = false; }
   else { $("dl-other").hidden = false; }
