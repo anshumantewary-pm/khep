@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khep App</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a2a6e">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Khep">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&family=Yatra+One&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/* Layout: painted-truck sidebar (fixed cobalt look) beside a calm, theme-aware work area. */
+:root{
+  --bg:#eef0f6; --surface:#ffffff; --sunk:#f6f7fb; --ink:#151936; --muted:#596080; --line:#d9dcea; --grid:#e6e8f2;
+  --brand:#24317a; --brand-soft:#e4e8fb; --accent:#f2a516; --accent-ink:#3a2500; --pink:#c8145f;
+  --ok:#17804f; --ok-soft:#dcf3e7; --warn:#9a5b00; --warn-soft:#fdf0d4; --bad:#c23b3b; --bad-soft:#fbe3e3;
+  --side:#0a2a6e; --side2:#061d4f; --side-ink:#fff8e6; --side-mute:#b9c3ea;
+  --yel:#ffd400; --tpink:#e5197e; --tgrn:#1f9e46; --tsaff:#ff9f1c; --tred:#d7261e; --tink:#10122b;
+  --display:"Baloo 2","Mukta",system-ui,sans-serif; --body:"Mukta",system-ui,"Segoe UI",sans-serif;
+  --paint:"Yatra One","Baloo 2",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0d1020; --surface:#161a30; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50; --grid:#23284a;
+  --brand:#9aa8ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --pink:#ff5ca8;
+  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --bad:#f07272; --bad-soft:#3d1d22;
+  --side:#081f55; --side2:#04143a; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0d1020; --surface:#161a30; --sunk:#12152a; --ink:#e8eaf5; --muted:#9ca2c2; --line:#2a2f50; --grid:#23284a;
+  --brand:#9aa8ff; --brand-soft:#232a55; --accent:#f5b53a; --accent-ink:#2a1a00; --pink:#ff5ca8;
+  --ok:#4cc48c; --ok-soft:#163a2a; --warn:#f0b44c; --warn-soft:#3a2c10; --bad:#f07272; --bad-soft:#3d1d22;
+  --side:#081f55; --side2:#04143a; color-scheme:dark }
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body)}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--display);line-height:1.15;margin:0;text-wrap:balance}
+button,input,select{font:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.mono{font-family:var(--mono);letter-spacing:.03em}
+
+.shell{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:100%}
+/* sidebar */
+.side{position:sticky;top:0;height:100vh;overflow-y:auto;background:linear-gradient(180deg,var(--side),var(--side2));color:var(--side-ink);display:flex;flex-direction:column;z-index:30}
+.jhalar{height:22px;flex:none;background:repeating-linear-gradient(90deg,var(--tpink) 0 22px,var(--yel) 22px 44px,var(--tgrn) 44px 66px,var(--tsaff) 66px 88px);-webkit-mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/22px 100%;mask:conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) 0 0/22px 100%}
+.brand{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 6px}
+.brand a{font:400 2.3rem var(--paint);color:var(--side-ink);text-decoration:none;text-shadow:3px 3px 0 var(--tpink);line-height:1.1}
+.who{margin:6px 14px 10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.08);display:grid;gap:6px}
+.who b{font-size:1.05rem}
+.who .role{justify-self:start;font:700 .72rem var(--body);letter-spacing:.1em;text-transform:uppercase;padding:2px 9px;border-radius:999px;background:var(--yel);color:var(--tink)}
+.plate{display:inline-flex;align-items:stretch;border:2.5px solid #111;border-radius:7px;background:var(--yel);overflow:hidden;justify-self:start}
+.plate i{font-style:normal;display:grid;place-items:center;padding:0 5px;background:#1d3fa6;color:#fff;font:700 .6rem var(--body)}
+.plate b{font:700 .95rem var(--mono);letter-spacing:.08em;color:#111;padding:1px 8px}
+.nav{display:grid;gap:2px;padding:6px 10px;margin:0;list-style:none}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;color:var(--side-mute);text-decoration:none;font-weight:600}
+.nav a svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav a:hover{background:rgba(255,255,255,.07);color:var(--side-ink)}
+.nav a[aria-current="page"]{background:var(--yel);color:var(--tink);box-shadow:3px 3px 0 var(--tpink)}
+.nav .count{margin-left:auto;font:700 .75rem var(--body);background:var(--tpink);color:#fff;border-radius:999px;padding:0 7px}
+.side-foot{margin-top:auto;padding:14px 18px 18px;display:grid;gap:8px;font-size:.85rem;color:var(--side-mute)}
+.side-foot .slogan{font:400 1.05rem var(--paint);color:var(--yel);text-shadow:1px 1px 0 var(--tred)}
+.side-foot button{justify-self:start;background:none;border:1.5px solid var(--side-mute);color:var(--side-ink);border-radius:999px;padding:4px 12px;cursor:pointer;font-weight:600;font-size:.85rem}
+.scrim{display:none}
+
+/* main */
+.main{min-width:0;display:flex;flex-direction:column}
+.side{padding-top:env(safe-area-inset-top,0px)}
+.install{justify-self:start;border:0;border-radius:12px;padding:8px 14px;background:var(--yel);color:var(--tink);font:800 .95rem var(--display);cursor:pointer;box-shadow:3px 3px 0 var(--tpink)}
+.top{position:sticky;top:0;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:12px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.top h1{font-size:1.5rem;font-weight:800;margin-right:auto}
+.menu-btn{display:none;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:6px 12px;font-weight:700;cursor:pointer}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;padding:3px 10px;border-radius:999px;background:var(--brand-soft);color:var(--brand);white-space:nowrap;border:0}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.bad{background:var(--bad-soft);color:var(--bad)}
+button.chip{cursor:pointer}
+.live{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;color:var(--ok)}
+.live::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 var(--ok);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.view{padding-block:20px 48px;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:grid;gap:18px;max-width:1180px;width:100%}
+.lead{margin:0;color:var(--muted);max-width:70ch}
+.callout{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between;background:var(--warn-soft);color:var(--ink);border-radius:14px;padding:12px 16px}
+.callout p{margin:0;max-width:60ch}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters button{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 14px;font-weight:600;cursor:pointer;font-size:.9rem}
+.filters button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--surface)}
+.filters select{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 12px;font-weight:600;font-size:.9rem}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:8px;min-width:0;align-content:start}
+.card.new{animation:flash 2.2s}
+@keyframes flash{0%,40%{box-shadow:0 0 0 3px var(--accent)}100%{box-shadow:0 0 0 0 transparent}}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.route{font:800 1.15rem var(--display)}
+.route span{color:var(--muted);font-weight:600}
+.sub{color:var(--muted);font-size:.9rem}
+.price{font:800 1.3rem var(--display)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.btn{border:0;border-radius:12px;padding:9px 16px;background:var(--accent);color:var(--accent-ink);font-weight:800;cursor:pointer;font-family:var(--display);font-size:1rem}
+.btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+.btn.sm{padding:6px 12px;font-size:.92rem}
+.btn:disabled{opacity:.55;cursor:default}
+.dist{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--brand);font-size:.9rem}
+.dist svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2}
+.bookbox{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:10px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.f{display:grid;gap:3px;min-width:0}
+.f label{font:700 .72rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--muted)}
+.f input,.f select{border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 10px;width:100%;min-width:0}
+.est{background:var(--sunk);border-radius:10px;padding:8px 12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tabs2{display:inline-flex;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:3px;gap:3px}
+.tabs2 button{border:0;background:none;color:var(--muted);padding:6px 14px;border-radius:9px;font-weight:700;cursor:pointer}
+.tabs2 button[aria-pressed="true"]{background:var(--brand);color:var(--surface)}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sec-h h2{font-size:1.25rem}
+.empty{background:var(--surface);border:1.5px dashed var(--line);border-radius:16px;padding:22px;display:grid;gap:10px;justify-items:start}
+.empty p{margin:0;color:var(--muted)}
+/* order tracker */
+.track{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin:4px 0}
+.track div{display:grid;gap:4px;justify-items:center;text-align:center;font-size:.72rem;font-weight:600;color:var(--muted)}
+.track i{width:100%;height:6px;border-radius:3px;background:var(--line)}
+.track .done i{background:var(--ok)} .track .now i{background:var(--accent)}
+.track .done,.track .now{color:var(--ink)}
+/* tables */
+.tw{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);background:var(--sunk)}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+/* analytics */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:12px 16px;display:grid;gap:2px}
+.kpi span{font:700 .72rem var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kpi b{font:800 1.6rem var(--display)}
+.kpi small{color:var(--muted)}
+.two{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px}
+@media (max-width:980px){.two{grid-template-columns:minmax(0,1fr)}}
+.chart svg{width:100%;height:auto;display:block}
+.hbars{display:grid;gap:10px}
+.hb{display:grid;grid-template-columns:110px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.92rem}
+.hb .bar{height:12px;border-radius:6px;background:var(--grid);overflow:hidden}
+.hb .bar i{display:block;height:100%;border-radius:6px;background:var(--brand)}
+.hb:first-child .bar i{background:var(--accent)}
+/* earn */
+.season{display:grid;grid-template-columns:120px repeat(12,minmax(0,1fr));gap:3px;font-size:.78rem;align-items:center;min-width:560px}
+.season .m{text-align:center;color:var(--muted);font-weight:700}
+.season .m.cur{color:var(--pink)}
+.season .c{height:22px;border-radius:5px;background:var(--grid)}
+.season .c.on{background:var(--tgrn)}
+.season .c.on.cur{background:var(--accent);box-shadow:0 0 0 2px var(--pink)}
+.season .name{font-weight:700;font-size:.88rem}
+.tip{display:grid;gap:6px}
+.tip .gain{font:800 1.25rem var(--display);color:var(--ok)}
+.tip .gain.neg{color:var(--bad)}
+.tag{font:700 .7rem var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--pink)}
+.calc{display:grid;gap:12px}
+.result{border-radius:14px;padding:14px 16px;background:var(--ok-soft);display:grid;gap:4px}
+.result.neg{background:var(--bad-soft)}
+.result b{font:800 1.5rem var(--display)}
+.small-note{font-size:.82rem;color:var(--muted);margin:0}
+/* map */
+#map{height:min(64vh,560px);border-radius:16px;border:1px solid var(--line);background:var(--sunk);z-index:0}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.88rem;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:2px solid #fff}
+.leaflet-popup-content{font-family:var(--body);font-size:.92rem;line-height:1.4}
+/* profile */
+.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;margin:0}
+.dl dt{color:var(--muted)} .dl dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+/* gate */
+.gate{min-height:100%;display:grid;place-items:center;padding:24px 16px;background:var(--tink);color:var(--side-ink)}
+.gate .box{max-width:520px;display:grid;gap:14px;text-align:center;justify-items:center}
+.gate h1{font:400 clamp(2.6rem,9vw,4rem) var(--paint);color:var(--yel);text-shadow:3px 3px 0 var(--tpink)}
+.gate p{margin:0;color:#dcd8f3}
+.gate .btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.gate a.btn{text-decoration:none}
+.gate .btn.ghost{color:var(--side-ink);border-color:var(--side-mute)}
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);background:var(--ink);color:var(--surface);padding:10px 16px;border-radius:12px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:60;max-width:min(92vw,520px)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (max-width:900px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:0;bottom:0;width:min(84vw,290px);transform:translateX(-102%);transition:transform .25s}
+  .side.open{transform:none}
+  .scrim{display:block;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:25}
+  .scrim[hidden]{display:none!important}
+  .menu-btn{display:inline-block}
+}
+@media (max-width:520px){ .hb{grid-template-columns:80px minmax(0,1fr) auto} }
+@media (prefers-reduced-motion:reduce){ .live::before,.card.new{animation:none} .side,.toast{transition:none} }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+"use strict";
+/* ---------- helpers ---------- */
+const $ = s => document.querySelector(s);
+const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const store = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(_){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(_){} },
+  del(k){ try{ localStorage.removeItem(k); }catch(_){} }
+};
+function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function hash(str){ let h = 2166136261; for(const ch of String(str)){ h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+const pick = (r, a) => a[Math.floor(r() * a.length)];
+const between = (r, a, b) => a + Math.floor(r() * (b - a + 1));
+function hav(a, b){ const R = 6371, rad = x => x * Math.PI / 180; const dLat = rad(b[0]-a[0]), dLng = rad(b[1]-a[1]);
+  const s = Math.sin(dLat/2)**2 + Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(dLng/2)**2; return 2 * R * Math.asin(Math.sqrt(s)); }
+const roadKm = (a, b) => Math.max(1, Math.round(hav(a, b) * 1.25));
+function jitter(r, [lat, lng], km){ const d = km * Math.sqrt(r()), t = r() * 2 * Math.PI; return [lat + d*Math.cos(t)/111, lng + d*Math.sin(t)/(111*Math.cos(lat*Math.PI/180))]; }
+const DAY = 864e5;
+const fmtDate = d => new Date(d).toLocaleDateString("en-IN", {day:"numeric", month:"short"});
+const fmtWhen = h => { const d = new Date(Date.now() + h*36e5); d.setMinutes(0,0,0);
+  const today = new Date(); const diff = Math.floor((new Date(d).setHours(0,0,0,0) - today.setHours(0,0,0,0)) / DAY);
+  const t = d.toLocaleTimeString("en-IN", {hour:"2-digit", minute:"2-digit", hour12:false});
+  return (diff === 0 ? "Today " : diff === 1 ? "Tomorrow " : d.toLocaleDateString("en-IN",{weekday:"short", day:"numeric", month:"short"}) + ", ") + t; };
+let toastT;
+function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 3200); }
+
+/* ---------- reference data ---------- */
+const CITIES = [
+ ["Ludhiana",30.901,75.857,"PB"],["Amritsar",31.634,74.872,"PB"],["Jalandhar",31.326,75.576,"PB"],["Patiala",30.340,76.386,"PB"],["Mandi Gobindgarh",30.667,76.300,"PB"],["Bathinda",30.211,74.945,"PB"],
+ ["Chandigarh",30.733,76.779,"CH"],["Karnal",29.686,76.990,"HR"],["Panipat",29.391,76.970,"HR"],["Sonipat",28.993,77.016,"HR"],["Delhi",28.704,77.102,"DL"],["Gurugram",28.459,77.026,"HR"],
+ ["Faridabad",28.408,77.317,"HR"],["Meerut",28.984,77.706,"UP"],["Agra",27.176,78.008,"UP"],["Kanpur",26.449,80.331,"UP"],["Lucknow",26.846,80.946,"UP"],["Jaipur",26.912,75.787,"RJ"],
+ ["Kota",25.213,75.865,"RJ"],["Indore",22.719,75.857,"MP"],["Bhopal",23.259,77.412,"MP"],["Ahmedabad",23.022,72.571,"GJ"],["Surat",21.170,72.831,"GJ"],["Vapi",20.371,72.904,"GJ"],
+ ["Rajkot",22.303,70.802,"GJ"],["Nashik",19.997,73.789,"MH"],["Bhiwandi",19.296,73.063,"MH"],["Mumbai",19.076,72.877,"MH"],["Pune",18.520,73.856,"MH"],["Nagpur",21.146,79.088,"MH"],
+ ["Hyderabad",17.385,78.486,"TS"],["Bengaluru",12.971,77.594,"KA"],["Chennai",13.082,80.270,"TN"],["Coimbatore",11.016,76.955,"TN"],["Kolkata",22.572,88.363,"WB"],["Patna",25.594,85.137,"BR"],
+ ["Guwahati",26.144,91.736,"AS"],["Raipur",21.251,81.629,"CG"],["Visakhapatnam",17.686,83.218,"AP"],["Vijayawada",16.506,80.648,"AP"]
+].map(([n,lat,lng,st]) => ({n, lat, lng, st, p:[lat,lng]}));
+const TRUCKS = [
+ {t:"32 ft container", cap:"18 t", rate:58}, {t:"20–24 ft container", cap:"9 t", rate:44}, {t:"Open body, 10–14 wheel", cap:"21 t", rate:52},
+ {t:"Tractor-trolley", cap:"8 t", rate:32, short:true}, {t:"Trailer", cap:"30 t", rate:75}, {t:"Tanker", cap:"20 kL", rate:65}, {t:"Small, under 7.5 t", cap:"3 t", rate:26}
+];
+const truckOf = name => TRUCKS.find(t => t.t === name) || TRUCKS[0];
+const GOODS = {
+ agri:["Wheat, 250 quintal","Paddy, 220 quintal","Cotton bales, 80","Potato, 300 bags","Onion, 18 t","Mustard seed, 15 t","Maize, 20 t","Kinnow, 12 t","Sugarcane, 25 t","Fertiliser bags, 400"],
+ construction:["Cement, 400 bags","TMT bars, 16 t","Bricks, 4,000","Sand, 20 t","Tiles, 12 t","Marble slabs, 14 t"],
+ fmcg:["Biscuit cartons, 9 t","Detergent, 12 t","Soft drinks, 14 t","Edible oil tins, 16 t"],
+ textile:["Cotton yarn, 18 t","Hosiery cartons, 8 t","Fabric rolls, 10 t"],
+ steel:["Steel pipes, 9 t","HR coils, 25 t","Angles and channels, 18 t"],
+ chemicals:["Chemical drums, 16 t","Paint, 10 t","PVC granules, 15 t"],
+ other:["Furniture, 6 t","Machinery parts, 11 t","E-commerce parcels, 7 t","Household goods, 4 t"]
+};
+const DEAL = {agri:"Crops and agriculture", construction:"Construction material", fmcg:"FMCG and retail", textile:"Textiles and yarn", steel:"Steel and metal", chemicals:"Chemicals", other:"Other goods"};
+const FIRST = ["Gurpreet","Harjeet","Rajesh","Suresh","Mohammed Salim","Balwinder","Ramesh","Anil","Sukhdev","Vijay","Imran","Kuldeep","Manoj","Santosh","Iqbal","Prakash","Jaswinder","Dinesh","Lakhan","Shabbir"];
+const LAST = ["Singh","Kumar","Yadav","Sharma","Khan","Gill","Patel","Chauhan","Sandhu","Meena","Pawar","Reddy"];
+const FIRM_A = ["Shree Balaji","Gurkirpa","Jai Mata Di","New Punjab","Sai Ram","Hind","Om Sai","Sangam","Royal","Ganesh","Khalsa","Bharat"];
+const FIRM_B = ["Roadlines","Transport Co.","Freight Carriers","Logistics","Goods Carrier"];
+const SHIPPERS = ["Satluj Yarns","Doaba Agro Traders","Malwa Rice Mills","Ganga Cement Depot","Shivam Steel","Kisan Seva Kendra","Arora Hosiery","Pioneer Pipes","Navyug Distributors","Green Valley Cold Store","Sharda Cotton Ginning","Annapurna Flour Mill"];
+const STEPS = ["Booked","At pickup","Loaded","On the way","Delivered"];
+const NEXT = {
+  driver:["I've reached pickup","Goods loaded","Start the trip","Mark delivered"],
+  other:["Truck reached pickup","Goods loaded","Truck on the way","Confirm delivery"]
+};
+/* sample mandi prices in ₹ per quintal: illustrative only */
+const CROP_PRICE = {"Wheat":2425,"Paddy / rice":2369,"Cotton":7710,"Sugarcane":355,"Potato":1200,"Onion":1800,"Maize":2400,"Mustard":5950,"Fruits and vegetables":2000};
+const SEASONS = [
+ ["Wheat",[4,5],"Punjab, Haryana, MP, UP"],["Mustard",[3,4],"Rajasthan, Haryana, MP"],["Potato",[2,3],"UP, Punjab, West Bengal"],
+ ["Paddy / rice",[10,11],"Punjab, Haryana, UP"],["Cotton",[10,11,12,1],"Gujarat, Maharashtra, Punjab"],["Sugarcane",[11,12,1,2,3,4],"UP, Maharashtra, Karnataka"],
+ ["Maize",[9,10],"Karnataka, MP, Bihar"],["Onion",[3,4,5,11,12],"Maharashtra, MP, Karnataka"],["Fruits and vegetables",[1,2,3,4,5,6,7,8,9,10,11,12],"Year-round, all states"]
+];
+
+/* ---------- user + state ---------- */
+let U = store.get("khep-user", null);
+const root = $("#root");
+
+function demoUser(role){
+  const base = {driver:{name:"Balwinder Singh", city:"Ludhiana", truckType:"32 ft container", truckNumber:"PB 10 HX 4417", trucksOwned:"1, I own it", deal:"agri", side:"seller", crops:["Wheat","Paddy / rice"]},
+    company:{name:"Neha Arora", city:"Ludhiana", company:"Arora Hosiery Pvt Ltd", deal:"textile", side:"seller", crops:[], trucksPerMonth:"11–50"},
+    contractor:{name:"Sukhdev Gill", city:"Patiala", work:"Farmer", deal:"agri", side:"seller", crops:["Wheat","Potato"]}}[role];
+  return {...base, role, mobile:{driver:"9876500001", company:"9876500002", contractor:"9876500003"}[role], language:"Hindi · हिंदी", pass:`KH 26 ${{driver:"D",company:"C",contractor:"K"}[role]} 1001`, demo:true};
+}
+
+function gate(){
+  root.innerHTML = `<div class="gate"><div class="box">
+    <h1>Khep</h1>
+    <p>Sign up first to open your Khep. Drivers see live loads, companies see trucks to book, and contractors find the nearest driver or transporter.</p>
+    <div class="btns"><a class="btn" href="index.html#signup">Sign up</a></div>
+    <p class="small-note" style="color:#b9b4d6">Or look around with a sample account:</p>
+    <div class="btns"><button class="btn ghost sm" data-demo="driver">Driver</button><button class="btn ghost sm" data-demo="company">Company</button><button class="btn ghost sm" data-demo="contractor">Contractor</button></div>
+  </div></div>`;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-demo]"); if(!b) return;
+  U = demoUser(b.dataset.demo); store.set("khep-user", U); boot();
+});
+
+// app.html?demo=driver (or company, contractor) opens a sample account: handy for showing people around.
+const qDemo = new URLSearchParams(location.search).get("demo");
+if(["driver","company","contractor"].includes(qDemo) && (!U || U.demo)){ U = demoUser(qDemo); store.set("khep-user", U); }
+if(!U || !U.role || !["driver","company","contractor"].includes(U.role)){ gate(); return; }
+boot();
+
+function boot(){
+if(!U) return gate();
+const KEY = "khep-app-" + (U.mobile || "x") + "-" + U.role;
+const ST = Object.assign({coords:null, accuracy:null, loc:"off", orders:[], history:null, expenses:null, taken:[]}, store.get(KEY, {}));
+const save = () => store.set(KEY, ST);
+const cityOf = name => CITIES.find(c => c.n.toLowerCase() === String(name||"").trim().toLowerCase());
+const homeCity = cityOf(U.city) || CITIES.find(c => c.n === "Delhi");
+const base = () => ST.coords || homeCity.p;
+const nearest = (p, k = 1, minKm = 0) => CITIES.map(c => ({...c, d:hav(p, c.p)})).filter(c => c.d >= minKm).sort((a,b) => a.d - b.d).slice(0, k);
+const nearName = () => nearest(base())[0].n;
+const plateFor = (r, st) => `${st} ${String(between(r,1,99)).padStart(2,"0")} ${String.fromCharCode(65+between(r,0,25))}${String.fromCharCode(65+between(r,0,25))} ${between(r,1000,9999)}`;
+const person = r => `${pick(r, FIRST)} ${pick(r, LAST)}`;
+const firm = r => `${pick(r, FIRM_A)} ${pick(r, FIRM_B)}`;
+const firstName = (U.name || "").split(/\s+/)[0] || "there";
+
+/* ---------- generated, location-aware sample data ---------- */
+let LOADS = [], NEARBY_TRUCKS = [], NEARBY_FIRMS = [];
+function makeLoad(r, idx){
+  const from = pick(r, nearest(base(), 6));
+  const pt = jitter(r, from.p, 9);
+  let tt = (U.truckType && r() < .5) ? truckOf(U.truckType) : pick(r, TRUCKS);
+  let to;
+  if(tt.short){ const c = CITIES.filter(c => c.n !== from.n && roadKm(from.p, c.p) >= 20 && roadKm(from.p, c.p) <= 160); if(c.length) to = pick(r, c); else tt = TRUCKS[2]; }
+  if(!to){ do { to = pick(r, CITIES); } while(to.n === from.n || roadKm(from.p, to.p) < 120); }
+  const km = roadKm(from.p, to.p);
+  const deal = r() < .65 ? (U.deal || "other") : pick(r, Object.keys(GOODS));
+  return {id:`L${idx}-${hash(from.n + to.n + idx) % 9999}`, from:from.n, to:to.n, pt, km, tt:tt.t, goods:pick(r, GOODS[deal]), deal,
+    price:Math.round(km * tt.rate * (.9 + r()*.25) / 500) * 500, whenH:between(r, 2, 52), shipper:pick(r, SHIPPERS)};
+}
+function regen(){
+  const seed = hash((U.mobile||"") + U.role + base().map(x => x.toFixed(2)).join(","));
+  const r = rng(seed);
+  LOADS = Array.from({length:16}, (_, i) => makeLoad(r, i)).map(l => ({...l, away:roadKm(base(), l.pt)})).sort((a,b) => a.away - b.away);
+  NEARBY_TRUCKS = Array.from({length:14}, (_, i) => {
+    const pt = jitter(r, base(), 30), st = nearest(pt)[0].st;
+    const tt = U.role === "contractor" && r() < .45 ? pick(r, [TRUCKS[3], TRUCKS[6], TRUCKS[1]]) : pick(r, TRUCKS);
+    return {id:`T${i}`, name:person(r), plate:plateFor(r, st), tt:tt.t, cap:tt.cap, rate:(4 + r()*.9).toFixed(1), trips:between(r, 12, 420), pt, away:roadKm(base(), pt), availH: r() < .6 ? 0 : between(r, 2, 8), owner:r() < .5};
+  }).sort((a,b) => a.away - b.away);
+  NEARBY_FIRMS = Array.from({length:8}, (_, i) => {
+    const pt = jitter(r, base(), 25), far = nearest(base(), 12, 150);
+    return {id:`F${i}`, name:firm(r), fleet:between(r, 4, 80), pt, away:roadKm(base(), pt), rate:(4.1 + r()*.8).toFixed(1), lanes:[pick(r, far).n, pick(r, far).n].filter((v,j,a)=>a.indexOf(v)===j), since:between(r, 1994, 2021)};
+  }).sort((a,b) => a.away - b.away);
+}
+function seedHistory(){
+  if(ST.history) return;
+  const r = rng(hash((U.mobile||"") + U.role + "hist"));
+  const hist = [], exps = [];
+  const n = U.role === "driver" ? 14 : U.role === "company" ? 26 : 9;
+  const span = U.role === "driver" ? 56 : 180;
+  for(let i = 0; i < n; i++){
+    const daysAgo = between(r, 2, span), date = Date.now() - daysAgo*DAY;
+    const from = U.role === "driver" && r() < .5 ? pick(r, CITIES) : pick(r, nearest(homeCity.p, 5));
+    let to; do { to = pick(r, CITIES); } while(to.n === from.n || (U.role === "contractor" ? roadKm(from.p,to.p) > 350 : roadKm(from.p,to.p) < 150));
+    const tt = U.role === "driver" && U.truckType ? truckOf(U.truckType) : pick(r, TRUCKS.filter(t => !t.short));
+    const km = roadKm(from.p, to.p), price = Math.round(km * tt.rate * (.92 + r()*.2) / 500) * 500;
+    const h = {id:"H"+i, date, from:from.n, to:to.n, km, tt:tt.t, goods:pick(r, GOODS[r() < .7 ? (U.deal||"other") : "other"]), price,
+      party: U.role === "driver" ? pick(r, SHIPPERS) : (r() < .6 ? person(r) : firm(r)), onTime: r() < .87, emptyReturn: r() < .45};
+    hist.push(h);
+    if(U.role === "driver"){
+      exps.push({date, cat:"Diesel", amt:Math.round(km/3.8*92), note:`${h.from} → ${h.to}`});
+      exps.push({date, cat:"Toll", amt:Math.round(km*6.2), note:"FASTag"});
+      exps.push({date, cat:"Food", amt:Math.round(Math.ceil(km/450)*350), note:"On the road"});
+      if(r() < .35) exps.push({date, cat:"Loading / unloading", amt:between(r, 3, 12)*100, note:"Labour charge"});
+      if(r() < .2) exps.push({date, cat:"Repairs", amt:between(r, 15, 90)*100, note:pick(r, ["Tyre puncture","Brake work","Clutch plate","Oil change"])});
+    }
+  }
+  hist.sort((a,b) => b.date - a.date);
+  ST.history = hist; ST.expenses = exps; save();
+}
+regen(); seedHistory();
+
+/* ---------- navigation by role ---------- */
+const IC = {
+  loads:'<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="19" cy="18" r="2"/>',
+  book:'<path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17" r="1.8"/><circle cx="17" cy="17" r="1.8"/>',
+  find:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  orders:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+  map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+  money:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  earn:'<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>'
+};
+const NAV = {
+  driver:[["loads","Live loads"],["orders","My trips"],["map","Map"],["money","Earnings & expenses"],["earn","Earn more"],["profile","Profile"]],
+  company:[["book","Book a truck"],["orders","Shipments"],["map","Map"],["money","Spend & analytics"],["earn","Save & earn more"],["profile","Profile"]],
+  contractor:[["find","Find nearby"],["orders","My bookings"],["map","Map"],["money","Spend & analytics"],["earn","Earn more"],["profile","Profile"]]
+}[U.role];
+const ROLE_NAME = {driver:"Driver", company:"Company", contractor:"Contractor"}[U.role];
+const allowed = NAV.map(n => n[0]);
+const view = () => { const h = location.hash.slice(1); return allowed.includes(h) ? h : allowed[0]; };
+
+root.innerHTML = `<div class="shell">
+  <aside class="side" id="side" aria-label="Khep menu">
+    <div class="jhalar" aria-hidden="true"></div>
+    <div class="brand"><a href="index.html">Khep</a></div>
+    <div class="who"><span class="role">${ROLE_NAME}</span><b>${esc(U.name)}</b><span style="font-size:.88rem;color:var(--side-mute)">${esc(U.company || U.work || U.truckType || "")}</span>
+      <span class="plate"><i>IND</i><b>${esc(U.pass || "KH 26")}</b></span></div>
+    <nav><ul class="nav" id="nav"></ul></nav>
+    <div class="side-foot"><button class="install" id="install" hidden>Install the Khep app</button><span class="slogan">HORN OK PLEASE</span><span>${U.demo ? "Sample account." : "Signed up on this device."} All loads, trucks and prices are sample data.</span><button id="logout">Log out</button></div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="main">
+    <header class="top"><button class="menu-btn" id="menu" aria-expanded="false" aria-controls="side">Menu</button><h1 id="title"></h1><span id="topchips" class="filters"></span></header>
+    <main class="view" id="view"></main>
+  </div>
+</div>`;
+
+function renderNav(){
+  const cur = view();
+  $("#nav").innerHTML = NAV.map(([id, label]) => {
+    const count = id === "orders" && ST.orders.length ? `<span class="count">${ST.orders.length}</span>` : "";
+    return `<li><a href="#${id}" ${cur === id ? 'aria-current="page"' : ""}><svg viewBox="0 0 24 24">${IC[id]}</svg>${label}${count}</a></li>`;
+  }).join("");
+}
+function renderTop(){
+  const loc = ST.loc === "on" ? `<button class="chip ok" data-act="locate" title="Refresh location">Near ${esc(nearName())}${ST.accuracy ? " · ±" + (ST.accuracy > 999 ? (ST.accuracy/1000).toFixed(1) + " km" : ST.accuracy + " m") : ""}</button>`
+    : ST.loc === "asking" ? `<span class="chip">Finding you…</span>`
+    : `<button class="chip warn" data-act="locate">Turn on location</button>`;
+  const live = ["loads","book","find"].includes(view()) ? `<span class="live">Live</span>` : "";
+  $("#topchips").innerHTML = live + loc;
+}
+function locCallout(){
+  if(ST.loc === "on") return "";
+  const msg = ST.loc === "denied" ? `Location is blocked for this site. Allow it in your browser's site settings to see exact distances. Until then we're using ${esc(homeCity.n)}.`
+    : ST.loc === "error" ? `We couldn't get your location. Check that GPS is on and try again. Until then we're using ${esc(homeCity.n)}.`
+    : `Share your location to see what's nearest to you. Until then we're using ${esc(homeCity.n)}, the city you signed up with.`;
+  return `<div class="callout"><p>${msg}</p><button class="btn sm" data-act="locate">Use my location</button></div>`;
+}
+const distBadge = km => `<span class="dist"><svg viewBox="0 0 24 24"><path d="M12 21s-6-6-6-11a6 6 0 0 1 12 0c0 5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg>${km < 1 ? "Under 1 km" : km + " km away"}</span>`;
+
+/* ---------- views ---------- */
+const UI = {loadFilter:"all", findTab:"drivers", bookFor:null, truckFilter:"all", newIds:new Set()};
+const V = {};
+
+V.loads = () => {
+  const mine = U.truckType;
+  let list = LOADS.filter(l => !ST.taken.includes(l.id));
+  if(UI.loadFilter === "near") list = list.filter(l => l.away <= 50);
+  if(UI.loadFilter === "truck" && mine) list = list.filter(l => l.tt === mine);
+  if(UI.loadFilter === "goods") list = list.filter(l => l.deal === U.deal);
+  const f = (id, label) => `<button data-act="lf" data-v="${id}" aria-pressed="${UI.loadFilter === id}">${label}</button>`;
+  return `${locCallout()}
+  <div class="sec-h"><h2>Loads from where to where, nearest pickup first</h2><span class="sub">${list.length} open · every load is paid into escrow before it's listed</span></div>
+  <div class="filters">${f("all","All")}${f("near","Pickup within 50 km")}${mine ? f("truck", esc(mine)) : ""}${f("goods", esc(DEAL[U.deal] || "My goods"))}</div>
+  ${list.length ? `<div class="list">${list.map(l => `
+    <article class="card ${UI.newIds.has(l.id) ? "new" : ""}">
+      <div class="row"><span class="route">${esc(l.from)} <span>→</span> ${esc(l.to)}</span><span class="price num">${inr(l.price)}</span></div>
+      <div class="sub">${esc(l.goods)} · ${esc(l.tt)} · ${l.km.toLocaleString("en-IN")} km · ${inr(l.price/l.km)}/km</div>
+      <div class="row"><span class="sub">Pickup ${fmtWhen(l.whenH)} · ${esc(l.shipper)}</span>${distBadge(l.away)}</div>
+      <div class="chips"><span class="chip ok">Payment secured</span><span class="chip">90% at loading: ${inr(l.price*.9)}</span>${UI.newIds.has(l.id) ? '<span class="chip warn">New</span>' : ""}</div>
+      <div><button class="btn sm" data-act="accept" data-id="${l.id}">Accept load</button></div>
+    </article>`).join("")}</div>`
+  : `<div class="empty"><b>No loads match this filter right now</b><p>New loads appear here live. Try "All" to see everything near you.</p></div>`}`;
+};
+
+function bookBox(item){
+  const far = CITIES.filter(c => c.n !== nearName()).sort((a,b) => a.n.localeCompare(b.n));
+  const tmr = new Date(Date.now() + DAY).toISOString().slice(0,10);
+  const shortT = truckOf(item.tt).short;
+  const def = shortT ? nearest(base(), 4, 15)[0].n : (U.role === "company" ? "Mumbai" : nearest(base(), 3, 40)[0].n);
+  return `<div class="bookbox" data-book="${item.id}">
+    <div class="fgrid">
+      <div class="f"><label for="bk-to-${item.id}">Deliver to</label><select id="bk-to-${item.id}" data-est="${item.id}">${far.map(c => `<option ${c.n === def ? "selected" : ""}>${c.n}</option>`).join("")}</select></div>
+      <div class="f"><label for="bk-date-${item.id}">Pickup date</label><input type="date" id="bk-date-${item.id}" value="${tmr}" min="${new Date().toISOString().slice(0,10)}"></div>
+      <div class="f"><label for="bk-goods-${item.id}">Goods</label><input id="bk-goods-${item.id}" value="${esc(GOODS[U.deal || "other"][0])}"></div>
+    </div>
+    <div class="est" id="est-${item.id}">${estimate(item, def)}</div>
+    <div class="row"><span class="small-note">You pay into escrow now. The driver gets 90% at loading and the rest when you confirm delivery.</span>
+      <span style="display:flex;gap:8px"><button class="btn ghost sm" data-act="bookcancel">Cancel</button><button class="btn sm" data-act="bookconfirm" data-id="${item.id}">Confirm booking</button></span></div>
+  </div>`;
+}
+function estimate(item, toName){
+  const to = cityOf(toName) || homeCity, km = roadKm(base(), to.p) + (item.away || 0), t = truckOf(item.tt);
+  return `<span>${km.toLocaleString("en-IN")} km with ${esc(t.t)}</span><b class="num">Fair price ${inr(Math.round(km*t.rate*.95/500)*500)} – ${inr(Math.round(km*t.rate*1.08/500)*500)}</b>`;
+}
+const truckCard = t => `
+  <article class="card ${UI.newIds.has(t.id) ? "new" : ""}">
+    <div class="row"><span class="mono" style="font-weight:700">${esc(t.plate)}</span>${distBadge(t.away)}</div>
+    <div><b>${esc(t.name)}</b> <span class="sub">· ${t.owner ? "owner-driver" : "driver"} · ★ ${t.rate} · ${t.trips} trips</span></div>
+    <div class="sub">${esc(t.tt)} · carries up to ${esc(t.cap)} · ${t.availH ? `free in about ${t.availH} h` : "free now"}</div>
+    <div class="chips"><span class="chip ok">RC verified</span><span class="chip ok">Licence verified</span><span class="chip">Reaches you in ~${Math.max(10, Math.round(t.away/35*60))} min</span></div>
+    ${UI.bookFor === t.id ? bookBox(t) : `<div><button class="btn sm" data-act="bookopen" data-id="${t.id}">Book this truck</button></div>`}
+  </article>`;
+
+V.book = () => {
+  const types = [...new Set(NEARBY_TRUCKS.map(t => t.tt))];
+  const list = NEARBY_TRUCKS.filter(t => UI.truckFilter === "all" || t.tt === UI.truckFilter);
+  return `${locCallout()}
+  <div class="sec-h"><h2>Verified trucks near you, nearest first</h2><span class="sub">${list.length} available around ${esc(nearName())}</span></div>
+  <div class="filters"><label class="sub" for="tf">Truck type</label><select id="tf" data-act="tf"><option value="all">All types</option>${types.map(t => `<option ${UI.truckFilter === t ? "selected" : ""}>${esc(t)}</option>`).join("")}</select></div>
+  <div class="list">${list.map(truckCard).join("")}</div>`;
+};
+
+V.find = () => {
+  const tabs = `<div class="tabs2" role="group" aria-label="Show"><button data-act="ft" data-v="drivers" aria-pressed="${UI.findTab === "drivers"}">Drivers (${NEARBY_TRUCKS.length})</button><button data-act="ft" data-v="firms" aria-pressed="${UI.findTab === "firms"}">Transport companies (${NEARBY_FIRMS.length})</button></div>`;
+  const body = UI.findTab === "drivers" ? NEARBY_TRUCKS.map(truckCard).join("") : NEARBY_FIRMS.map(f => `
+    <article class="card">
+      <div class="row"><b style="font-size:1.05rem">${esc(f.name)}</b>${distBadge(f.away)}</div>
+      <div class="sub">${f.fleet} trucks · ★ ${f.rate} · in business since ${f.since}</div>
+      <div class="sub">Regular routes: ${esc(nearName())} ↔ ${f.lanes.map(esc).join(", ")}</div>
+      <div class="chips"><span class="chip ok">GST verified</span><span class="chip">Full and part loads</span></div>
+      <div><button class="btn sm ghost" data-act="callback" data-name="${esc(f.name)}">Request a call back</button></div>
+    </article>`).join("");
+  return `${locCallout()}
+  <div class="sec-h"><h2>Nearest drivers and transport companies</h2><span class="sub">Sorted by distance from ${ST.loc === "on" ? "you" : esc(homeCity.n)}</span></div>
+  ${tabs}<div class="list">${body}</div>`;
+};
+
+V.orders = () => {
+  const label = {driver:"trip", company:"shipment", contractor:"booking"}[U.role];
+  const nexts = U.role === "driver" ? NEXT.driver : NEXT.other;
+  const cta = {driver:["loads","Find a load"], company:["book","Book a truck"], contractor:["find","Find a driver"]}[U.role];
+  const active = ST.orders.length ? `<div class="list">${ST.orders.map(o => `
+    <article class="card">
+      <div class="row"><span class="route">${esc(o.from)} <span>→</span> ${esc(o.to)}</span><span class="price num">${inr(o.price)}</span></div>
+      <div class="sub">${esc(o.goods)} · ${esc(o.tt)} · ${o.km.toLocaleString("en-IN")} km · ${esc(o.party)}</div>
+      <div class="track" aria-label="Status: ${STEPS[o.step]}">${STEPS.map((s, i) => `<div class="${i < o.step ? "done" : i === o.step ? "now" : ""}"><i></i>${s}</div>`).join("")}</div>
+      <div class="row"><span class="sub">${o.step >= 2 ? (U.role === "driver" ? `Advance received: ${inr(o.price*.9)}` : `Advance released to driver: ${inr(o.price*.9)}`) : "Payment held in escrow"}</span>
+        <button class="btn sm" data-act="next" data-id="${o.id}">${nexts[o.step]}</button></div>
+    </article>`).join("")}</div>`
+    : `<div class="empty"><b>No active ${label}s</b><p>When you ${U.role === "driver" ? "accept a load" : "book a truck"}, it shows here with live status.</p><a class="btn sm" href="#${cta[0]}" style="text-decoration:none">${cta[1]}</a></div>`;
+  const rows = ST.history.slice(0, 12).map(h => `<tr><td>${fmtDate(h.date)}</td><td>${esc(h.from)} → ${esc(h.to)}</td><td>${esc(h.goods)}</td><td>${esc(h.party)}</td><td class="r">${h.km.toLocaleString("en-IN")}</td><td class="r">${inr(h.price)}</td><td>${h.onTime ? '<span class="chip ok">On time</span>' : '<span class="chip warn">Late</span>'}</td></tr>`).join("");
+  return `<div class="sec-h"><h2>Active ${label}s</h2><span class="sub">${ST.orders.length} running</span></div>${active}
+  <div class="sec-h"><h2>Delivered</h2><span class="sub">Last ${Math.min(12, ST.history.length)} of ${ST.history.length}</span></div>
+  <div class="tw"><table><thead><tr><th>Date</th><th>Route</th><th>Goods</th><th>${U.role === "driver" ? "Shipper" : "Driver or transporter"}</th><th class="r">Km</th><th class="r">${U.role === "driver" ? "Earned" : "Paid"}</th><th>Delivery</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+};
+
+V.map = () => `${locCallout()}
+  <div class="legend"><span><i style="background:#24317a"></i>You${ST.loc === "on" ? "" : ` (${esc(homeCity.n)})`}</span>${U.role === "driver" ? '<span><i style="background:#e5197e"></i>Load pickups</span>' : '<span><i style="background:#1f9e46"></i>Trucks and drivers</span>'}${U.role === "contractor" ? '<span><i style="background:#ff9f1c"></i>Transport companies</span>' : ""}</div>
+  <div id="map" role="region" aria-label="Map of what's near you"></div>
+  <p class="small-note">Map data © OpenStreetMap contributors. Tap a marker for details.</p>`;
+
+let MAP = null;
+function drawMap(){
+  if(MAP){ MAP.remove(); MAP = null; }
+  const el = $("#map"); if(!el) return;
+  if(!window.L){ el.innerHTML = `<div class="empty" style="height:100%"><b>The map couldn't load</b><p>It needs an internet connection. Everything else works offline.</p></div>`; return; }
+  MAP = L.map(el, {scrollWheelZoom:false}).setView(base(), 9);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {maxZoom:18, attribution:"© OpenStreetMap"}).addTo(MAP);
+  const dot = (p, color, r = 8) => L.circleMarker(p, {radius:r, color:"#fff", weight:2, fillColor:color, fillOpacity:.95});
+  const pts = [base()];
+  dot(base(), "#24317a", 11).addTo(MAP).bindPopup(`<b>You</b><br>${ST.loc === "on" ? "Your location" : esc(homeCity.n) + " (turn on location for exact)"}`);
+  if(ST.accuracy && ST.loc === "on") L.circle(base(), {radius:ST.accuracy, color:"#24317a", weight:1, fillOpacity:.08}).addTo(MAP);
+  if(U.role === "driver") LOADS.filter(l => !ST.taken.includes(l.id)).forEach(l => { pts.push(l.pt); dot(l.pt, "#e5197e").addTo(MAP).bindPopup(`<b>${esc(l.from)} → ${esc(l.to)}</b><br>${esc(l.goods)}<br>${inr(l.price)} · ${l.away} km to pickup<br><a href="#loads">Open live loads</a>`); });
+  else NEARBY_TRUCKS.forEach(t => { pts.push(t.pt); dot(t.pt, "#1f9e46").addTo(MAP).bindPopup(`<b>${esc(t.name)}</b><br>${esc(t.tt)} · ${esc(t.plate)}<br>${t.away} km away · ${t.availH ? "free in " + t.availH + " h" : "free now"}<br><a href="#${U.role === "company" ? "book" : "find"}">Book</a>`); });
+  if(U.role === "contractor") NEARBY_FIRMS.forEach(f => { pts.push(f.pt); dot(f.pt, "#ff9f1c").addTo(MAP).bindPopup(`<b>${esc(f.name)}</b><br>${f.fleet} trucks · ${f.away} km away`); });
+  MAP.fitBounds(L.latLngBounds(pts).pad(.15));
+  setTimeout(() => MAP && MAP.invalidateSize(), 60);
+}
+
+function barChart(items, {money = true, height = 220} = {}){
+  const W = 640, H = height, L0 = 56, B = 28, T = 16, max = Math.max(1, ...items.map(i => i.v));
+  const step = niceStep(max / 4), top = Math.ceil(max / step) * step;
+  const y = v => T + (H - T - B) * (1 - v / top), bw = (W - L0 - 10) / items.length;
+  const ticks = []; for(let v = 0; v <= top + 1e-6; v += step) ticks.push(v);
+  const lbl = v => money ? (v >= 1e5 ? "₹" + (v/1e5).toFixed(v % 1e5 ? 1 : 0) + "L" : v >= 1e3 ? "₹" + Math.round(v/1e3) + "k" : "₹" + v) : v;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${items.map(i => i.l + ": " + (money ? inr(i.v) : i.v)).join(", ")}">
+    ${ticks.map(v => `<line x1="${L0}" x2="${W-6}" y1="${y(v)}" y2="${y(v)}" style="stroke:var(--grid)" stroke-width="1"/><text x="${L0-8}" y="${y(v)+4}" text-anchor="end" font-size="11" style="fill:var(--muted)">${lbl(v)}</text>`).join("")}
+    ${items.map((it, i) => { const x = L0 + i*bw + bw*.18, w = bw*.64, last = i === items.length - 1;
+      return `<rect x="${x}" y="${y(it.v)}" width="${w}" height="${Math.max(0, H - B - y(it.v))}" rx="4" style="fill:${last ? "var(--accent)" : "var(--brand)"}" opacity="${last ? 1 : .85}"/>
+      <text x="${x + w/2}" y="${H - 9}" text-anchor="middle" font-size="11" style="fill:var(--muted)">${esc(it.l)}</text>
+      ${last ? `<text x="${x + w/2}" y="${y(it.v) - 6}" text-anchor="middle" font-size="12" font-weight="700" style="fill:var(--ink)">${money ? inr(it.v) : it.v}</text>` : ""}`; }).join("")}
+  </svg>`;
+}
+function niceStep(raw){ const p = Math.pow(10, Math.floor(Math.log10(raw || 1))), n = raw / p; return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p; }
+const hbars = rows => { const max = Math.max(1, ...rows.map(r => r[1])); return `<div class="hbars">${rows.map(([k, v]) => `<div class="hb"><span>${esc(k)}</span><span class="bar"><i style="width:${(v/max*100).toFixed(1)}%"></i></span><b class="num">${inr(v)}</b></div>`).join("")}</div>`; };
+
+V.money = () => {
+  const now = new Date(), monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+  const H = ST.history;
+  if(U.role === "driver"){
+    const weeks = Array.from({length:8}, (_, i) => { const end = Date.now() - (7 - i)*7*DAY, start = end - 7*DAY;
+      return {l:fmtDate(start), v:H.filter(h => h.date >= start && h.date < end).reduce((s, h) => s + h.price, 0)}; });
+    const since = Date.now() - 56*DAY;
+    const earned8 = H.filter(h => h.date >= since).reduce((s, h) => s + h.price, 0);
+    const exp8 = ST.expenses.filter(x => x.date >= since);
+    const spent8 = exp8.reduce((s, x) => s + x.amt, 0);
+    const byCat = Object.entries(exp8.reduce((m, x) => (m[x.cat] = (m[x.cat]||0) + x.amt, m), {})).sort((a,b) => b[1]-a[1]);
+    const month = H.filter(h => h.date >= monthStart), km = H.filter(h => h.date >= since).reduce((s, h) => s + h.km, 0);
+    const tripExp = h => ST.expenses.filter(x => x.date === h.date).reduce((s, x) => s + x.amt, 0);
+    return `<div class="kpis">
+      <div class="kpi"><span>Earned this month</span><b class="num">${inr(month.reduce((s,h)=>s+h.price,0))}</b><small>${month.length} trips delivered</small></div>
+      <div class="kpi"><span>Last 8 weeks</span><b class="num">${inr(earned8)}</b><small>${km.toLocaleString("en-IN")} km driven</small></div>
+      <div class="kpi"><span>Expenses, 8 weeks</span><b class="num">${inr(spent8)}</b><small>${inr(spent8/Math.max(1,km))} per km</small></div>
+      <div class="kpi"><span>Kept after expenses</span><b class="num" style="color:var(--ok)">${inr(earned8 - spent8)}</b><small>${earned8 ? Math.round((earned8-spent8)/earned8*100) : 0}% of what you earned</small></div>
+    </div>
+    <div class="two">
+      <section class="card chart"><div class="sec-h"><h2>Earnings by week</h2><span class="sub">Week starting</span></div>${barChart(weeks)}</section>
+      <section class="card"><div class="sec-h"><h2>Where the money went</h2><span class="sub">Last 8 weeks</span></div>${hbars(byCat)}
+        <form class="bookbox" id="expform"><b>Add an expense</b><div class="fgrid">
+          <div class="f"><label for="ex-cat">Type</label><select id="ex-cat"><option>Diesel</option><option>Toll</option><option>Food</option><option>Repairs</option><option>Loading / unloading</option><option>Other</option></select></div>
+          <div class="f"><label for="ex-amt">Amount (₹)</label><input id="ex-amt" type="number" min="1" inputmode="numeric" placeholder="1500"></div>
+          <div class="f"><label for="ex-note">Note</label><input id="ex-note" placeholder="Fuel at Panipat"></div></div>
+          <div><button class="btn sm" type="submit">Add expense</button></div></form></section>
+    </div>
+    <div class="sec-h"><h2>What you delivered</h2><span class="sub">Earned minus that trip's diesel, toll, food and other costs</span></div>
+    <div class="tw"><table><thead><tr><th>Date</th><th>Route</th><th>Goods</th><th class="r">Km</th><th class="r">Earned</th><th class="r">Expenses</th><th class="r">Kept</th></tr></thead><tbody>
+    ${H.slice(0, 12).map(h => { const e = tripExp(h); return `<tr><td>${fmtDate(h.date)}</td><td>${esc(h.from)} → ${esc(h.to)}</td><td>${esc(h.goods)}</td><td class="r">${h.km.toLocaleString("en-IN")}</td><td class="r">${inr(h.price)}</td><td class="r">${inr(e)}</td><td class="r"><b>${inr(h.price - e)}</b></td></tr>`; }).join("")}
+    </tbody></table></div>`;
+  }
+  const months = Array.from({length:6}, (_, i) => { const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1), e = new Date(d.getFullYear(), d.getMonth() + 1, 1);
+    return {l:d.toLocaleDateString("en-IN",{month:"short"}), v:H.filter(h => h.date >= d.getTime() && h.date < e.getTime()).reduce((s,h) => s + h.price, 0)}; });
+  const total = H.reduce((s,h) => s + h.price, 0), km = H.reduce((s,h) => s + h.km, 0), ontime = H.filter(h => h.onTime).length;
+  const thisMonth = H.filter(h => h.date >= monthStart);
+  const byTruck = Object.entries(H.reduce((m, h) => (m[h.tt] = (m[h.tt]||0) + h.price, m), {})).sort((a,b) => b[1]-a[1]);
+  const lanes = Object.entries(H.reduce((m, h) => { const k = h.from + " → " + h.to; (m[k] = m[k] || {n:0, v:0, km:h.km}); m[k].n++; m[k].v += h.price; return m; }, {})).sort((a,b) => b[1].v - a[1].v).slice(0, 8);
+  return `<div class="kpis">
+    <div class="kpi"><span>Spent this month</span><b class="num">${inr(thisMonth.reduce((s,h)=>s+h.price,0))}</b><small>${thisMonth.length} deliveries</small></div>
+    <div class="kpi"><span>Last 6 months</span><b class="num">${inr(total)}</b><small>${H.length} deliveries</small></div>
+    <div class="kpi"><span>Average cost</span><b class="num">${inr(total/Math.max(1,km))}/km</b><small>${km.toLocaleString("en-IN")} km moved</small></div>
+    <div class="kpi"><span>Delivered on time</span><b class="num">${H.length ? Math.round(ontime/H.length*100) : 0}%</b><small>${H.length - ontime} late</small></div>
+  </div>
+  <div class="two">
+    <section class="card chart"><div class="sec-h"><h2>Freight spend by month</h2></div>${barChart(months)}</section>
+    <section class="card"><div class="sec-h"><h2>Spend by truck type</h2></div>${hbars(byTruck)}</section>
+  </div>
+  <div class="sec-h"><h2>Your busiest routes</h2><span class="sub">What you paid, and the rate per km</span></div>
+  <div class="tw"><table><thead><tr><th>Route</th><th class="r">Trips</th><th class="r">Paid</th><th class="r">Per trip</th><th class="r">Per km</th></tr></thead><tbody>
+  ${lanes.map(([k, o]) => `<tr><td>${esc(k)}</td><td class="r">${o.n}</td><td class="r">${inr(o.v)}</td><td class="r">${inr(o.v/o.n)}</td><td class="r">${inr(o.v/o.n/o.km)}</td></tr>`).join("")}
+  </tbody></table></div>`;
+};
+
+V.earn = () => {
+  const out = [];
+  const isAgri = U.deal === "agri", m = new Date().getMonth() + 1;
+  const H = ST.history;
+  const card = (tag, title, body, gain, neg) => `<article class="card tip"><span class="tag">${tag}</span><h3>${title}</h3><p class="sub" style="margin:0">${body}</p>${gain ? `<span class="gain ${neg ? "neg" : ""}">${gain}</span>` : ""}</article>`;
+
+  if(U.role === "driver"){
+    const empties = H.filter(h => h.emptyReturn);
+    const backhaul = empties.reduce((s, h) => s + Math.round(h.km * truckOf(h.tt).rate * .78 / 500) * 500, 0);
+    out.push(card("Return loads", "Stop driving home empty", `${empties.length} of your last ${H.length} trips came back without a load. Return trips usually pay about 20% less than outbound, but they still beat driving empty. Open Live loads before you unload to book the way back.`, `About ${inr(backhaul)} you could have earned`));
+    const busy = SEASONS.filter(s => s[1].includes(m) && s[0] !== "Fruits and vegetables").map(s => s[0]);
+    out.push(card("Harvest season", busy.length ? `${busy.join(", ")} season is on now` : "Plan for the next harvest", busy.length ? `Mandis in ${SEASONS.filter(s => busy.includes(s[0])).map(s => s[2]).join("; ")} need extra trucks this month. Rates on mandi-to-mill routes go up when trucks are short.` : "Harvest months pay more on mandi routes. See the crop calendar below.", isAgri ? "You carry crops: you'll see these loads first" : ""));
+    out.push(card("Steady work", "Take a monthly contract", `Shippers who book often offer fixed monthly routes. With a ${esc(U.truckType || "32 ft")} truck that can mean 6–8 guaranteed trips a month at agreed rates.`, ""));
+    out.push(card("Ratings", "Keep your rating above 4.5", "Trucks rated 4.5 and above are shown first to shippers. Deliver on time and close every trip with the delivery code.", ""));
+    out.push(card("Coming soon", "Fuel card cashback", `Planned: about 1% back on diesel. On your recent diesel spend that would be around ${inr(ST.expenses.filter(x => x.cat === "Diesel").reduce((s,x)=>s+x.amt,0)*.01)} over 8 weeks.`, ""));
+  } else {
+    const total = H.reduce((s,h) => s + h.price, 0);
+    if(U.role === "company"){
+      out.push(card("Save", "Book trucks on their way home", "Trucks heading back to their base city charge about 15–25% less. Khep marks these as return trucks in Book a truck.", `Up to ${inr(total*.15)} on your last 6 months`));
+      out.push(card("Save", "Combine part loads", "If you send under 10 tonnes on the same route in a week, combine them into one truck instead of paying for two half-empty ones.", ""));
+      out.push(card("Plan", "Book early in harvest weeks", "In harvest months trucks get scarce near mandis and rates rise. Book 3–4 days ahead on routes that pass through farm belts.", ""));
+    } else {
+      out.push(card("Save", "Share a truck with people nearby", "If your load is small, share one truck with other contractors or farmers going the same way and split the fare.", `Often 30–40% cheaper than booking a whole truck`));
+      out.push(card("Save", "Use a tractor-trolley for short trips", "For under 30 km, a tractor-trolley or small truck is usually cheaper than a full truck. Filter by truck type in Find nearby.", ""));
+    }
+    if(U.side === "seller" || U.side === "both") out.push(card("Earn", `Sell straight to buyers in other cities`, `Buyers on Khep looking for ${esc(DEAL[U.deal] || "your goods").toLowerCase()} are listed below. Selling direct skips one or two middlemen.`, ""));
+    if(U.side === "buyer" || U.side === "both") out.push(card("Save", "Buy where it's made", "Buying direct from the producing region, with transport booked on Khep, often costs less than buying from a local trader.", ""));
+  }
+
+  /* crop calendar + mandi calculator for agriculture */
+  let agri = "";
+  if(isAgri){
+    const crops = (U.crops && U.crops.length ? U.crops : ["Wheat","Paddy / rice","Cotton"]);
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const rows = SEASONS.filter(s => U.role === "driver" || crops.includes(s[0]) || !U.crops || !U.crops.length);
+    agri += `<section class="card"><div class="sec-h"><h2>Crop calendar</h2><span class="sub">Harvest and mandi arrival months. This month is marked.</span></div>
+      <div style="overflow-x:auto"><div class="season"><span></span>${months.map((x, i) => `<span class="m ${i+1 === m ? "cur" : ""}">${x}</span>`).join("")}
+      ${rows.map(s => `<span class="name" title="${esc(s[2])}">${esc(s[0])}</span>${months.map((_, i) => `<span class="c ${s[1].includes(i+1) ? "on" : ""} ${i+1 === m ? "cur" : ""}"></span>`).join("")}`).join("")}
+      </div></div><p class="small-note">Hover a crop for the main growing states. Months are typical and vary by state and year.</p></section>`;
+    if(U.role !== "driver" && U.side !== "buyer"){
+      const mandis = nearest(homeCity.p, 5, 60).slice(0, 4);
+      const r = rng(hash(U.mobile + "mandi"));
+      UI.mandis = UI.mandis || mandis.map(c => ({n:c.n, km:roadKm(base(), c.p), prem:.03 + r()*.11}));
+      const crop = crops.find(c => CROP_PRICE[c]) || "Wheat";
+      agri += `<section class="card calc" id="calc"><div class="sec-h"><h2>Sell where it pays more</h2><span class="sub">Mandi price check</span></div>
+        <p class="sub" style="margin:0">Compare your local mandi with a bigger mandi further away, after paying for the truck.</p>
+        <div class="fgrid">
+          <div class="f"><label for="mc-crop">Crop</label><select id="mc-crop">${Object.keys(CROP_PRICE).map(c => `<option ${c === crop ? "selected" : ""}>${esc(c)}</option>`).join("")}</select></div>
+          <div class="f"><label for="mc-qty">Quantity (quintal)</label><input id="mc-qty" type="number" min="1" value="120"></div>
+          <div class="f"><label for="mc-local">Local price (₹/quintal)</label><input id="mc-local" type="number" min="1" value="${CROP_PRICE[crop]}"></div>
+          <div class="f"><label for="mc-mandi">Other mandi</label><select id="mc-mandi">${UI.mandis.map((x, i) => `<option value="${i}">${esc(x.n)} · ${x.km} km</option>`).join("")}</select></div>
+          <div class="f"><label for="mc-far">Price there (₹/quintal)</label><input id="mc-far" type="number" min="1" value="${Math.round(CROP_PRICE[crop]*(1+UI.mandis[0].prem))}"></div>
+        </div>
+        <label class="sub" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="mc-share" checked> Share the truck with neighbours if my load doesn't fill it</label>
+        <div id="mc-out"></div>
+        <p class="small-note">Prices filled in are samples for illustration. Check today's rates on eNAM or Agmarknet before you decide.</p></section>`;
+    }
+  }
+
+  /* buyer / seller leads */
+  let leads = "";
+  if(U.role !== "driver"){
+    const r = rng(hash(U.mobile + "leads")), wantBuyers = U.side !== "buyer";
+    const far = nearest(homeCity.p, 14, 80);
+    const goodsList = U.deal === "agri" && U.crops && U.crops.length ? U.crops.map(c => c + ", " + between(r, 5, 40) * 10 + " quintal") : GOODS[U.deal || "other"];
+    const L5 = Array.from({length:4}, () => ({who:pick(r, SHIPPERS), where:pick(r, far), what:pick(r, goodsList), when:between(r, 2, 20)}));
+    leads = `<section class="card"><div class="sec-h"><h2>${wantBuyers ? "Buyers looking for what you sell" : "Sellers with what you buy"}</h2><span class="sub">Sample leads</span></div>
+      <div class="tw" style="border:0"><table><thead><tr><th>${wantBuyers ? "Buyer" : "Seller"}</th><th>Wants</th><th>City</th><th class="r">Truck cost from you</th><th></th></tr></thead><tbody>
+      ${L5.map(l => { const km = roadKm(base(), l.where.p); return `<tr><td>${esc(l.who)}</td><td>${esc(l.what)}</td><td>${esc(l.where.n)} · ${km} km</td><td class="r">~${inr(Math.round(km*52/500)*500)}</td><td><button class="btn sm ghost" data-act="callback" data-name="${esc(l.who)}">Connect</button></td></tr>`; }).join("")}
+      </tbody></table></div></section>`;
+  }
+  const kind = U.role === "driver" ? `a driver who carries ${esc((DEAL[U.deal] || "all goods").toLowerCase())}` : `a ${U.side === "both" ? "buyer and seller" : esc(U.side || "seller")} of ${esc((DEAL[U.deal] || "goods").toLowerCase())}`;
+  return `<p class="lead">Ideas picked for you as ${kind}${U.crops && U.crops.length ? ` (${U.crops.map(esc).join(", ")})` : ""}.</p>
+    <div class="list">${out.join("")}</div>${agri}${leads}`;
+};
+function calcMandi(){
+  const g = id => $("#" + id); if(!g("mc-out")) return;
+  const qty = +g("mc-qty").value || 0, local = +g("mc-local").value || 0, far = +g("mc-far").value || 0;
+  const md = UI.mandis[+g("mc-mandi").value], cap = 210, truckCost = Math.round(md.km * 52 / 100) * 100;
+  const share = g("mc-share").checked, trucks = Math.ceil(qty / cap) || 1;
+  const transport = share ? Math.round(truckCost * qty / cap) : truckCost * trucks;
+  const gain = qty * (far - local) - transport;
+  g("mc-out").innerHTML = `<div class="result ${gain < 0 ? "neg" : ""}"><span>${gain >= 0 ? `Selling at ${esc(md.n)} earns you about` : `${esc(md.n)} isn't worth it. You'd lose about`}</span><b class="num">${inr(Math.abs(gain))} ${gain >= 0 ? "extra" : ""}</b>
+    <span class="sub">${qty} quintal × ${inr(far - local)} more per quintal = ${inr(qty*(far-local))}, minus truck ${inr(transport)} (${share ? "your share of one truck" : trucks + " full truck" + (trucks > 1 ? "s" : "")}, ${md.km} km).</span></div>`;
+}
+
+V.profile = () => {
+  const rows = [["Joined as", ROLE_NAME], ["Name", U.name], ["Mobile", "+91 " + String(U.mobile||"").replace(/(\d{5})(\d{5})/, "$1 $2")], ["City", U.city], ["App language", U.language]];
+  if(U.company) rows.push(["Company", U.company]); if(U.gstin) rows.push(["GSTIN", U.gstin]);
+  if(U.truckType) rows.push(["Truck", U.truckType + (U.truckNumber ? " · " + U.truckNumber : "")]);
+  if(U.work) rows.push(["Work", U.work]);
+  rows.push(["Goods", DEAL[U.deal] || "—"]); if(U.crops && U.crops.length) rows.push(["Crops", U.crops.join(", ")]);
+  if(U.role !== "driver") rows.push(["You are a", {seller:"Seller", buyer:"Buyer", both:"Buyer and seller"}[U.side] || "—"]);
+  rows.push(["Location", ST.loc === "on" ? `On · near ${nearName()}` : "Off"]);
+  return `<section class="card" style="max-width:640px"><div class="row"><h2>${esc(U.name)}</h2><span class="plate"><i>IND</i><b>${esc(U.pass || "")}</b></span></div>
+    <dl class="dl">${rows.map(([k,v]) => `<dt>${k}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+    <div class="row" style="justify-content:flex-start"><button class="btn sm ghost" data-act="locate">${ST.loc === "on" ? "Refresh location" : "Turn on location"}</button><button class="btn sm ghost" data-act="reset">Reset sample data</button><button class="btn sm" data-act="logout">Log out</button></div></section>
+    <p class="small-note">Your account and activity are stored only in this browser.</p>`;
+};
+
+/* ---------- render ---------- */
+function render(){
+  const v = view();
+  $("#title").textContent = NAV.find(n => n[0] === v)[1];
+  document.title = NAV.find(n => n[0] === v)[1] + " · Khep";
+  renderNav(); renderTop();
+  $("#view").innerHTML = V[v]();
+  if(v === "map") drawMap(); else if(MAP){ MAP.remove(); MAP = null; }
+  if(v === "earn") calcMandi();
+  UI.newIds.clear();
+}
+window.addEventListener("hashchange", () => { UI.bookFor = null; closeMenu(); render(); window.scrollTo(0, 0); });
+
+/* ---------- geolocation ---------- */
+function locate(manual){
+  if(!("geolocation" in navigator)){ ST.loc = "error"; save(); render(); if(manual) toast("This browser can't share location."); return; }
+  ST.loc = "asking"; renderTop();
+  navigator.geolocation.getCurrentPosition(p => {
+    ST.coords = [p.coords.latitude, p.coords.longitude]; ST.accuracy = Math.round(p.coords.accuracy); ST.loc = "on"; save();
+    UI.mandis = null; regen(); render(); toast(`Location on. Showing what's near ${nearName()}.`);
+  }, err => {
+    ST.loc = err.code === 1 ? "denied" : "error"; save(); render();
+    if(manual) toast(err.code === 1 ? "Location is blocked. Allow it for this site in your browser settings." : "Couldn't get your location. Check GPS and try again.");
+  }, {enableHighAccuracy:true, timeout:12000, maximumAge:300000});
+}
+if(navigator.permissions && navigator.permissions.query){
+  navigator.permissions.query({name:"geolocation"}).then(s => { if(s.state === "granted") locate(false); else if(s.state === "denied" && ST.loc !== "denied"){ ST.loc = "denied"; save(); renderTop(); } }).catch(() => {});
+}
+
+/* ---------- actions ---------- */
+function closeMenu(){ $("#side").classList.remove("open"); $("#scrim").hidden = true; $("#menu").setAttribute("aria-expanded", "false"); }
+$("#menu").addEventListener("click", () => { const o = !$("#side").classList.contains("open"); $("#side").classList.toggle("open", o); $("#scrim").hidden = !o; $("#menu").setAttribute("aria-expanded", String(o)); });
+$("#scrim").addEventListener("click", closeMenu);
+$("#logout").addEventListener("click", logout);
+function logout(){ store.del("khep-user"); location.href = "index.html"; }
+
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act]"); if(!b || b.tagName === "SELECT") return;
+  const a = b.dataset.act;
+  if(a === "locate") locate(true);
+  else if(a === "lf"){ UI.loadFilter = b.dataset.v; render(); }
+  else if(a === "ft"){ UI.findTab = b.dataset.v; UI.bookFor = null; render(); }
+  else if(a === "accept"){
+    const l = LOADS.find(x => x.id === b.dataset.id); if(!l) return;
+    ST.taken.push(l.id); ST.orders.unshift({id:"O" + Date.now(), from:l.from, to:l.to, km:l.km, goods:l.goods, tt:l.tt, price:l.price, party:l.shipper, step:0}); save();
+    render(); toast(`Load accepted: ${l.from} → ${l.to}. It's in My trips.`);
+  }
+  else if(a === "bookopen"){ UI.bookFor = b.dataset.id; render(); const box = document.querySelector(`[data-book="${b.dataset.id}"]`); if(box) box.scrollIntoView({block:"nearest", behavior:"smooth"}); }
+  else if(a === "bookcancel"){ UI.bookFor = null; render(); }
+  else if(a === "bookconfirm"){
+    const t = NEARBY_TRUCKS.find(x => x.id === b.dataset.id); if(!t) return;
+    const to = $(`#bk-to-${t.id}`).value, goods = $(`#bk-goods-${t.id}`).value.trim() || "Goods";
+    const city = cityOf(to) || homeCity, km = roadKm(base(), city.p) + t.away, price = Math.round(km * truckOf(t.tt).rate / 500) * 500;
+    ST.orders.unshift({id:"O" + Date.now(), from:nearName(), to, km, goods, tt:t.tt, price, party:t.name + " · " + t.plate, step:0}); save();
+    UI.bookFor = null; location.hash = "orders"; toast(`Booked ${t.name}. ${inr(price)} held in escrow.`);
+  }
+  else if(a === "next"){
+    const o = ST.orders.find(x => x.id === b.dataset.id); if(!o) return;
+    o.step++;
+    if(o.step >= 4){
+      ST.orders = ST.orders.filter(x => x !== o);
+      const date = Date.now();
+      ST.history.unshift({id:"H" + date, date, from:o.from, to:o.to, km:o.km, tt:o.tt, goods:o.goods, price:o.price, party:o.party, onTime:true, emptyReturn:false});
+      if(U.role === "driver"){ ST.expenses.push({date, cat:"Diesel", amt:Math.round(o.km/3.8*92), note:o.from + " → " + o.to}, {date, cat:"Toll", amt:Math.round(o.km*6.2), note:"FASTag"}, {date, cat:"Food", amt:Math.ceil(o.km/450)*350, note:"On the road"}); }
+      toast(U.role === "driver" ? `Delivered. Balance ${inr(o.price*.1)} paid to you.` : `Delivery confirmed. Balance ${inr(o.price*.1)} released to the driver.`);
+    } else if(o.step === 2) toast(U.role === "driver" ? `Advance ${inr(o.price*.9)} sent to your account.` : `Advance ${inr(o.price*.9)} released to the driver.`);
+    save(); render();
+  }
+  else if(a === "callback") toast(`Request sent. ${b.dataset.name} will call you on +91 ${String(U.mobile||"").replace(/(\d{5})(\d{5})/, "$1 $2")}. (Sample)`);
+  else if(a === "reset"){ store.del(KEY); location.reload(); }
+  else if(a === "logout") logout();
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if(t.id === "tf"){ UI.truckFilter = t.value; UI.bookFor = null; render(); }
+  else if(t.dataset && t.dataset.est){ const item = NEARBY_TRUCKS.find(x => x.id === t.dataset.est); if(item) $("#est-" + item.id).innerHTML = estimate(item, t.value); }
+  else if(t.id === "mc-crop"){ $("#mc-local").value = CROP_PRICE[t.value]; $("#mc-far").value = Math.round(CROP_PRICE[t.value] * (1 + UI.mandis[+$("#mc-mandi").value].prem)); calcMandi(); }
+  else if(t.id === "mc-mandi"){ $("#mc-far").value = Math.round((+$("#mc-local").value || 0) * (1 + UI.mandis[+t.value].prem)); calcMandi(); }
+  else if(t.id && t.id.startsWith("mc-")) calcMandi();
+});
+document.addEventListener("input", e => { if(e.target.id && e.target.id.startsWith("mc-") && e.target.type === "number") calcMandi(); });
+document.addEventListener("submit", e => {
+  if(e.target.id !== "expform") return; e.preventDefault();
+  const amt = Math.round(+$("#ex-amt").value);
+  if(!(amt > 0)){ toast("Enter the amount in rupees."); $("#ex-amt").focus(); return; }
+  ST.expenses.push({date:Date.now(), cat:$("#ex-cat").value, amt, note:$("#ex-note").value.trim()}); save(); render(); toast(`${inr(amt)} added to expenses.`);
+});
+
+/* ---------- live feed: new loads for drivers, trucks freeing up for everyone else ---------- */
+let feedN = 100;
+setInterval(() => {
+  if(document.hidden) return;
+  if(U.role === "driver"){
+    const l = makeLoad(rng(Date.now() | 0), feedN++); l.away = roadKm(base(), l.pt); l.whenH = between(Math.random, 1, 6);
+    LOADS.unshift(l); UI.newIds.add(l.id);
+    if(view() === "loads"){ render(); } toast(`New load: ${l.from} → ${l.to}, ${inr(l.price)}`);
+  } else {
+    const busy = NEARBY_TRUCKS.filter(t => t.availH > 0); if(!busy.length) return;
+    const t = busy[Math.floor(Math.random()*busy.length)]; t.availH = 0; UI.newIds.add(t.id);
+    if(["book","find"].includes(view()) && UI.bookFor === null){ render(); toast(`${t.name}'s ${t.tt} is free now, ${t.away} km away.`); }
+  }
+}, 25000);
+
+/* ---------- install as an app ---------- */
+const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const ib = $("#install");
+if(!standalone){
+  if(window.__khepPrompt) ib.hidden = false;
+  window.addEventListener("khep-installable", () => { ib.hidden = false; });
+}
+ib.addEventListener("click", async () => {
+  const p = window.__khepPrompt; if(!p) return;
+  p.prompt(); const r = await p.userChoice; window.__khepPrompt = null; ib.hidden = true;
+  if(r.outcome === "accepted") toast("Khep is installing. Open it from your home screen.");
+});
+
+render();
+}
+})();
+</script>
+<script>
+// Registered outside the app code so the gate screen can be installed too.
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); window.__khepPrompt = e; window.dispatchEvent(new Event("khep-installable")); });
+if("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+</body>
+</html>

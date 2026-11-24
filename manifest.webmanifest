@@ -1,0 +1,25 @@
+{
+  "id": "./app.html",
+  "name": "Khep: freight for India",
+  "short_name": "Khep",
+  "description": "Live loads for drivers, trucks to book for companies, and the nearest driver or transporter for everyone else.",
+  "lang": "en-IN",
+  "start_url": "./app.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a2a6e",
+  "theme_color": "#0a2a6e",
+  "categories": ["business", "productivity", "navigation"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "My trips and orders", "url": "./app.html#orders", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Map", "url": "./app.html#map", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Money", "url": "./app.html#money", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
