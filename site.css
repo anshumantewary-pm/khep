@@ -32,20 +32,34 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .stripes{height:10px;background:repeating-linear-gradient(-45deg,var(--yel) 0 12px,var(--ink) 12px 24px)}
 
 /* ---------- header: hides when you scroll down, returns when you scroll up ---------- */
-.site-hdr{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:transform .35s cubic-bezier(.3,.7,.3,1),background-color .3s,box-shadow .3s;will-change:transform}
-.site-hdr.scrolled{background:linear-gradient(90deg,rgba(46,12,10,.92),rgba(16,10,28,.9) 55%,rgba(46,12,10,.92));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(0,0,0,.8)}
-.site-hdr.hide{transform:translateY(-110%)}
-.hdr-in{height:var(--hdr);display:flex;align-items:center;gap:18px}
+/* painted like the top panel of a goods truck: orange-to-brick wood, a chrome strip, and decorations hanging below */
+.site-hdr{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);
+  background:repeating-linear-gradient(180deg,transparent 0 21px,rgba(60,16,6,.13) 21px 22px),linear-gradient(180deg,#d0601f,#a83a1e 62%,#7f2818);
+  box-shadow:0 10px 24px -14px rgba(0,0,0,.8);transition:transform .38s cubic-bezier(.3,.7,.3,1),box-shadow .3s;will-change:transform}
+.site-hdr::after{content:"";position:absolute;left:0;right:0;bottom:-5px;height:5px;background:linear-gradient(180deg,#fafafa,#a9a9a9 55%,#e6e6e6);box-shadow:0 2px 3px rgba(0,0,0,.4)}
+.site-hdr.scrolled{box-shadow:0 14px 30px -12px rgba(0,0,0,.85)}
+.site-hdr.hide{transform:translateY(calc(-100% - 120px))}
+.hdr-in{height:var(--hdr);display:flex;align-items:center;gap:18px;position:relative;z-index:3}
+.permit{display:grid;place-items:center;text-align:center;width:58px;height:58px;border-radius:50%;background:#f4efe6;border:2.5px solid #1d3fa6;color:#1d3fa6;font:800 .5rem/1.15 var(--body);letter-spacing:.04em;text-transform:uppercase;transform:rotate(-8deg);box-shadow:2px 2px 0 rgba(0,0,0,.35);flex:none}
+.permit b{display:block;color:#c8202a;font-size:.62rem}
+@media (max-width:980px){.permit{display:none}}
+/* hanging garlands and nimbu-mirchi (moved by site.js) */
+.hdr-deco{position:absolute;left:0;right:0;top:100%;height:0;pointer-events:none;z-index:1}
+.swag{position:absolute;top:0;transform-origin:50% 0;will-change:transform}
+.swag svg,.nimbu svg{display:block;overflow:visible}
+.nimbu{position:absolute;top:0;width:36px;margin-left:-18px;transform-origin:50% 0;will-change:transform;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.45))}
+svg .swing{transform-box:fill-box;transform-origin:50% 0}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
 .logo img{width:38px;height:38px;border-radius:11px;display:block}
-.logo b{font:400 1.9rem var(--paint);color:var(--paper);text-shadow:2px 2px 0 var(--pink);line-height:1}
-.nav{display:flex;align-items:center;gap:4px;list-style:none;margin:0;padding:0}
-.nav a{display:block;padding:8px 12px;border-radius:999px;text-decoration:none;font-weight:600;color:#dfe2f5}
-.nav a:hover{background:rgba(255,248,230,.08);color:var(--paper)}
+.logo b{font:400 1.9rem var(--paint);color:var(--yel);text-shadow:2px 2px 0 var(--ink),3px 3px 0 var(--pink);line-height:1}
+.site-hdr .logo img{border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink)}
+.nav{display:flex;align-items:center;gap:4px;list-style:none;margin:0;padding:0;position:relative;z-index:4}
+.nav a{display:block;padding:8px 12px;border-radius:999px;text-decoration:none;font-weight:700;color:#fff1df;text-shadow:1px 1px 0 rgba(60,16,6,.6)}
+.nav a:hover{background:rgba(40,10,4,.25);color:#fff}
 .nav a[aria-current="page"]{color:var(--yel)}
-.hdr-cta{font:800 .98rem var(--display);text-decoration:none;color:var(--ink);background:var(--yel);border-radius:999px;padding:8px 18px;box-shadow:3px 3px 0 var(--pink);white-space:nowrap;transition:transform .15s,box-shadow .15s}
-.hdr-cta:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--pink)}
-.burger{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:rgba(255,248,230,.06);color:var(--paper);cursor:pointer;place-items:center}
+.hdr-cta{font:800 .98rem var(--display);text-decoration:none;color:var(--ink);background:var(--yel);border:2.5px solid var(--ink);border-radius:999px;padding:7px 18px;box-shadow:3px 3px 0 var(--ink);white-space:nowrap;transition:transform .15s,box-shadow .15s}
+.hdr-cta:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.burger{display:none;width:44px;height:44px;border-radius:12px;border:2px solid rgba(40,10,4,.5);background:rgba(40,10,4,.25);color:var(--paper);cursor:pointer;place-items:center}
 .burger svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round}
 @media (max-width:860px){
   .burger{display:grid}
@@ -159,4 +173,5 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
   .marquee-track,.rise,.road::before,.road svg{animation:none}
   .road svg{left:45%}
   .site-hdr,.btn,.post-card,.to-top,.nav{transition:none}
+  .swag,.nimbu{transform:none!important}
 }
