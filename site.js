@@ -29,6 +29,7 @@ if(hdrSlot){
     <div class="fringe" aria-hidden="true"></div>
     <div class="wrap hdr-in">
       <a class="logo" href="./" aria-label="Khep home"><img src="icons/icon-192.png" alt="" width="38" height="38"><b>Khep</b></a>
+      <span class="permit" aria-hidden="true"><span><b>All India</b>Permit</span></span>
       <ul class="nav" id="nav">${NAV.map(([label, href, p]) => `<li><a href="${href}" ${p === page && p !== "home" ? 'aria-current="page"' : ""}>${label}</a></li>`).join("")}</ul>
       <a class="hdr-cta" href="${home}#get">Get the app</a>
       <button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
@@ -57,6 +58,68 @@ if(hdr){
   document.addEventListener("keydown", e => { if(e.key === "Escape") setOpen(false); });
   document.addEventListener("click", e => { if(hdr.classList.contains("open") && !hdr.contains(e.target)) setOpen(false); });
 }
+
+/* ---------- garlands and nimbu-mirchi hanging from the header ---------- */
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function swagSVG(w){
+  const sag = Math.round(w * .2), n = Math.max(8, Math.round(w / 10.5)), out = [];
+  for(let i = 0; i <= n; i++){
+    const t = i / n, x = w * t, y = 4 + 4 * sag * t * (1 - t);
+    const c = i % 3 === 1 ? "#ffd400" : "#ff8a00";
+    out.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.6" fill="${c}" stroke="#b34700" stroke-width="1"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.8" fill="#b34700"/>`);
+  }
+  const mx = w / 2, my = 4 + sag;
+  // a small pendant of leaves and a red bead at the low point
+  out.push(`<path d="M${mx} ${my + 4} q-7 6 -3 14 q3 -6 3 -14z M${mx} ${my + 4} q7 6 3 14 q-3 -6 -3 -14z" fill="#1f9e46" stroke="#0f5a26" stroke-width="1"/><circle cx="${mx}" cy="${my + 21}" r="4" fill="#d7261e" stroke="#7a0e0e" stroke-width="1"/>`);
+  out.push(`<circle cx="0" cy="4" r="3" fill="#d7261e"/><circle cx="${w}" cy="4" r="3" fill="#d7261e"/>`);
+  return `<svg width="${w}" height="${sag + 34}" viewBox="0 0 ${w} ${sag + 34}">${out.join("")}</svg>`;
+}
+function nimbuSVG(){
+  // thread, seven chillies and a lemon at the bottom: the classic nimbu-mirchi charm
+  let s = `<svg width="36" height="118" viewBox="0 0 36 118"><path d="M18 0 V86" stroke="#2b1a10" stroke-width="1.6"/>`;
+  for(let i = 0; i < 7; i++){
+    const y = 14 + i * 9.5, rot = (i % 2 ? 1 : -1) * (16 + (i % 3) * 6);
+    s += `<g transform="translate(18 ${y}) rotate(${rot})"><path d="M0 0 C6 3 6 14 1.5 22 C-1 14 -5 5 0 0Z" fill="${i % 3 === 2 ? "#3cb043" : "#2a8f34"}" stroke="#145c1c" stroke-width="1"/><rect x="-1.4" y="-3" width="2.8" height="4" rx="1" fill="#6b4a1a"/></g>`;
+  }
+  s += `<ellipse cx="18" cy="100" rx="11" ry="13" fill="#f7d83a" stroke="#a88a10" stroke-width="1.4"/><ellipse cx="14" cy="95" rx="3" ry="4.5" fill="#fff6b0" opacity=".8"/><path d="M18 86 v2" stroke="#2b1a10" stroke-width="1.6"/></svg>`;
+  return s;
+}
+function buildDeco(){
+  if(!hdr) return;
+  let deco = hdr.querySelector(".hdr-deco");
+  if(!deco){ deco = document.createElement("div"); deco.className = "hdr-deco"; deco.setAttribute("aria-hidden", "true"); hdr.appendChild(deco); }
+  const W = document.documentElement.clientWidth, sw = W < 600 ? 92 : 128, n = Math.ceil(W / sw) + 1;
+  let html = "";
+  for(let i = 0; i < n; i++) html += `<div class="swag swing" data-amp="1.6" data-gain=".8" style="left:${i * sw - 4}px;width:${sw}px">${swagSVG(sw)}</div>`;
+  (W < 700 ? [.5] : [.2, .8]).forEach(p => { html += `<div class="nimbu swing" data-amp="7" data-gain="2.6" style="left:${p * 100}%">${nimbuSVG()}</div>`; });
+  deco.innerHTML = html;
+  collectSwings();
+}
+/* Pendulum motion as if the truck is on the road: a steady sway, a jolt when you scroll, and the odd pothole. */
+let swings = [], impulse = 0, lastScroll = window.scrollY;
+function collectSwings(){
+  swings = [...document.querySelectorAll(".swing")].map((el, i) => ({
+    el, amp: +el.dataset.amp || 3, gain: +el.dataset.gain || 1,
+    w: 1.6 + (i % 5) * .23 + Math.random() * .3, ph: Math.random() * 6.28
+  }));
+}
+if(!calm){
+  window.addEventListener("scroll", () => { const y = window.scrollY; impulse += Math.max(-10, Math.min(10, (y - lastScroll) * .06)); lastScroll = y; }, {passive:true});
+  setInterval(() => { if(!document.hidden && Math.random() < .55) impulse += (Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 3); }, 2600);
+  const tick = t => {
+    impulse *= .94;
+    const s = t / 1000;
+    for(const k of swings){
+      const a = k.amp * Math.sin(s * k.w + k.ph) * (1 + Math.min(1.5, Math.abs(impulse) * .12)) + impulse * k.gain * Math.cos(s * k.w * 1.8 + k.ph);
+      k.el.style.transform = `rotate(${a.toFixed(2)}deg)`;
+    }
+    requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+buildDeco();
+let decoT; window.addEventListener("resize", () => { clearTimeout(decoT); decoT = setTimeout(buildDeco, 200); });
+window.Khep_collectSwings = collectSwings;
 
 /* ---------- footer ---------- */
 const ftrSlot = document.getElementById("site-footer");
