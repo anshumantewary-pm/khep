@@ -45,10 +45,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 @media (max-width:980px){.permit{display:none}}
 /* hanging garlands and nimbu-mirchi (moved by site.js) */
 .hdr-deco{position:absolute;left:0;right:0;top:100%;height:0;pointer-events:none;z-index:1}
-.swag{position:absolute;top:0;transform-origin:50% 0;will-change:transform}
+/* sway runs as CSS transform animations, so the graphics card does the work with no script per frame */
+.swag,.nimbu,.jolt-in{transform-origin:50% 0;will-change:transform}
+.swag{position:absolute;top:0;animation:sway-s var(--d,2.4s) ease-in-out var(--dl,0s) infinite alternate}
+.nimbu{position:absolute;top:0;width:36px;margin-left:-18px;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.45));animation:sway-b var(--d,1.6s) ease-in-out var(--dl,0s) infinite alternate}
 .swag svg,.nimbu svg{display:block;overflow:visible}
-.nimbu{position:absolute;top:0;width:36px;margin-left:-18px;transform-origin:50% 0;will-change:transform;filter:drop-shadow(2px 3px 2px rgba(0,0,0,.45))}
-svg .swing{transform-box:fill-box;transform-origin:50% 0}
+@keyframes sway-s{from{transform:rotate(-1.8deg)}to{transform:rotate(1.8deg)}}
+@keyframes sway-b{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+/* a damped swing when the truck jolts: scrolling quickly, or the odd pothole */
+.hdr-deco.jolt .swag .jolt-in{animation:jolt-s 1.3s ease-out}
+.hdr-deco.jolt .nimbu .jolt-in{animation:jolt-b 1.5s ease-out}
+@keyframes jolt-s{20%{transform:rotate(4.5deg)}45%{transform:rotate(-3deg)}70%{transform:rotate(1.4deg)}100%{transform:rotate(0)}}
+@keyframes jolt-b{16%{transform:rotate(20deg)}38%{transform:rotate(-13deg)}60%{transform:rotate(7deg)}80%{transform:rotate(-2.5deg)}100%{transform:rotate(0)}}
+.site-hdr.hide .swag,.site-hdr.hide .nimbu{animation-play-state:paused}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
 .logo img{width:38px;height:38px;border-radius:11px;display:block}
 .logo b{font:400 1.9rem var(--paint);color:var(--yel);text-shadow:2px 2px 0 var(--ink),3px 3px 0 var(--pink);line-height:1}
@@ -174,5 +183,5 @@ svg .swing{transform-box:fill-box;transform-origin:50% 0}
   .marquee-track,.rise,.road::before,.road svg{animation:none}
   .road svg{transform:translate3d(45vw,0,0)}
   .site-hdr,.btn,.post-card,.to-top,.nav{transition:none}
-  .swag,.nimbu{transform:none!important}
+  .swag,.nimbu,.jolt-in{animation:none!important}
 }

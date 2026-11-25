@@ -89,40 +89,30 @@ function buildDeco(){
   let deco = hdr.querySelector(".hdr-deco");
   if(!deco){ deco = document.createElement("div"); deco.className = "hdr-deco"; deco.setAttribute("aria-hidden", "true"); hdr.appendChild(deco); }
   const W = document.documentElement.clientWidth, sw = W < 600 ? 92 : 128, n = Math.ceil(W / sw) + 1;
+  // Each piece gets its own sway speed and starting point (CSS variables), so they don't move in lockstep.
+  const v = (d, spread) => `--d:${(d + Math.random() * spread).toFixed(2)}s;--dl:-${(Math.random() * 3).toFixed(2)}s`;
   let html = "";
-  for(let i = 0; i < n; i++) html += `<div class="swag swing" data-amp="1.6" data-gain=".8" style="left:${i * sw - 4}px;width:${sw}px">${swagSVG(sw)}</div>`;
-  (W < 700 ? [.07] : [.2, .8]).forEach(p => { html += `<div class="nimbu swing" data-amp="7" data-gain="2.6" style="left:${p * 100}%">${nimbuSVG()}</div>`; });
+  for(let i = 0; i < n; i++) html += `<div class="swag" style="left:${i * sw - 4}px;width:${sw}px;${v(2.1, .9)}"><div class="jolt-in">${swagSVG(sw)}</div></div>`;
+  (W < 700 ? [.07] : [.2, .8]).forEach(p => { html += `<div class="nimbu" style="left:${p * 100}%;${v(1.4, .5)}"><div class="jolt-in">${nimbuSVG()}</div></div>`; });
   deco.innerHTML = html;
-  collectSwings();
 }
-/* Pendulum motion as if the truck is on the road: a steady sway, a jolt when you scroll, and the odd pothole. */
-let swings = [], impulse = 0, lastScroll = window.scrollY;
-function collectSwings(){
-  swings = [...document.querySelectorAll(".swing")].map((el, i) => ({
-    el, amp: +el.dataset.amp || 3, gain: +el.dataset.gain || 1,
-    w: 1.6 + (i % 5) * .23 + Math.random() * .3, ph: Math.random() * 6.28
-  }));
+/* The steady sway is pure CSS, run by the graphics card. Script only adds a short "jolt" class
+   when you scroll quickly or, now and then, when the truck hits a pothole. */
+let joltT = 0, lastScroll = window.scrollY, lastJolt = 0;
+function jolt(){
+  const deco = hdr && hdr.querySelector(".hdr-deco");
+  if(!deco || hdr.classList.contains("hide") || performance.now() - lastJolt < 1700) return;
+  lastJolt = performance.now();
+  deco.classList.remove("jolt"); void deco.offsetWidth; deco.classList.add("jolt");
+  clearTimeout(joltT); joltT = setTimeout(() => deco.classList.remove("jolt"), 1600);
 }
 if(!calm){
-  window.addEventListener("scroll", () => { const y = window.scrollY; impulse += Math.max(-10, Math.min(10, (y - lastScroll) * .06)); lastScroll = y; }, {passive:true});
-  setInterval(() => { if(!document.hidden && Math.random() < .55) impulse += (Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 3); }, 2600);
-  // Runs only while the header is on screen; writes a new angle only when it has visibly changed.
-  const tick = t => {
-    impulse *= .94;
-    if(!hdr || !hdr.classList.contains("hide")){
-      const s = t / 1000, boost = 1 + Math.min(1.5, Math.abs(impulse) * .12);
-      for(const k of swings){
-        const a = k.amp * Math.sin(s * k.w + k.ph) * boost + impulse * k.gain * Math.cos(s * k.w * 1.8 + k.ph);
-        if(Math.abs(a - (k.last ?? 99)) > .04){ k.last = a; k.el.style.transform = `rotate(${a.toFixed(2)}deg)`; }
-      }
-    }
-    requestAnimationFrame(tick);
-  };
-  requestAnimationFrame(tick);
+  window.addEventListener("scroll", () => { const y = window.scrollY; if(Math.abs(y - lastScroll) > 40) jolt(); lastScroll = y; }, {passive:true});
+  setInterval(() => { if(!document.hidden && Math.random() < .45) jolt(); }, 3200);
 }
 buildDeco();
-let decoT; window.addEventListener("resize", () => { clearTimeout(decoT); decoT = setTimeout(buildDeco, 200); });
-window.Khep_collectSwings = collectSwings;
+let decoT, lastW = document.documentElement.clientWidth;
+window.addEventListener("resize", () => { clearTimeout(decoT); decoT = setTimeout(() => { const w = document.documentElement.clientWidth; if(w !== lastW){ lastW = w; buildDeco(); } }, 200); });
 
 /* ---------- footer ---------- */
 const ftrSlot = document.getElementById("site-footer");
