@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stories · Khep</title>
+<meta name="description" content="Stories from drivers, truck owners, farmers and companies on Khep, plus guides and news.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#070a1c">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600&family=Yatra+One&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.page-hero{padding-top:calc(var(--hdr) + 48px + env(safe-area-inset-top,0px));padding-bottom:28px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#1a1f5c,var(--night) 70%)}
+.page-hero .in{display:grid;gap:14px;justify-items:center}
+.page-hero h1{font:400 clamp(2.6rem,7vw,4.8rem)/1.05 var(--paint);color:var(--yel);text-shadow:3px 3px 0 var(--pink),6px 6px 0 var(--cob)}
+.page-hero p{color:#dfe2f5;max-width:58ch;font-size:1.1rem}
+.tools{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin:8px auto 30px}
+.cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.cats button{font:700 .98rem var(--body);color:#dfe2f5;background:rgba(255,248,230,.06);border:1.5px solid var(--line);border-radius:999px;padding:7px 16px;cursor:pointer}
+.cats button[aria-pressed="true"]{background:var(--yel);border-color:var(--yel);color:var(--ink);box-shadow:3px 3px 0 var(--pink)}
+.search{position:relative;flex:0 1 300px;min-width:0}
+.search input{width:100%;font:500 1rem var(--body);color:var(--paper);background:rgba(255,248,230,.06);border:1.5px solid var(--line);border-radius:999px;padding:9px 16px 9px 40px}
+.search svg{position:absolute;left:14px;top:50%;width:18px;height:18px;transform:translateY(-50%);fill:none;stroke:var(--mute);stroke-width:2.2;stroke-linecap:round}
+.count{color:var(--mute);text-align:center;margin-bottom:18px;font-size:.92rem}
+.featured{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:0;background:var(--panel-solid);border:1px solid var(--line);border-radius:26px;overflow:hidden;text-decoration:none;margin-bottom:24px;transition:border-color .2s,transform .2s}
+.featured:hover{border-color:rgba(255,212,0,.4);transform:translateY(-3px)}
+.featured .cover{aspect-ratio:auto;min-height:280px;height:100%}
+.featured .body{display:grid;gap:12px;align-content:center;padding:clamp(20px,4vw,40px)}
+.featured h2{font:800 clamp(1.5rem,3vw,2.1rem)/1.15 var(--display)}
+.featured p{color:var(--mute)}
+.featured .meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:.88rem;color:var(--mute)}
+@media (max-width:780px){.featured{grid-template-columns:minmax(0,1fr)}.featured .cover{min-height:200px}}
+.share{background:linear-gradient(160deg,#0b3d91,#06275f);border-radius:30px;overflow:hidden;border:1px solid var(--line)}
+.share .in{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,48px);padding:clamp(24px,5vw,48px)}
+@media (max-width:860px){.share .in{grid-template-columns:minmax(0,1fr)}}
+.share h2{font:400 clamp(2rem,4.6vw,3rem)/1.15 var(--paint);color:var(--yel);text-shadow:2px 2px 0 var(--pink)}
+.share .lead{display:grid;gap:14px;align-content:start}
+.share .lead p{color:#e3e6f8}
+.share ul{margin:0;padding-left:1.1rem;color:#cfd5f3;display:grid;gap:4px}
+.share .form{background:rgba(7,10,28,.55);border:1px solid var(--line);border-radius:22px;padding:22px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;color:#dfe2f5}
+.check input{width:20px;height:20px;margin-top:3px;accent-color:var(--pink);flex:none}
+</style>
+</head>
+<body data-page="stories">
+<div id="site-header"></div>
+
+<main id="main">
+  <section class="page-hero">
+    <div class="wrap in">
+      <span class="ribbon">Stories from the road</span>
+      <h1>सड़क की कहानियाँ</h1>
+      <p>Real stories from drivers, truck owners, farmers and companies on Khep, plus guides and news from the team.</p>
+    </div>
+  </section>
+
+  <section class="wrap" aria-label="All posts" style="padding-bottom:72px">
+    <div class="tools">
+      <div class="cats" role="group" aria-label="Show" id="cats">
+        <button data-cat="all" aria-pressed="true">All</button>
+        <button data-cat="stories" aria-pressed="false">Stories</button>
+        <button data-cat="guides" aria-pressed="false">Guides</button>
+        <button data-cat="news" aria-pressed="false">News</button>
+      </div>
+      <label class="search"><span class="skip" style="position:absolute;left:-999px">Search posts</span><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="q" type="search" placeholder="Search stories" aria-label="Search stories"></label>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <div id="featured"></div>
+    <div class="posts" id="grid"><div class="empty-card"><p>Loading…</p></div></div>
+  </section>
+
+  <section class="wrap" id="share" aria-labelledby="share-title" style="padding-bottom:88px">
+    <div class="share"><div class="fringe" aria-hidden="true"></div><div class="in">
+      <div class="lead">
+        <span class="ribbon" style="justify-self:start">Share your story · अपनी कहानी सुनाइए</span>
+        <h2 id="share-title">Your road, your story</h2>
+        <p>Drive a truck, run a fleet, grow crops or ship goods? Tell us what changed for you. We'll write it up with you and share it here.</p>
+        <ul><li>A few lines is enough. We'll call you for the rest.</li><li>Write in Hindi, Punjabi or English.</li><li>We only publish after you say yes.</li></ul>
+      </div>
+      <form class="form" id="story-form" novalidate>
+        <div class="fgrid">
+          <div class="field"><label for="s-name">Your name</label><input id="s-name" autocomplete="name" required></div>
+          <div class="field"><label for="s-phone">Mobile</label><input id="s-phone" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210" required></div>
+          <div class="field"><label for="s-role">You are a</label><select id="s-role"><option>Driver</option><option>Truck owner</option><option>Company</option><option>Contractor</option><option>Farmer or trader</option></select></div>
+          <div class="field"><label for="s-city">City</label><input id="s-city" placeholder="Ludhiana" required></div>
+          <div class="field full"><label for="s-story">Your story</label><textarea id="s-story" placeholder="What happened, and what changed?" required></textarea></div>
+        </div>
+        <label class="check" for="s-ok"><input type="checkbox" id="s-ok"><span>Khep can contact me about publishing this story.</span></label>
+        <p class="form-msg" id="s-msg" role="status"></p>
+        <div><button class="btn" type="submit" id="s-send">Send my story</button></div>
+      </form>
+    </div></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const {esc, loadPosts, cardHTML, coverHTML, fmtDate, readMins, CAT, CONFIG} = window.Khep;
+const params = new URLSearchParams(location.search);
+let cat = ["stories","guides","news"].includes(params.get("cat")) ? params.get("cat") : "all";
+let q = params.get("q") || "";
+let all = [];
+$("q").value = q;
+
+function featuredHTML(p){
+  return `<a class="featured" href="post.html?p=${encodeURIComponent(p.slug)}">${coverHTML(p, true)}
+    <div class="body"><div class="meta"><span class="chip ${esc(p.category)}">${CAT[p.category] || "Post"}</span><span>Latest</span><span>${fmtDate(p.date)}</span><span>${readMins(p)} min read</span></div>
+    <h2>${esc(p.title)}</h2><p>${esc(p.excerpt || "")}</p><div class="meta">${esc(p.author || "Khep team")}${p.city ? " · " + esc(p.city) : ""}</div></div></a>`;
+}
+function render(){
+  document.querySelectorAll("#cats button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.cat === cat)));
+  const term = q.trim().toLowerCase();
+  const list = all.filter(p => (cat === "all" || p.category === cat) &&
+    (!term || [p.title, p.excerpt, p.author, p.city, p.role, (p.tags || []).join(" "), p.body].join(" ").toLowerCase().includes(term)));
+  $("count").textContent = list.length ? `${list.length} ${list.length === 1 ? "post" : "posts"}${term ? ` matching “${q.trim()}”` : ""}` : "";
+  const showFeatured = cat === "all" && !term && list.length > 1;
+  $("featured").innerHTML = showFeatured ? featuredHTML(list[0]) : "";
+  const rest = showFeatured ? list.slice(1) : list;
+  if(list.length){ $("grid").innerHTML = rest.map(cardHTML).join(""); return; }
+  $("grid").innerHTML = cat === "stories" && !term
+    ? `<div class="empty-card" style="grid-column:1/-1"><b style="font:800 1.3rem var(--display)">The first stories are on their way</b><p>We're talking to drivers, owners and farmers on the Punjab to Mumbai route. Want yours to be one of the first?</p><a class="btn" href="#share">Share your story</a></div>`
+    : `<div class="empty-card" style="grid-column:1/-1"><b>Nothing found</b><p>Try another word, or show all posts.</p><button class="btn ghost" id="clear">Show all posts</button></div>`;
+}
+function sync(){
+  const u = new URL(location.href);
+  cat === "all" ? u.searchParams.delete("cat") : u.searchParams.set("cat", cat);
+  q.trim() ? u.searchParams.set("q", q.trim()) : u.searchParams.delete("q");
+  history.replaceState(null, "", u.pathname + u.search + u.hash);
+}
+$("cats").addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return; cat = b.dataset.cat; sync(); render(); });
+let t; $("q").addEventListener("input", e => { q = e.target.value; clearTimeout(t); t = setTimeout(() => { sync(); render(); }, 150); });
+document.addEventListener("click", e => { if(e.target.id === "clear"){ cat = "all"; q = ""; $("q").value = ""; sync(); render(); } });
+
+loadPosts().then(p => { all = p; render(); })
+  .catch(() => { $("grid").innerHTML = `<div class="empty-card" style="grid-column:1/-1"><b>Stories couldn't load</b><p>Check your connection and refresh the page.</p></div>`; });
+
+/* share your story */
+const form = $("story-form"), msg = $("s-msg");
+$("s-phone").addEventListener("input", e => { e.target.value = e.target.value.replace(/\D/g, "").replace(/^91(?=\d{10})/, "").slice(0, 10); });
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  form.querySelectorAll("[aria-invalid]").forEach(el => el.removeAttribute("aria-invalid"));
+  const v = id => $(id).value.trim();
+  const bad = (id, text) => { $(id).setAttribute("aria-invalid", "true"); $(id).focus(); msg.className = "form-msg err"; msg.textContent = text; };
+  if(v("s-name").length < 2) return bad("s-name", "Enter your name.");
+  if(!/^[6-9]\d{9}$/.test(v("s-phone"))) return bad("s-phone", "Enter a 10-digit mobile number that starts with 6, 7, 8 or 9.");
+  if(v("s-city").length < 2) return bad("s-city", "Enter your city.");
+  if(v("s-story").length < 20) return bad("s-story", "Tell us a little more: at least a couple of sentences.");
+  if(!$("s-ok").checked){ msg.className = "form-msg err"; msg.textContent = "Tick the box so we can contact you about your story."; $("s-ok").focus(); return; }
+  const rec = {name:v("s-name"), mobile:v("s-phone"), role:v("s-role"), city:v("s-city"), story:v("s-story"), sentAt:new Date().toISOString()};
+  const btn = $("s-send"); btn.disabled = true; btn.textContent = "Sending…";
+  try{
+    if(CONFIG.STORY_ENDPOINT){
+      const r = await fetch(CONFIG.STORY_ENDPOINT, {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}, body:JSON.stringify(rec)});
+      if(!r.ok) throw new Error(r.status);
+      msg.className = "form-msg ok"; msg.textContent = `Thank you, ${rec.name.split(" ")[0]}! We'll call you on +91 ${rec.mobile} about your story.`;
+    } else {
+      try{ const k = "khep-stories"; const l = JSON.parse(localStorage.getItem(k) || "[]"); l.push(rec); localStorage.setItem(k, JSON.stringify(l)); }catch(_){}
+      msg.className = "form-msg ok"; msg.textContent = `Thank you, ${rec.name.split(" ")[0]}! Story submissions aren't connected yet, so this was saved on this device only.`;
+    }
+    form.reset();
+  }catch(err){
+    msg.className = "form-msg err"; msg.textContent = "Your story didn't send. Check your connection and try again.";
+  }finally{ btn.disabled = false; btn.textContent = "Send my story"; }
+});
+})();
+</script>
+</body>
+</html>
