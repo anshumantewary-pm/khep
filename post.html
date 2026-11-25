@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Story · Khep</title>
+<meta name="description" content="A story from the Khep network.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#070a1c">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;500;600;700&family=IBM+Plex+Mono:wght@600&family=Yatra+One&display=swap">
+<link rel="stylesheet" href="site.css">
+<style>
+.art-head{padding-top:calc(var(--hdr) + 40px + env(safe-area-inset-top,0px));text-align:center;background:radial-gradient(ellipse at 50% 0%,#1a1f5c,var(--night) 70%)}
+.art-head .in{display:grid;gap:16px;justify-items:center;max-width:860px;margin:0 auto}
+.crumbs{font-size:.9rem;color:var(--mute)}
+.crumbs a{color:var(--mute)}
+.art-head h1{font:800 clamp(2rem,5.4vw,3.6rem)/1.1 var(--display);color:var(--paper)}
+.art-head .excerpt{font-size:1.15rem;color:#dfe2f5;max-width:60ch}
+.byline{display:flex;flex-wrap:wrap;gap:8px 14px;justify-content:center;align-items:center;color:var(--mute);font-size:.95rem}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--yel);color:var(--ink);font:800 1.1rem var(--display);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--pink)}
+.art-cover{max-width:980px;margin:30px auto 0;border-radius:26px;overflow:hidden;border:1px solid var(--line)}
+.art-cover .cover{aspect-ratio:16/7}
+.art-cover .cover.gen b{font-size:clamp(1.8rem,5vw,3rem)}
+article.prose{max-width:720px;margin:0 auto;padding-block:40px 24px;font-size:1.12rem;line-height:1.75;color:#e6e8f6}
+.prose > * + *{margin-top:1.1em}
+.prose h2{font:800 1.7rem/1.2 var(--display);color:var(--paper);margin-top:1.8em}
+.prose h3{font:800 1.3rem/1.25 var(--display);color:var(--paper);margin-top:1.5em}
+.prose h4{font:700 1.1rem var(--display);color:var(--yel)}
+.prose a{color:var(--yel);text-underline-offset:3px}
+.prose strong{color:var(--paper)}
+.prose ul,.prose ol{padding-left:1.3rem;display:grid;gap:.45em}
+.prose li::marker{color:var(--saff);font-weight:800}
+.prose blockquote{margin-left:0;margin-right:0;padding:18px 22px;border-radius:18px;background:var(--panel-solid);border-left:6px solid var(--pink);font:400 1.4rem/1.4 var(--paint);color:var(--yel)}
+.prose img{border-radius:18px;display:block}
+.tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:720px;margin:0 auto}
+.tags a{font-size:.88rem;color:#dfe2f5;text-decoration:none;background:rgba(255,248,230,.07);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
+.tags a:hover{border-color:var(--yel);color:var(--yel)}
+.share-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:720px;margin:26px auto 0;padding-top:24px;border-top:1px solid var(--line);color:var(--mute)}
+.share-row .btn{font-size:.98rem;padding:8px 16px;border-width:2px;box-shadow:3px 3px 0 var(--pink)}
+.cta-box{max-width:720px;margin:36px auto 0;background:linear-gradient(160deg,#0b3d91,#06275f);border-radius:24px;overflow:hidden;border:1px solid var(--line)}
+.cta-box .in{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between;padding:22px 24px}
+.cta-box b{font:400 1.6rem var(--paint);color:var(--yel);text-shadow:2px 2px 0 var(--pink)}
+.missing{min-height:70vh;display:grid;place-items:center;text-align:center;padding-top:var(--hdr)}
+.missing .in{display:grid;gap:14px;justify-items:center}
+.missing h1{font:400 clamp(2.4rem,7vw,4rem) var(--paint);color:var(--yel);text-shadow:3px 3px 0 var(--pink)}
+</style>
+</head>
+<body data-page="post">
+<div id="site-header"></div>
+
+<main id="main">
+  <div id="article"><div class="missing"><p>Loading…</p></div></div>
+  <section class="wrap section" id="more" aria-labelledby="more-title" hidden>
+    <div class="sec-head"><span class="ribbon">Keep reading</span><h2 id="more-title">More from the road</h2></div>
+    <div class="posts" id="related"></div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const {esc, loadPosts, cardHTML, coverHTML, md, fmtDate, readMins, CAT} = window.Khep;
+const slug = new URLSearchParams(location.search).get("p") || "";
+
+function missing(){
+  document.title = "Story not found · Khep";
+  $("article").innerHTML = `<div class="missing"><div class="in"><h1>Story not found</h1><p style="color:var(--mute)">This story may have moved or not be published yet.</p><a class="btn" href="blog.html">See all stories</a></div></div>`;
+}
+loadPosts().then(posts => {
+  const i = posts.findIndex(p => p.slug === slug);
+  if(i < 0) return missing();
+  const p = posts[i], url = location.href.split("#")[0];
+  document.title = p.title + " · Khep";
+  const d = document.querySelector('meta[name="description"]'); if(d) d.setAttribute("content", p.excerpt || p.title);
+  const initials = String(p.author || "Khep").split(/\s+/).map(w => w[0]).slice(0, 2).join("").toUpperCase();
+  const wa = "https://wa.me/?text=" + encodeURIComponent(p.title + " " + url);
+  $("article").innerHTML = `
+    <header class="art-head"><div class="wrap in">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="blog.html">Stories</a> / <a href="blog.html?cat=${esc(p.category)}">${CAT[p.category] ? CAT[p.category] + "s" : "Posts"}</a></nav>
+      <span class="chip ${esc(p.category)}">${CAT[p.category] || "Post"}</span>
+      <h1>${esc(p.title)}</h1>
+      ${p.excerpt ? `<p class="excerpt">${esc(p.excerpt)}</p>` : ""}
+      <div class="byline"><span class="avatar" aria-hidden="true">${esc(initials)}</span><span><b style="color:var(--paper)">${esc(p.author || "Khep team")}</b>${p.role ? " · " + esc(p.role) : ""}${p.city ? " · " + esc(p.city) : ""}</span><span>${fmtDate(p.date)}</span><span>${readMins(p)} min read</span></div>
+    </div>
+    <div class="wrap"><div class="art-cover">${coverHTML(p, true)}</div></div></header>
+    <div class="wrap">
+      <article class="prose">${md(p.body)}</article>
+      ${(p.tags || []).length ? `<div class="tags">${p.tags.map(t => `<a href="blog.html?q=${encodeURIComponent(t)}">#${esc(t)}</a>`).join("")}</div>` : ""}
+      <div class="share-row"><span>Share this story</span>
+        <a class="btn" href="${wa}" target="_blank" rel="noopener">WhatsApp</a>
+        <button class="btn ghost" id="copy" type="button">Copy link</button></div>
+      <div class="cta-box"><div class="fringe" aria-hidden="true"></div><div class="in"><b>Get Khep on your phone</b><a class="btn" href="./#get">Download the app</a></div></div>
+    </div>`;
+  $("copy").addEventListener("click", async e => {
+    const b = e.currentTarget;
+    try{ await navigator.clipboard.writeText(url); b.textContent = "Link copied"; }
+    catch(_){ b.textContent = "Copy the address bar link"; }
+    setTimeout(() => { b.textContent = "Copy link"; }, 2000);
+  });
+  const same = posts.filter((x, j) => j !== i && x.category === p.category);
+  const others = posts.filter((x, j) => j !== i && x.category !== p.category);
+  const rel = [...same, ...others].slice(0, 3);
+  if(rel.length){ $("related").innerHTML = rel.map(cardHTML).join(""); $("more").hidden = false; }
+}).catch(missing);
+})();
+</script>
+</body>
+</html>
