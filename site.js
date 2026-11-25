@@ -91,7 +91,7 @@ function buildDeco(){
   const W = document.documentElement.clientWidth, sw = W < 600 ? 92 : 128, n = Math.ceil(W / sw) + 1;
   let html = "";
   for(let i = 0; i < n; i++) html += `<div class="swag swing" data-amp="1.6" data-gain=".8" style="left:${i * sw - 4}px;width:${sw}px">${swagSVG(sw)}</div>`;
-  (W < 700 ? [.5] : [.2, .8]).forEach(p => { html += `<div class="nimbu swing" data-amp="7" data-gain="2.6" style="left:${p * 100}%">${nimbuSVG()}</div>`; });
+  (W < 700 ? [.07] : [.2, .8]).forEach(p => { html += `<div class="nimbu swing" data-amp="7" data-gain="2.6" style="left:${p * 100}%">${nimbuSVG()}</div>`; });
   deco.innerHTML = html;
   collectSwings();
 }
