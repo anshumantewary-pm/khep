@@ -4,6 +4,9 @@
   --night:#070a1c; --night2:#0b1033; --panel:rgba(14,19,52,.78); --panel-solid:#0e1334; --ink:#10122b;
   --paper:#fff8e6; --mute:#b6bcdc; --line:rgba(255,248,230,.13);
   --yel:#ffd400; --pink:#e5197e; --grn:#1f9e46; --saff:#ff9f1c; --red:#d7261e; --cob:#0b3d91; --sky:#7aa2ff;
+  /* brick maroon, the colour of a painted Indian truck body */
+  --brick:#8e2f23; --brick-light:#c0563e; --brick-deep:#5b1a14; --brick-dark:#2e0c0a; --maroon:#6d1a1f; --cream:#ffe9cf;
+  --brick-wall:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='88' height='44'%3E%3Cg fill='none' stroke='rgba(255,226,196,0.075)' stroke-width='2'%3E%3Cpath d='M0 1h88M0 23h88M44 1v22M22 23v22M66 23v22'/%3E%3C/g%3E%3C/svg%3E");
   --paint:"Yatra One","Baloo 2",system-ui,sans-serif; --display:"Baloo 2","Mukta",system-ui,sans-serif;
   --body:"Mukta",system-ui,"Segoe UI",sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --hdr:68px;
@@ -30,7 +33,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 
 /* ---------- header: hides when you scroll down, returns when you scroll up ---------- */
 .site-hdr{position:fixed;top:0;left:0;right:0;z-index:50;padding-top:env(safe-area-inset-top,0px);transition:transform .35s cubic-bezier(.3,.7,.3,1),background-color .3s,box-shadow .3s;will-change:transform}
-.site-hdr.scrolled{background:rgba(7,10,28,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(0,0,0,.8)}
+.site-hdr.scrolled{background:linear-gradient(90deg,rgba(46,12,10,.92),rgba(16,10,28,.9) 55%,rgba(46,12,10,.92));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(0,0,0,.8)}
 .site-hdr.hide{transform:translateY(-110%)}
 .hdr-in{height:var(--hdr);display:flex;align-items:center;gap:18px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
@@ -62,7 +65,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .btn svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .btn:disabled{opacity:.6;cursor:wait}
 .chip{display:inline-flex;align-items:center;gap:6px;font:700 .78rem var(--body);letter-spacing:.06em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:rgba(255,248,230,.1);color:var(--paper)}
-.chip.stories{background:rgba(229,25,126,.2);color:#ff8cc4}
+.chip.stories{background:rgba(192,86,62,.28);color:#ffb59c}
 .chip.guides{background:rgba(122,162,255,.2);color:#b4c8ff}
 .chip.news{background:rgba(31,158,70,.25);color:#7ee8a2}
 .plate{display:inline-flex;align-items:stretch;border:2px solid #111;border-radius:6px;background:var(--yel);overflow:hidden;flex:none;vertical-align:middle}
@@ -75,6 +78,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .ribbon{display:inline-block;font:700 .8rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);background:var(--saff);padding:4px 16px;clip-path:polygon(0 0,100% 0,96% 50%,100% 100%,0 100%,4% 50%)}
 .sec-head h2{font:400 clamp(2.1rem,5vw,3.3rem)/1.15 var(--paint);color:var(--paper);text-shadow:2px 2px 0 var(--pink),4px 4px 0 var(--cob)}
 .sec-head p{color:var(--mute);font-size:1.08rem;max-width:60ch}
+
+/* ---------- brick maroon surfaces ---------- */
+.brick{background-color:var(--brick-deep);background-image:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(255,150,90,.20),transparent 70%),radial-gradient(ellipse 60% 50% at 50% 100%,rgba(0,0,0,.35),transparent 70%),var(--brick-wall)}
+.brick .sec-head p{color:#f3d9c4}
+.brick .ribbon{background:var(--yel)}
+.maroon-card{background:linear-gradient(160deg,var(--brick),var(--brick-deep));border:1px solid rgba(255,226,196,.16)}
+.ribbon.maroon{background:var(--brick-light);color:var(--cream)}
+
+/* ---------- road divider: asphalt, lane markings and a truck on its way ---------- */
+.road{position:relative;height:56px;background:#17131a;border-block:5px solid var(--brick);overflow:hidden}
+.road::before{content:"";position:absolute;left:0;right:0;top:50%;height:4px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--yel) 0 38px,transparent 38px 76px);animation:lane 1.6s linear infinite}
+@keyframes lane{to{background-position:-76px 0}}
+.road svg{position:absolute;top:6px;height:38px;width:auto;left:-120px;animation:drive 16s linear infinite}
+@keyframes drive{to{left:calc(100% + 40px)}}
 
 /* ---------- slogan marquee ---------- */
 .marquee{overflow:hidden;background:var(--yel);color:var(--ink);border-block:3px solid var(--ink);transform:rotate(-1.2deg);margin-block:-4px;position:relative;z-index:2}
@@ -114,7 +131,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 .form-msg.ok{color:#7ee8a2} .form-msg.err{color:#ff8a8a}
 
 /* ---------- footer ---------- */
-.site-ftr{background:#050716;border-top:1px solid var(--line);margin-top:0}
+.site-ftr{background-color:var(--brick-dark);background-image:linear-gradient(180deg,rgba(91,26,20,.55),transparent 60%),var(--brick-wall);border-top:1px solid var(--line);margin-top:0}
+.site-ftr .ftr-brand p,.site-ftr .ftr-bottom{color:#e2c3ae}
+.ftr-bottom{border-top-color:rgba(255,226,196,.14)!important}
 .ftr-grid{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(3,minmax(0,1fr));gap:28px;padding-block:48px 32px}
 @media (max-width:760px){.ftr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.ftr-brand{grid-column:1/-1}}
 .ftr-brand{display:grid;gap:12px;align-content:start}
@@ -137,6 +156,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible,t
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .marquee-track,.rise{animation:none}
+  .marquee-track,.rise,.road::before,.road svg{animation:none}
+  .road svg{left:45%}
   .site-hdr,.btn,.post-card,.to-top,.nav{transition:none}
 }
