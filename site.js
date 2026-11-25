@@ -106,12 +106,15 @@ function collectSwings(){
 if(!calm){
   window.addEventListener("scroll", () => { const y = window.scrollY; impulse += Math.max(-10, Math.min(10, (y - lastScroll) * .06)); lastScroll = y; }, {passive:true});
   setInterval(() => { if(!document.hidden && Math.random() < .55) impulse += (Math.random() < .5 ? -1 : 1) * (2 + Math.random() * 3); }, 2600);
+  // Runs only while the header is on screen; writes a new angle only when it has visibly changed.
   const tick = t => {
     impulse *= .94;
-    const s = t / 1000;
-    for(const k of swings){
-      const a = k.amp * Math.sin(s * k.w + k.ph) * (1 + Math.min(1.5, Math.abs(impulse) * .12)) + impulse * k.gain * Math.cos(s * k.w * 1.8 + k.ph);
-      k.el.style.transform = `rotate(${a.toFixed(2)}deg)`;
+    if(!hdr || !hdr.classList.contains("hide")){
+      const s = t / 1000, boost = 1 + Math.min(1.5, Math.abs(impulse) * .12);
+      for(const k of swings){
+        const a = k.amp * Math.sin(s * k.w + k.ph) * boost + impulse * k.gain * Math.cos(s * k.w * 1.8 + k.ph);
+        if(Math.abs(a - (k.last ?? 99)) > .04){ k.last = a; k.el.style.transform = `rotate(${a.toFixed(2)}deg)`; }
+      }
     }
     requestAnimationFrame(tick);
   };
@@ -139,7 +142,8 @@ if(ftrSlot){
 }
 const toTop = document.getElementById("to-top");
 if(toTop){
-  window.addEventListener("scroll", () => toTop.classList.toggle("show", window.scrollY > 900), {passive:true});
+  let shown = false;
+  window.addEventListener("scroll", () => { const s = window.scrollY > 900; if(s !== shown){ shown = s; toTop.classList.toggle("show", s); } }, {passive:true});
   toTop.addEventListener("click", () => window.scrollTo({top:0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"}));
 }
 
