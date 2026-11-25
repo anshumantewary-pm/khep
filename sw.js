@@ -1,6 +1,6 @@
 // Khep service worker: lets the installed app open offline.
 // Bump VERSION whenever app files change so phones pick up the new version.
-const VERSION = "khep-v5";
+const VERSION = "khep-v6";
 const SHELL = [
   "./", "./index.html", "./app.html", "./signup.html", "./blog.html", "./post.html",
   "./site.css", "./site.js", "./posts.json", "./manifest.webmanifest",
