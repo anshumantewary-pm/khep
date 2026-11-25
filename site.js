@@ -82,7 +82,7 @@ if(toTop){
 
 /* ---------- blog helpers ---------- */
 const CAT = {stories:"Story", guides:"Guide", news:"News"};
-const COVER = {stories:"#a3135a", guides:"#0b3d91", news:"#146b32"};
+const COVER = {stories:"#8e2f23", guides:"#0b3d91", news:"#6d1a1f"};
 let postsCache = null;
 async function loadPosts(){
   if(postsCache) return postsCache;
