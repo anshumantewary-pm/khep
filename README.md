@@ -8,7 +8,9 @@ Live site: https://anshumantewary-pm.github.io/khep/
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The landing page: a live animated map of trucks moving across India, who Khep is for, and the app download (QR code on computers, APK on Android, home-screen steps on iPhone) |
+| `index.html` | The landing page: live map of trucks moving across India, slogan band, who Khep is for, how it works per role with real app screens, features, latest stories, FAQ and the app download (QR code on computers, APK on Android, home-screen steps on iPhone) |
+| `blog.html`, `post.html`, `posts.json` | Stories: list with filters and search, article page, and every post's content |
+| `site.css`, `site.js` | Shared styles, the header that hides on scroll, footer, back-to-top and blog helpers |
 | `app.html` | The Khep app, installable on Android, iPhone and desktop as a Progressive Web App |
 | `signup.html` | Sign-up, opened from inside the app |
 | `download/Khep.apk` | The Android app the website serves |
@@ -29,6 +31,18 @@ Try a sample account without signing up:
 - https://anshumantewary-pm.github.io/khep/app.html?demo=driver
 - https://anshumantewary-pm.github.io/khep/app.html?demo=company
 - https://anshumantewary-pm.github.io/khep/app.html?demo=contractor
+
+## Adding a story or post
+
+All posts live in `posts.json`. To add one:
+
+1. Copy the `_template` object at the top of the file into the start of the `posts` list.
+2. Fill in `slug` (lowercase words joined by hyphens; it becomes the link), `title`, `category` (`stories`, `guides` or `news`), `date` (YYYY-MM-DD), `author`, and optionally `role` and `city`.
+3. Write the `body` in Markdown: `## headings`, `**bold**`, `*italics*`, `[links](url)`, `![photos](img/stories/name.jpg)`, `> quotes` and `- lists`. Use `\n` for new lines inside the JSON string.
+4. For a cover photo, put the image in `img/stories/` and set `cover` and `coverAlt`. Without one, the page draws a truck-art cover from `coverText`.
+5. Remove `"draft": true`, commit and push. The post appears on the stories page and the home page.
+
+"Share your story" submissions are saved in the visitor's browser until `STORY_ENDPOINT` in `site.js` is set to a form endpoint such as Formspree.
 
 ## Current limits
 
