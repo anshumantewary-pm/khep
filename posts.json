@@ -1,0 +1,65 @@
+{
+  "_how_to_add": "Add a new object to the top of \"posts\". Copy \"_template\" as a starting point. category is stories, guides or news. body is Markdown: ## headings, **bold**, *italics*, [links](url), ![images](img/your-photo.jpg), > quotes and - lists. Put photos in img/stories/. Set \"draft\": true to hide a post.",
+  "_template": {
+    "slug": "harjeet-ludhiana-to-bhiwandi",
+    "title": "How Harjeet stopped driving home empty",
+    "category": "stories",
+    "date": "2026-12-01",
+    "author": "Harjeet Singh",
+    "role": "Owner-driver, 2 trucks",
+    "city": "Ludhiana",
+    "excerpt": "One or two lines that make people want to read the story.",
+    "cover": "img/stories/harjeet.jpg",
+    "coverAlt": "Harjeet standing next to his truck at a Ludhiana transport nagar",
+    "coverText": "Used only when there is no cover photo",
+    "tags": ["return loads", "Punjab"],
+    "body": "## The problem\n\nWrite the story here in Markdown.\n\n> A quote from the person works well.\n\n## What changed\n\n- Point one\n- Point two",
+    "draft": true
+  },
+  "posts": [
+    {
+      "slug": "why-we-are-building-khep",
+      "title": "Why we're building Khep",
+      "category": "news",
+      "date": "2026-11-24",
+      "author": "Khep team",
+      "excerpt": "Most of India's trucks belong to people who own one to five of them. They wait weeks to get paid and drive home empty too often. Here's what we want to change.",
+      "coverText": "Every truck. Every load. One app.",
+      "tags": ["Khep", "mission"],
+      "body": "Most of India's goods move by road, and most of the trucks that carry them belong to small owners: people with one truck they drive themselves, or a handful they run with hired drivers.\n\nThose owners usually find work through commission agents at the transport nagar. The agent finds the load, keeps a cut, and the owner waits for the balance. That wait can stretch to weeks, and deductions for shortage or delay often arrive with no proof.\n\n## Three things go wrong on almost every trip\n\n- **Payment comes late.** An owner pays for diesel and tolls up front, then waits for the balance after delivery.\n- **The way home is empty.** A truck that delivers in Bhiwandi often comes back to Punjab with nothing, or waits days for a load.\n- **Nobody can see a fair price.** Rates depend on who you ask and how badly you need the trip.\n\n## What Khep does about it\n\nKhep is one app for everyone who moves goods by truck. Drivers and owners see loads from where to where, nearest pickup first. Companies see verified trucks near them. Contractors and farmers find the nearest driver or transporter when they need one truck.\n\nThe idea at the centre is simple: **a load is paid for before the truck moves.** The company pays into escrow, the owner gets 90% at loading, and the rest is released when the receiver confirms delivery.\n\n> If the money is sure, the truck owner can say yes to the load without calling five people first.\n\n## Where we are\n\nKhep is in early access. The app shows sample loads and trucks while we bring on our first partners, starting with the route from Punjab and Delhi NCR to Mumbai. If you run trucks or ship goods on that route, [download the app](./#get) and sign up. We'd like to hear from you."
+    },
+    {
+      "slug": "how-you-get-paid-on-khep",
+      "title": "How you get paid on Khep: 90% at loading",
+      "category": "guides",
+      "date": "2026-11-22",
+      "author": "Khep team",
+      "excerpt": "Escrow, the advance at loading, the delivery code and the 24-hour rule for deductions, explained simply for drivers and truck owners.",
+      "coverText": "90% at loading. The rest on delivery.",
+      "tags": ["payments", "drivers"],
+      "body": "Getting paid on time is the reason most owners give for sticking with an agent they don't fully trust. Khep is built so that the money is sorted before the truck moves.\n\n## Step by step\n\n1. **The company posts a load and pays into escrow.** Escrow means the money sits in a bank account that neither side can touch alone.\n2. **You accept the load.** The app shows the full freight and how much you get at loading.\n3. **You load the truck.** When loading is confirmed, 90% of the freight is sent to your account.\n4. **You deliver.** The receiver gives you a 4-digit delivery code. Enter it in the app.\n5. **The balance is released.** The remaining 10% comes to you once the code is entered.\n\n## What about deductions?\n\nIf the company wants to deduct money for shortage or damage, they have to raise it **within 24 hours of delivery, with photos**. If they don't, the balance is released automatically.\n\n## What it costs\n\nWhen payments go live, Khep plans to charge truck owners a flat 2% per trip. Agents usually take 5–10%.\n\n> Khep is in early access, so payments are not live yet. This guide explains how they will work."
+    },
+    {
+      "slug": "harvest-calendar-for-truck-drivers",
+      "title": "Harvest calendar for truck drivers: when mandis need trucks",
+      "category": "guides",
+      "date": "2026-11-18",
+      "author": "Khep team",
+      "excerpt": "Wheat in April, paddy in October, cotton through the winter. A month-by-month guide to when farm loads pick up and where.",
+      "coverText": "When the mandis need trucks",
+      "tags": ["agriculture", "drivers", "seasons"],
+      "body": "Farm loads come in waves. When a crop is harvested, mandis fill up, mills and cold stores need stock, and trucks get scarce. Drivers who plan for these weeks find more work and better rates.\n\nMonths below are typical. They shift a little by state and by year.\n\n## Crop by crop\n\n- **Wheat:** April and May. Punjab, Haryana, Madhya Pradesh and Uttar Pradesh.\n- **Mustard:** March and April. Rajasthan, Haryana and Madhya Pradesh.\n- **Potato:** February and March. Uttar Pradesh, Punjab and West Bengal, mostly into cold stores.\n- **Paddy (rice):** October and November. Punjab, Haryana and Uttar Pradesh, into rice mills.\n- **Cotton:** October to January. Gujarat, Maharashtra and Punjab, into ginning mills.\n- **Sugarcane:** November to April. Uttar Pradesh, Maharashtra and Karnataka, short trips to sugar mills.\n- **Maize:** September and October. Karnataka, Madhya Pradesh and Bihar.\n- **Onion:** March to May, and again in November and December. Maharashtra (Nashik), Madhya Pradesh and Karnataka.\n\n## Tips for harvest weeks\n\n- **Be near the mandi early.** Loads go fast in the first days of arrivals.\n- **Plan the return.** Mills and cold stores often have outbound loads of their own.\n- **Use the right truck.** Open-body trucks suit grain bags and cotton bales. Fruit and vegetables over long distances need a reefer.\n\nIn the Khep app, the **Earn more** tab shows this calendar with the current month marked."
+    },
+    {
+      "slug": "install-khep-on-android",
+      "title": "How to install Khep on your Android phone",
+      "category": "guides",
+      "date": "2026-11-15",
+      "author": "Khep team",
+      "excerpt": "Khep isn't on the Play Store yet, so you install it from our website. It takes about a minute. Here's every step, including the Play Protect warning.",
+      "coverText": "Install Khep in one minute",
+      "tags": ["install", "android"],
+      "body": "Khep is a small app, about 1.8 MB, and works on Android 7 or newer. Until it's on the Play Store, you install it straight from our website.\n\n## Steps\n\n1. On your phone, open the Khep website and tap **Download for Android**. On a computer, scan the QR code with your phone instead.\n2. When the download finishes, tap the message, or open **Khep.apk** from your phone's **Downloads** folder.\n3. Android may say your browser isn't allowed to install apps. Tap **Settings**, turn on **Allow from this source**, then go back.\n4. Tap **Install**. When it's done, tap **Open**.\n\n## About the Play Protect warning\n\nGoogle Play Protect may show a warning because the app didn't come from the Play Store. Tap **More details**, then **Install anyway**. The warning goes away once Khep is on the Play Store.\n\n## On iPhone\n\niPhones can't install APK files. Open the Khep website in **Safari**, tap the **Share** button, then **Add to Home Screen**.\n\n## After installing\n\nOpen Khep and tap **Sign up**. Choose driver, company or contractor, and the app sets itself up for you."
+    }
+  ]
+}
